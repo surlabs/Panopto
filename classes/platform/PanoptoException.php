@@ -20,6 +20,9 @@ declare(strict_types=1);
  */
 
 namespace platform;
+
+use Exception;
+
 /**
  * Class PanoptoException
  * @authors Jesús Copado, Daniel Cazalla, Saúl Díaz, Juan Aguilar <info@surlabs.es>

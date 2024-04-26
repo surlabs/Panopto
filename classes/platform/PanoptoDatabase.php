@@ -20,6 +20,7 @@ declare(strict_types=1);
  */
 
 namespace platform;
+
 /**
  * Class PanoptoDatabase
  * @authors Jesús Copado, Daniel Cazalla, Saúl Díaz, Juan Aguilar <info@surlabs.es>
