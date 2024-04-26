@@ -13,7 +13,7 @@
  * https://github.com/surlabs/Panopto
  *
  * If you need support, please contact the maintainer of this software at:
- * stack@surlabs.es
+ * info@surlabs.es
  *
  */
 
