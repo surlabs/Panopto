@@ -19,11 +19,12 @@ declare(strict_types=1);
  *
  */
 
+namespace platform;
 /**
- * Class PanoptoDatabase
+ * Class PanoptoRender
  * @authors Jesús Copado, Daniel Cazalla, Saúl Díaz, Juan Aguilar <info@surlabs.es>
  */
-class PanoptoDatabase
+class PanoptoRender
 {
 
 }
