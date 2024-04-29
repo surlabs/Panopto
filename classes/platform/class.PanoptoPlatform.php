@@ -27,5 +27,22 @@ namespace platform;
  */
 class PanoptoPlatform
 {
+    /**
+     * Gets the platform translation of a string
+     * @param string $str
+     * @param mixed $params
+     * @return string|null
+     */
+    public static function getTranslation(string $str, ?array $params = null): ?string
+    {
+        global $DIC;
 
+        $txt = $DIC->language()->txt($str);
+
+        if (isset($params)) {
+            $txt = vsprintf($txt, $params);
+        }
+
+        return $txt;
+    }
 }
