@@ -26,16 +26,30 @@ class ilObjPanoptoListGUI extends ilObjectPluginListGUI
 {
     public function getGuiClass(): string
     {
-        // TODO: Implement getGuiClass() method.
+        return ilObjPanoptoGUI::class;
     }
 
     public function initCommands(): array
     {
-        // TODO: Implement initCommands() method.
+        $this->timings_enabled = false;
+        $this->subscribe_enabled = false;
+        $this->link_enabled = false;
+        $this->info_screen_enabled = true;
+        $this->delete_enabled = true;
+        $this->cut_enabled = false;
+        $this->copy_enabled = true;
+
+        return [
+            [
+                "permission" => "read",
+                "cmd" => "index",
+                "default" => true,
+            ]
+        ];
     }
 
     public function initType()
     {
-        // TODO: Implement initType() method.
+        $this->setType("xpan");
     }
 }

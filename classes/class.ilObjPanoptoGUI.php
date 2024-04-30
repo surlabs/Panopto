@@ -28,21 +28,31 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
 {
     public function getAfterCreationCmd(): string
     {
-        // TODO: Implement getAfterCreationCmd() method.
+        return "manageVideos";
     }
 
     public function getStandardCmd(): string
     {
-        // TODO: Implement getStandardCmd() method.
+        return "index";
     }
 
     public function performCommand(string $cmd): void
     {
-        // TODO: Implement performCommand() method.
+        $this->{$cmd}();
     }
 
     public function getType(): string
     {
-        // TODO: Implement getType() method.
+        return "xpan";
+    }
+
+    public function index(): void
+    {
+        $this->tpl->setContent('<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&loop=1&rel=0&cc_load_policy=1&iv_load_policy=3&playlist=dQw4w9WgXcQ" width="560" height="315" title="Rick Astley - Never Gonna Give You Up (Official Music Video)" frameborder="0" allowfullscreen></iframe>');
+    }
+
+    public function manageVideos(): void
+    {
+        $this->tpl->setContent("(En desarrollo) Cargar la página: manageVideos");
     }
 }

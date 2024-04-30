@@ -27,6 +27,6 @@ class ilObjPanopto extends ilObjectPlugin
 
     protected function initType(): void
     {
-        // TODO: Implement initType() method.
+        $this->setType("xpan");
     }
 }

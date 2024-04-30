@@ -27,6 +27,8 @@ class ilPanoptoPlugin extends ilRepositoryObjectPlugin
 
     protected function uninstallCustom(): void
     {
-        // TODO: Implement uninstallCustom() method.
+        global $DIC;
+        $DIC->database()->dropTable("xpan_config");
+        $DIC->database()->dropTable("xpan_settings");
     }
 }
