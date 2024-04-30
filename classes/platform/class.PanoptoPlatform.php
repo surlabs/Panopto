@@ -30,7 +30,7 @@ class PanoptoPlatform
     /**
      * Gets the platform translation of a string
      * @param string $str
-     * @param mixed $params
+     * @param array|null $params
      * @return string|null
      */
     public static function getTranslation(string $str, ?array $params = null): ?string
