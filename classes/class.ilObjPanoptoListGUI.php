@@ -24,11 +24,19 @@ declare(strict_types=1);
  */
 class ilObjPanoptoListGUI extends ilObjectPluginListGUI
 {
+    /**
+     * Get the GUI class of the plugin
+     * @return string
+     */
     public function getGuiClass(): string
     {
         return ilObjPanoptoGUI::class;
     }
 
+    /**
+     * Init commands
+     * @return array[]
+     */
     public function initCommands(): array
     {
         $this->timings_enabled = false;
@@ -48,6 +56,10 @@ class ilObjPanoptoListGUI extends ilObjectPluginListGUI
         ];
     }
 
+    /**
+     * Get the type of the object
+     * @return void
+     */
     public function initType()
     {
         $this->setType("xpan");

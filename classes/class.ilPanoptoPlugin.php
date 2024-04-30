@@ -24,7 +24,10 @@ declare(strict_types=1);
  */
 class ilPanoptoPlugin extends ilRepositoryObjectPlugin
 {
-
+    /**
+     * Remove the plugin related data from the database
+     * @return void
+     */
     protected function uninstallCustom(): void
     {
         global $DIC;

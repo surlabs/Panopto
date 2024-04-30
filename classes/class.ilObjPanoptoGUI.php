@@ -26,31 +26,56 @@ declare(strict_types=1);
  */
 class ilObjPanoptoGUI extends ilObjectPluginGUI
 {
+    /**
+     * Get the command to execute after the creation of the object
+     * @return string
+     */
     public function getAfterCreationCmd(): string
     {
         return "manageVideos";
     }
 
+    /**
+     * Get the standard command
+     * @return string
+     */
     public function getStandardCmd(): string
     {
         return "index";
     }
 
+    /**
+     * Execute the command
+     * @param string $cmd
+     * @return void
+     */
     public function performCommand(string $cmd): void
     {
         $this->{$cmd}();
     }
 
+    /**
+     * Get the type of the object
+     * @return string
+     */
     public function getType(): string
     {
         return "xpan";
     }
 
+    /**
+     * Show the index page of the object
+     * @return void
+     */
     public function index(): void
     {
         $this->tpl->setContent('<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&loop=1&rel=0&cc_load_policy=1&iv_load_policy=3&playlist=dQw4w9WgXcQ" width="560" height="315" title="Rick Astley - Never Gonna Give You Up (Official Music Video)" frameborder="0" allowfullscreen></iframe>');
     }
 
+    /**
+     * Show the manage videos page
+     * @return void
+     */
     public function manageVideos(): void
     {
         $this->tpl->setContent("(En desarrollo) Cargar la página: manageVideos");

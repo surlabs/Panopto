@@ -24,7 +24,10 @@ declare(strict_types=1);
  */
 class ilObjPanopto extends ilObjectPlugin
 {
-
+    /**
+     * Set the type of the object as the id of the plugin
+     * @return void
+     */
     protected function initType(): void
     {
         $this->setType("xpan");
