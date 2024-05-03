@@ -18,6 +18,9 @@ declare(strict_types=1);
  *
  */
 
+use platform\PanoptoDatabase;
+use platform\PanoptoException;
+
 /**
  * Class ilObjPanopto
  * @authors Jesús Copado, Daniel Cazalla, Saúl Díaz, Juan Aguilar <info@surlabs.es>
@@ -25,11 +28,58 @@ declare(strict_types=1);
 class ilObjPanopto extends ilObjectPlugin
 {
     /**
+     * @var bool
+     */
+    private bool $isOnline;
+
+    /**
+     * @var int|null
+     */
+    private ?int $folderId;
+
+    /**
+     * Read the object from the database
+     * @throws PanoptoException
+     */
+    protected function doRead() :void
+    {
+        $settings = (new PanoptoDatabase)->select('xpan_settings', array(
+            'obj_id' => $this->getId()
+        ), array('is_online', 'folder_ext_id'));
+
+        if (!empty($settings)) {
+            $settings = $settings[0];
+        } else {
+            throw new PanoptoException("No settings found for object with ID " . $this->getId());
+        }
+
+        $this->isOnline = $settings['is_online'] == 1;
+
+        $this->folderId = $settings['folder_ext_id'];
+    }
+
+    /**
      * Set the type of the object as the id of the plugin
      * @return void
      */
     protected function initType(): void
     {
         $this->setType("xpan");
+    }
+
+    /**
+     * Get the online status of the object
+     * @return bool
+     */
+    public function isOnline(): bool {
+        return $this->isOnline;
+    }
+
+    /**
+     * Get the folder ID of the object
+     * @return int|null
+     */
+    public function getFolderId(): ?int {
+        return $this->folderId;
     }
 }

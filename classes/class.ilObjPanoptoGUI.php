@@ -69,7 +69,7 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
      */
     public function index(): void
     {
-        $this->tpl->setContent('<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&loop=1&rel=0&cc_load_policy=1&iv_load_policy=3&playlist=dQw4w9WgXcQ" width="560" height="315" title="Rick Astley - Never Gonna Give You Up (Official Music Video)" frameborder="0" allowfullscreen></iframe>');
+        $this->tpl->setContent("(En desarrollo) Cargar la página: index, con el ID de carpeta: <strong>" . ($this->object->getFolderId() ?? "null") . "</strong> y el ID de referencia: <strong>" . $this->object->getRefId() . "</strong>");
     }
 
     /**
