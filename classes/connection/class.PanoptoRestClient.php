@@ -22,7 +22,7 @@ namespace connection;
 
 use platform\PanoptoConfig;
 use platform\PanoptoException;
-use connection\PanoptoTokenHandler as RESTToken;
+use utils\DTO\RESTToken as RESTToken;
 use League\OAuth2\Client\Provider\GenericProvider as OAuth2Provider;
 
 /**

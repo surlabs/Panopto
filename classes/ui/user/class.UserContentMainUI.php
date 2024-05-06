@@ -2,6 +2,8 @@
 declare(strict_types=1);
 
 namespace classes\ui\user;
+use connection\PanoptoClient;
+
 /**
  * This file is part of the Panopto Repository Object plugin for ILIAS.
  * This plugin allows users to embed Panopto videos in ILIAS as repository objects.
@@ -32,6 +34,17 @@ class UserContentMainUI
     const TAB_SUB_SORTING = "subSorting";
 
     /**
+     * @var PanoptoClient
+     */
+    protected PanoptoClient $client;
+    /**
+     * @var String
+     */
+    protected string $folder_id;
+
+    protected $tpl;
+
+    /**
      * @throws \ilCtrlException
      */
     public static function render(): string
@@ -39,7 +52,11 @@ class UserContentMainUI
 //        $this->addSubTabs(self::TAB_SUB_SHOW);
 
         // Render the content
-
+        $content_objects = $this->client->getContentObjectsOfFolder(
+            $this->folder_id,
+            true,
+            $_GET['xpan_page'],
+            $this->getObject()->getReferenceId());
 
 
     }
@@ -66,6 +83,10 @@ class UserContentMainUI
 
         $DIC->tabs()->activateSubTab($active_sub_tab);
     }
+    //TODO: Ver como resolver la implementación del getObject() en esta clase
+//    public function getObject() {
+//        return $this->parent_gui->getObject();
+//    }
 
 
 }

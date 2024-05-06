@@ -1,5 +1,5 @@
 <?php
-namespace connection;
+namespace utils\DTO;
 
 /**
  * This file is part of the Panopto Repository Object plugin for ILIAS.
@@ -18,7 +18,8 @@ namespace connection;
  * info@surlabs.es
  *
  */
-class PanoptoTokenHandler
+
+class RESTToken
 {
     /**
      * @var string

@@ -24,6 +24,7 @@ use Panopto\UserManagement\User;
 use Panopto\UserManagement\UserManagement;
 use Panopto\AccessManagement\SessionAccessDetails;
 use Panopto\SessionManagement\Pagination;
+use utils\DTO\ContentObjectBuilder;
 
 /**
  * This file is part of the Panopto Repository Object plugin for ILIAS.
@@ -156,8 +157,8 @@ class PanoptoClient
         $sessions = ContentObjectBuilder::buildSessionsDTOsFromSessions($sessions->getResults()->getSession() ?? []);
         $playlists = $this->rest_client->getPlaylistsOfFolder($folder_id);
         $objects = array_merge($sessions, $playlists);
-        $objects = SorterEntry::generateSortedObjects($objects, $ref_id);
-
+//        $objects = SorterEntry::generateSortedObjects($objects, $ref_id);
+        //TODO: Buscar SorterEntry y aplicarlo.
         if ($page_limit) {
             // Implement manual pagination
             return array(
@@ -169,27 +170,5 @@ class PanoptoClient
         }
 
     }
-
-    /**
-     * @param \Panopto\SessionManagement\Session[] $sessions
-     * @return Session[]
-     */
-    public static function buildSessionsDTOsFromSessions(array $sessions) : array
-    {
-        //TODO: Esta sesión no tiene pinta de ser la misma que la de la clase Session
-        $sessions_array = [];
-        foreach ($sessions as $session) {
-            $sessions_array[] = new Session(
-                $session->getId(),
-                $session->getName(),
-                $session->getDescription() ?? '',
-                //       'https://' . xpanConfig::getConfig(xpanConfig::F_HOSTNAME) . $session->getThumbUrl(),
-                $session->getThumbUrl(),
-                $session->getDuration());
-        }
-        return $sessions_array;
-    }
-
-
 
 }
