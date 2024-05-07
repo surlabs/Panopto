@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace classes\ui\user;
 use connection\PanoptoClient;
-
+use ilException;
+use ilPanoptoPlugin;
+use platform\PanoptoConfig;
 /**
  * This file is part of the Panopto Repository Object plugin for ILIAS.
  * This plugin allows users to embed Panopto videos in ILIAS as repository objects.
@@ -46,19 +48,47 @@ class UserContentMainUI
 
     /**
      * @throws \ilCtrlException
+     * @throws \Exception
      */
-    public static function render(): string
+    public function render($object): string
     {
 //        $this->addSubTabs(self::TAB_SUB_SHOW);
 
         // Render the content
+        $this->client = PanoptoClient::getInstance();
+
+       $folder = $this->client->getFolderByExternalId($object->getFolderExtId());
+        if (!$folder) {
+            throw new ilException('No external folder found for this object.');
+        }
+       $this->folder_id = $folder->getId();
+
+        return self::createContentObject($object);
+
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function createContentObject($object): string
+    {
+
         $content_objects = $this->client->getContentObjectsOfFolder(
             $this->folder_id,
             true,
             $_GET['xpan_page'],
-            $this->getObject()->getReferenceId());
+            $object->getReferenceId());
 
 
+        if (!$content_objects['count']) {
+//            $this->tpl->setOnScreenMessage("success", ilPanoptoPlugin::getInstance()->txt("msg_no_videos"), true);
+            //ilUtil::sendInfo($this->pl->txt('msg_no_videos'));
+            return "No videos found in this folder.";
+        }
+
+        //TODO: CONTINUAR POR AQUI
+
+        return "HOLA";
     }
 
 
@@ -83,11 +113,6 @@ class UserContentMainUI
 
         $DIC->tabs()->activateSubTab($active_sub_tab);
     }
-    //TODO: Ver como resolver la implementación del getObject() en esta clase
-//    public function getObject() {
-//        return $this->parent_gui->getObject();
-//    }
-
 
 }
 

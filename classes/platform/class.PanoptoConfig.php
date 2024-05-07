@@ -21,6 +21,9 @@ declare(strict_types=1);
 
 namespace platform;
 
+use utils\DTO\RESTToken as RESTToken;
+
+
 /**
  * Class PanoptoConfig
  * @authors Jesús Copado, Daniel Cazalla, Saúl Díaz, Juan Aguilar <info@surlabs.es>
@@ -101,7 +104,7 @@ class PanoptoConfig
      */
     public static function getFromDB(string $key) {
         $config = (new PanoptoDatabase)->select('xpan_config', array(
-            'parameter_name' => $key
+            'name' => $key
         ));
 
         if (count($config) > 0) {
@@ -112,12 +115,6 @@ class PanoptoConfig
             }
 
             self::$config[$key] = $config[0]['value'];
-
-            if (!isset(self::$categories[$config[0]['group_name']])) {
-                self::$categories[$config[0]['group_name']] = array();
-            }
-
-            self::$categories[$key] = $config[0]['group_name'];
 
             return $config[0]['value'];
         } else {
@@ -198,6 +195,10 @@ class PanoptoConfig
         return self::get('instance_name') . "\\" . self::get('api_user');
     }
 
-
+    public static function getToken()
+    {
+        $serialized_token = self::get('rest_token');
+        return $serialized_token ? RESTToken::jsonUnserialize($serialized_token) : null;
+    }
 
 }

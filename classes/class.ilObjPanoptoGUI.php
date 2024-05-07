@@ -37,6 +37,9 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
     const CMD_STANDARD = 'index';
     const CMD_MANAGE_VIDEOS = 'manageVideos';
 
+    protected UserContentMainUI $userContentMainUI;
+
+
     /**
      * @throws ilCtrlException
      * @return void
@@ -121,7 +124,11 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
 //        UserContentMainUI::render();
 //          $this->tpl->setContent("Cargar la página:". UserContentMainUI::CMD_STANDARD);
 
-        $this->tpl->setContent("(En desarrollo) Cargar la página: index, con el ID de carpeta: <strong>" . ($this->object->getFolderId() ?? "null") . "</strong> y el ID de referencia: <strong>" . $this->object->getRefId() . "</strong>");
+//        $this->tpl->setContent("(En desarrollo) Cargar la página: index, con el ID de carpeta: <strong>" . ($this->object->getFolderId() ?? "null") . "</strong> y el ID de referencia: <strong>" . $this->object->getRefId() . "</strong>");
+        $this->userContentMainUI = new UserContentMainUI();
+        $this->tpl->setContent($this->userContentMainUI->render($this->object));
+
+
     }
 
     /**

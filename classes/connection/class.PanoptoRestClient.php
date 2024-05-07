@@ -20,10 +20,15 @@ declare(strict_types=1);
 
 namespace connection;
 
+
+use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use platform\PanoptoConfig;
 use platform\PanoptoException;
 use utils\DTO\RESTToken as RESTToken;
 use League\OAuth2\Client\Provider\GenericProvider as OAuth2Provider;
+use utils\DTO\ContentObjectBuilder;
+
+
 
 /**
  * Class PanoptoClient
@@ -37,7 +42,7 @@ class PanoptoRestClient
     protected static PanoptoRestClient $instance;
     private string $base_url;
     private OAuth2Provider $oauth2_provider;
-    private PanoptoTokenHandler $token;
+    private RESTToken $token;
 
 
     /**
@@ -62,6 +67,7 @@ class PanoptoRestClient
             $host = substr($host, 8);
         }
         $this->base_url = 'https://' . rtrim($host, '/');
+
         $this->oauth2_provider = new OAuth2Provider(array(
             'clientId' => PanoptoConfig::get('rest_client_id'),
             'clientSecret' => PanoptoConfig::get('rest_client_secret'),
@@ -72,14 +78,17 @@ class PanoptoRestClient
         $this->loadToken();
     }
 
+    /**
+     * @throws IdentityProviderException
+     */
     private function loadToken(): void
     {
-        $token = xpanConfig::getToken();
+        $token = PanoptoConfig::getToken();
         if (!$token || $token->isExpired()) {
-            $this->log('fetch access token');
+//            $this->log('fetch access token');
             $oauth2_token = $this->oauth2_provider->getAccessToken("password", [
-                "username" => xpanConfig::getConfig(xpanConfig::F_REST_API_USER),
-                "password" => xpanConfig::getConfig(xpanConfig::F_REST_API_PASSWORD),
+                "username" => PanoptoConfig::get('rest_api_user'),
+                "password" => PanoptoConfig::get('rest_api_password'),
                 "scope" => "api"
             ]);
             $token = new RESTToken($oauth2_token->getToken(), $oauth2_token->getExpires());
@@ -157,7 +166,7 @@ class PanoptoRestClient
 
     private function log(string $message)
     {
-        $this->log->write('Panopto REST Client: ' . $message);
+//        $this->log->write('Panopto REST Client: ' . $message);
     }
 
 

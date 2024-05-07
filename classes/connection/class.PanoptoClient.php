@@ -1,7 +1,11 @@
 <?php
 declare(strict_types=1);
+
+namespace connection;
+require_once __DIR__."/../../vendor/autoload.php";
+
 use Panopto\AccessManagement\AccessManagement;
-use \Panopto\AccessManagement\AccessRole;
+use Panopto\AccessManagement\AccessRole;
 use Panopto\Client as PanoptoClientAPI;
 use Panopto\AccessManagement\FolderAccessDetails;
 use Panopto\AccessManagement\GetFolderAccessDetails;
@@ -25,6 +29,11 @@ use Panopto\UserManagement\UserManagement;
 use Panopto\AccessManagement\SessionAccessDetails;
 use Panopto\SessionManagement\Pagination;
 use utils\DTO\ContentObjectBuilder;
+use connection\PanoptoRestClient;
+use Exception;
+use Panopto\SessionManagement\Session;
+use platform\PanoptoConfig;
+use platform\PanoptoException;
 
 /**
  * This file is part of the Panopto Repository Object plugin for ILIAS.
@@ -44,12 +53,6 @@ use utils\DTO\ContentObjectBuilder;
  *
  */
 
-namespace connection;
-
-use Exception;
-use Panopto\SessionManagement\Session;
-use platform\PanoptoConfig;
-use platform\PanoptoException;
 
 /**
  * Class PanoptoClient
@@ -57,10 +60,10 @@ use platform\PanoptoException;
  */
 class PanoptoClient
 {
-    const ROLE_VIEWER = AccessRole::Viewer;
-    const ROLE_VIEWER_WITH_LINK = AccessRole::ViewerWithLink;
-    const ROLE_CREATOR = AccessRole::Creator;
-    const ROLE_PUBLISHER = AccessRole::Publisher;
+//    const ROLE_VIEWER = AccessRole::Viewer;
+//    const ROLE_VIEWER_WITH_LINK = AccessRole::ViewerWithLink;
+//    const ROLE_CREATOR = AccessRole::Creator;
+//    const ROLE_PUBLISHER = AccessRole::Publisher;
 
     /**
      * @var self
@@ -141,7 +144,7 @@ class PanoptoClient
 
         /** @var SessionManagement $session_client */
         //TODO: REVISAR ESTO, NO EXISTE EL MÉTODO EN EL PLUGIN ANTIGUO
-        $session_client = new SessionManagement();
+        $session_client = $this->panoptoclient->SessionManagement();
         try {
             $sessions_result = $session_client->GetSessionsList($params);
         } catch (Exception $e) {
@@ -169,6 +172,46 @@ class PanoptoClient
             return $objects;
         }
 
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getFolderByExternalId($ext_id) {
+        $folders = $this->getAllFoldersByExternalId(array($ext_id));
+        return array_shift($folders);
+    }
+
+    public function getAllFoldersByExternalId(array $ext_ids): array
+    {
+//        $this->log->write('*********');
+//        $this->log->write('SOAP call "GetAllFoldersByExternalId"');
+//        $this->log->write("folderExternalIds:");
+//        $this->log->write(print_r($ext_ids, true));
+//        $this->log->write("providerNames:");
+//        $this->log->write(print_r(array(xpanConfig::getConfig(xpanConfig::F_INSTANCE_NAME)), true));
+
+        $params = new GetAllFoldersByExternalId(
+            $this->auth,
+            $ext_ids,
+            array(PanoptoConfig::get('instance_name'))
+        );
+
+
+
+        //TODO: REVISAR ESTO, NO EXISTE EL MÉTODO EN EL PLUGIN ANTIGUO
+        $session_client = $this->panoptoclient->SessionManagement();
+
+        try {
+            $return = $session_client->GetAllFoldersByExternalId($params)->getGetAllFoldersByExternalIdResult()->getFolder();
+        } catch (Exception $e) {
+//            $this->logException($e, $session_client);
+            throw $e;
+        }
+
+//        $this->log->write('Status: ' . substr($session_client->__last_response_headers, 0, strpos($session_client->__last_response_headers, "\r\n")));
+        //        $this->log->write('Received ' . (int) count($return) . ' object(s).');
+        return is_array($return) ? $return : array();
     }
 
 }

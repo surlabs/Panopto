@@ -82,4 +82,15 @@ class ilObjPanopto extends ilObjectPlugin
     public function getFolderId(): ?int {
         return $this->folderId;
     }
+
+    public function getFolderExtId() : int
+    {
+        return $this->getReferenceId();
+    }
+
+    public function getReferenceId() : int
+    {
+        return $this->getRefId() ?: self::_getAllReferences($this->getId())[0];
+    }
+
 }
