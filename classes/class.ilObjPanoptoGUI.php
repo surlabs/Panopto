@@ -27,18 +27,7 @@ use classes\ui\user\UserContentMainUI;
  */
 class ilObjPanoptoGUI extends ilObjectPluginGUI
 {
-
-    const TAB_CONTENT = 'content';
-    const TAB_INFO = 'info';
-    const TAB_VIDEOS = 'videos';
-    const TAB_SETTINGS = 'settings';
-    const TAB_PERMISSIONS = 'permissions';
-
-    const CMD_STANDARD = 'index';
-    const CMD_MANAGE_VIDEOS = 'manageVideos';
-
     protected UserContentMainUI $userContentMainUI;
-
 
     /**
      * @throws ilCtrlException
@@ -46,33 +35,43 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
      */
     protected function setTabs(): void
     {
-        global $DIC;
-        $lng = $DIC['lng'];
+        $this->tabs->addTab("content", $this->lng->txt("content"), $this->ctrl->getLinkTargetByClass("ilObjPanoptoGUI", "index"));
+        $this->tabs->addTab("info", $this->lng->txt('info_short'), $this->ctrl->getLinkTargetByClass(ilInfoScreenGUI::class));
 
-        $DIC->tabs()->addTab(self::TAB_CONTENT, $this->lng->txt(self::TAB_CONTENT), $this->ctrl->getLinkTargetByClass("ilObjPanoptoGUI", UserContentMainUI::CMD_SHOW));
-        $DIC->tabs()->addTab(self::TAB_INFO, $this->lng->txt(self::TAB_INFO . '_short'), $this->ctrl->getLinkTargetByClass(ilInfoScreenGUI::class));
-        $DIC->tabs()->addSubTab(UserContentMainUI::TAB_SUB_SHOW, "Test", $this->ctrl->getLinkTargetByClass("ilObjPanoptoGUI", UserContentMainUI::CMD_SHOW));
-
-        //Comprobamos el CMD
-        if ($this->ctrl->getCmd() == UserContentMainUI::CMD_SHOW) {
-
-            $DIC->tabs()->addSubTab(UserContentMainUI::TAB_SUB_SHOW, "Test", $this->ctrl->getLinkTargetByClass("ilObjPanoptoGUI", UserContentMainUI::CMD_SHOW));
-//            $DIC->tabs()->activateTab(UserContentMainUI::TAB_SUB_SHOW);
+        if (ilObjPanoptoAccess::hasWriteAccess()) {
+            $this->tabs->addTab("videos", $this->plugin->txt('tab_videos'), $this->ctrl->getLinkTargetByClass("ilObjPanoptoGUI", "manageVideos"));
+            $this->tabs->addTab("settings", $this->lng->txt("settings"), $this->ctrl->getLinkTargetByClass("ilObjPanoptoGUI", "editSettings"));
         }
 
-//        if (ilObjPanoptoAccess::hasWriteAccess()) {
-//            $this->tabs_gui->addTab(self::TAB_VIDEOS, $this->plugin->txt('tab_' . self::TAB_VIDEOS), $this->ctrl->getLinkTargetByClass(xpanVideosGUI::class, xpanVideosGUI::CMD_STANDARD));
-//            $this->tabs_gui->addTab(self::TAB_SETTINGS, $this->lng->txt(self::TAB_SETTINGS), $this->ctrl->getLinkTargetByClass(xpanSettingsGUI::class, xpanSettingsGUI::CMD_STANDARD));
-//        }
+        if ($this->checkPermissionBool("edit_permission")) {
+            $this->tabs->addTab("perm_settings", $this->lng->txt("perm_settings"), $this->ctrl->getLinkTargetByClass(array(
+                get_class($this),
+                "ilpermissiongui",
+            ), "perm"));
+        }
+    }
 
-//        if ($this->checkPermissionBool("edit_permission")) {
-//            $this->tabs_gui->addTab("perm_settings", $lng->txt("perm_settings"), $this->ctrl->getLinkTargetByClass(array(
-//                get_class($this),
-//                "ilpermissiongui",
-//            ), "perm"));
-//        }
+    /**
+     * Add sub tabs and activate the forwarded sub tab in the parameter.
+     *
+     * @param string $active_sub_tab
+     * @throws ilCtrlException
+     */
+    protected function addSubTabs(string $active_sub_tab): void
+    {
+        $this->tabs->addSubTab("subShow",
+            $this->plugin->txt('content_show'),
+            $this->ctrl->getLinkTarget($this, "index")
+        );
 
-        //return true;
+        if ($this->access->checkAccess("write", "", $this->parent_id)) {
+            $this->tabs->addSubTab("subSorting",
+                $this->plugin->txt('content_sorting'),
+                $this->ctrl->getLinkTarget($this, "sorting")
+            );
+        }
+
+        $this->tabs->activateSubTab($active_sub_tab);
     }
 
     /**
@@ -119,16 +118,11 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
      */
     public function index(): void
     {
-//        $userContentMainUI = new UserContentMainUI();
-//        $userContentMainUI->render();
-//        UserContentMainUI::render();
-//          $this->tpl->setContent("Cargar la página:". UserContentMainUI::CMD_STANDARD);
+        $this->tabs->activateTab("content");
+        $this->addSubTabs("subShow");
 
-//        $this->tpl->setContent("(En desarrollo) Cargar la página: index, con el ID de carpeta: <strong>" . ($this->object->getFolderId() ?? "null") . "</strong> y el ID de referencia: <strong>" . $this->object->getRefId() . "</strong>");
         $this->userContentMainUI = new UserContentMainUI();
         $this->tpl->setContent($this->userContentMainUI->render($this->object));
-
-
     }
 
     /**
@@ -138,5 +132,26 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
     public function manageVideos(): void
     {
         $this->tpl->setContent("(En desarrollo) Cargar la página: manageVideos");
+    }
+
+    /**
+     * Show the edit settings page
+     * @return void
+     */
+    public function editSettings(): void
+    {
+        $this->tpl->setContent("(En desarrollo) Cargar la página: editSettings");
+    }
+
+    /**
+     * Show the sorting page
+     * @return void
+     * @throws ilCtrlException
+     */
+    public function sorting(): void
+    {
+        $this->addSubTabs("subSorting");
+
+        $this->tpl->setContent("(En desarrollo) Cargar la página: sorting");
     }
 }
