@@ -1,0 +1,52 @@
+<div class="xpan_pagination_container">
+    <!-- BEGIN previous_top -->
+    <a class="xpan_previous_button xpan_pagination" href="{LINK_PREVIOUS}">&laquo;</a>
+    <!-- END previous_top -->
+    <!-- BEGIN page_top -->
+    <a class="xpan_page xpan_pagination {ADDITIONAL_CLASS}" href="{LINK_PAGE}">{LABEL_PAGE}</a>
+    <!-- END page_top -->
+    <!-- BEGIN next_top -->
+    <a class="xpan_next_button xpan_pagination" href="{LINK_NEXT}">&raquo;</a>
+    <!-- END next_top -->
+</div>
+<!-- BEGIN list_item -->
+<div class="col-lg-2 col-md-3 col-sm-4 col-12">
+    <a onclick="Panopto.playVideo('{ID}', {IS_PLAYLIST}, '{TITLE}');">
+        <div class="box" id="box_{ID}">
+            <div class="xpan_image_container">
+                <img width="312px" height="175px" id="xpan_thumbnail_{ID}" class="xpan_preview_image" src="{THUMBNAIL}" onerror="this.src='./Customizing/global/plugins/Services/Repository/RepositoryObject/Panopto/templates/images/Panopto.jpg'">
+                <!-- BEGIN playlist_icon -->
+                <img class="xpan_playlist_icon" src="./Customizing/global/plugins/Services/Repository/RepositoryObject/Panopto/templates/images/list.svg"/>
+                <!-- END playlist_icon -->
+                <!-- BEGIN duration -->
+                <div class="xpan_duration_container">
+                    <div class="xpan_duration">{DURATION}</div>
+                </div>
+                <!-- END duration -->
+                <div class="xpan_play_overlay">
+                    <div class="xpan_pseudo_element"></div> <!-- this is necessary to center the following image -->
+                    <img class="xpan_play_icon" width="32px" height="32px" src="./Customizing/global/plugins/Services/Repository/RepositoryObject/Panopto/templates/images/play.svg">
+                </div>
+            </div>
+            <div class="xpan_video_infos">
+                <h2>{TITLE}</h2>
+                <p><i>{LABEL_AUTHOR}</i> {AUTHOR}</p>
+                <p><i>{LABEL_CREATED_AT}</i> {CREATED_AT}</p>
+                <p><i>{LABEL_WATCHED}</i> {WATCHED}</p>
+                <div class="xpan_description"><p>{DESCRIPTION}</p></div>
+            </div>
+        </div>
+    </a>
+</div>
+<!-- END list_item -->
+<div class="xpan_pagination_container">
+    <!-- BEGIN previous_bottom -->
+    <a class="xpan_previous_button xpan_pagination" href="{LINK_PREVIOUS}">&laquo;</a>
+    <!-- END previous_bottom -->
+    <!-- BEGIN page_bottom -->
+    <a class="xpan_page xpan_pagination {ADDITIONAL_CLASS}" href="{LINK_PAGE}">{LABEL_PAGE}</a>
+    <!-- END page_bottom -->
+    <!-- BEGIN next_bottom -->
+    <a class="xpan_next_button xpan_pagination" href="{LINK_NEXT}">&raquo;</a>
+    <!-- END next_bottom -->
+</div>

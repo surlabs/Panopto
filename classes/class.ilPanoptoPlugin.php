@@ -24,6 +24,11 @@ declare(strict_types=1);
  */
 class ilPanoptoPlugin extends ilRepositoryObjectPlugin
 {
+
+    protected static ilPanoptoPlugin $instance;
+
+    const PLUGIN_NAME = 'Panopto';
+
     /**
      * Remove the plugin related data from the database
      * @return void
@@ -33,5 +38,26 @@ class ilPanoptoPlugin extends ilRepositoryObjectPlugin
         global $DIC;
         $DIC->database()->dropTable("xpan_config");
         $DIC->database()->dropTable("xpan_settings");
+    }
+
+
+    public static function getInstance() {
+        if (!isset(self::$instance)) {
+            global $DIC;
+
+            $component_repository = $DIC["component.repository"];
+
+            $info = null;
+            $plugin_name = self::PLUGIN_NAME;
+            $info = $component_repository->getPluginByName($plugin_name);
+
+            $component_factory = $DIC["component.factory"];
+
+            $plugin_obj = $component_factory->getPlugin($info->getId());
+
+            self::$instance = $plugin_obj;
+        }
+
+        return self::$instance;
     }
 }

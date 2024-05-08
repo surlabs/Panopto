@@ -143,7 +143,6 @@ class PanoptoClient
         );
 
         /** @var SessionManagement $session_client */
-        //TODO: REVISAR ESTO, NO EXISTE EL MÉTODO EN EL PLUGIN ANTIGUO
         $session_client = $this->panoptoclient->SessionManagement();
         try {
             $sessions_result = $session_client->GetSessionsList($params);
@@ -198,8 +197,6 @@ class PanoptoClient
         );
 
 
-
-        //TODO: REVISAR ESTO, NO EXISTE EL MÉTODO EN EL PLUGIN ANTIGUO
         $session_client = $this->panoptoclient->SessionManagement();
 
         try {
