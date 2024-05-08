@@ -192,7 +192,7 @@ class UserContentMainUI
         $this->tpl->addJavaScript("./Services/UIComponent/Modal/js/Modal.js");
 
 
-        return $tpl->get().$lti_form .  $this->getModalPlayer();
+        return '<div class="row">'.$tpl->get().'</div>'.$lti_form .  $this->getModalPlayer();
     }
 
 
