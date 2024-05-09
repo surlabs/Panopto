@@ -2,12 +2,9 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    /*-webkit-box-shadow: 6px 6px 23px -12px rgba(0, 0, 0, 0.4);*/
-    /*-moz-box-shadow: 6px 6px 23px -12px rgba(0, 0, 0, 0.4);*/
-    /*box-shadow: 6px 6px 23px -12px rgba(0, 0, 0, 0.4);*/
-    /*border-radius: 15px;*/
     overflow: hidden;
     height: 100%;
+    margin-bottom:10px;
 }
 
 .innerContent {
@@ -74,7 +71,6 @@ div.xpan_duration {
 }
 
 
-/* PLAY OVERLAY */
 .xpan_play_overlay {
     position: absolute;
     top: 0;
@@ -90,7 +86,6 @@ div.xpan_duration {
     justify-content: center;
     align-items: center;
     border-radius:15px;
-    /*background: url('../images/play.svg') center no-repeat;*/
 }
 
 .xpan_play_icon{
@@ -106,7 +101,6 @@ div.xpan_duration {
     transform:scale(1);
 }
 
-/* this is necessary to center the "play" image */
 .xpan_pseudo_element {
     height: 100%;
     vertical-align: middle;
@@ -118,31 +112,19 @@ div.xpan_image_container img.xpan_play_icon {
     display: inline-block;
 }
 
-.xpan_preview_image {
-    background: black url('../images/vimp_logo.svg') center no-repeat;
-    background-size: cover;
+.xpan_thumbnail_container{
     width: 100%;
-    height: 300px;
-    border-radius:15px;
-    overflow: hidden;
+    height: auto;
+    aspect-ratio: 16 / 9;
 }
 
-@media only screen and (max-width : 650px) {
-    /* Tablet view: 2 tiles */
-    .xpan_image_container {
-        width: 100%;
-        height: 172px;
-    }
-
-    .xpan_image_container img {
-        width: 295px;
-        height: 172px;
-    }
-
-
-    .box {
-        height: 320px;
-    }
+.xpan_preview_image {
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+    border-radius:15px;
+    overflow: hidden;
+    background-position:center;
 }
 
 .xpan_description {
@@ -158,13 +140,14 @@ div.xpan_image_container img.xpan_play_icon {
 }
 
 .xpan_pagination_container {
-    display: inline-block;
-
+    display: flex;
+    width: 100%;
+    margin-top:10px;
+    margin-bottom:10px;
 }
 
 .xpan_pagination {
     color: black;
-    float: left;
     padding: 8px 16px;
     text-decoration: none;
     border-radius: 5px;
@@ -172,7 +155,6 @@ div.xpan_image_container img.xpan_play_icon {
 }
 
 .xpan_page_active {
-    /*background-color: #6ea03c;*/
     background-color: #4c6586;
     color: white;
     border-radius: 5px;
@@ -182,6 +164,15 @@ div.xpan_image_container img.xpan_play_icon {
     background-color: #ddd;
 }
 
+.xpan_page_active:hover {
+    color: white;
+}
+
 #xpan_video_container iframe{
     width: 100%;
+}
+
+.xpan_flex{
+    display:flex;
+    flex-wrap:wrap;
 }

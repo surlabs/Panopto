@@ -70,7 +70,7 @@ class PanoptoLTIHandler
     /**
      * @throws PanoptoException
      */
-    public static function launchTool($object): string
+    public static function launchTool($object, $showIframe = false): string
     {
         global $DIC;
         $launch_url = 'https://' . PanoptoConfig::get('hostname') . '/Panopto/BasicLTI/BasicLTILanding.aspx';
@@ -123,7 +123,7 @@ class PanoptoLTIHandler
             $html .= "<input type='hidden' name='$key' value='" . htmlspecialchars((string)$value, ENT_QUOTES) . "'>";
         }
         $html .= '</form>';
-        $html .= '<iframe name="basicltiLaunchFrame" id="basicltiLaunchFrame" src="" style="display:none;"></iframe>';
+        $html .= '<iframe name="basicltiLaunchFrame" id="basicltiLaunchFrame" src="" style="width:100%;height:100%;min-height:800px;border:none;' . ($showIframe ? 'min-height: calc(100dvh - 290px);' : 'display:none;') . '"></iframe>';
 
         return $html;
     }

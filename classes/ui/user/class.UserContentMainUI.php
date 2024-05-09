@@ -69,11 +69,12 @@ class UserContentMainUI
      * @throws \ilCtrlException
      * @throws \Exception
      */
-    public function render($object): string
+    public function render($object, $parent): string
     {
-//        $this->addSubTabs(self::TAB_SUB_SHOW);
         global $DIC;
         $this->tpl = $DIC['tpl'];
+        $this->ctrl = $DIC->ctrl();
+
         // Render the content
         $this->client = PanoptoClient::getInstance();
 
@@ -85,14 +86,14 @@ class UserContentMainUI
 
         $this->pl = ilPanoptoPlugin::getInstance();
 
-        return self::createContentObject($object);
+        return self::createContentObject($object, $parent);
 
     }
 
     /**
      * @throws \Exception
      */
-    public function createContentObject($panoptoObject): string
+    public function createContentObject($panoptoObject, $parent): string
     {
 
         $content_objects = $this->client->getContentObjectsOfFolder(
@@ -101,11 +102,9 @@ class UserContentMainUI
             $_GET['xpan_page'],
             $panoptoObject->getReferenceId());
 
-
         if (!$content_objects['count']) {
             $this->tpl->setOnScreenMessage("success", ilPanoptoPlugin::getInstance()->txt("msg_no_videos"), true);
-            //ilUtil::sendInfo($this->pl->txt('msg_no_videos'));
-            return "No videos found in this folder.";
+            return "";
         }
 
         $tpl = new ilTemplate('tpl.content_list.html', true, true, $this->pl->getDirectory());
@@ -113,8 +112,8 @@ class UserContentMainUI
 
         // "previous" button
         if ($_GET['xpan_page']) {
-            $this->ctrl->setParameter($this, 'xpan_page', $_GET['xpan_page'] - 1);
-            $link = $this->ctrl->getLinkTarget($this, 'index');
+            $this->ctrl->setParameter($parent, 'xpan_page', $_GET['xpan_page'] - 1);
+            $link = $this->ctrl->getLinkTarget($parent, 'index');
             // top
             $tpl->setCurrentBlock('previous_top');  // for some reason, i had to do 2 different blocks for top and bottom pagination
             $tpl->setVariable('LINK_PREVIOUS', $link);
@@ -128,8 +127,8 @@ class UserContentMainUI
         // pages
         if ($pages > 1) {
             for ($i = 1; $i <= $pages; $i++) {
-                $this->ctrl->setParameter($this, 'xpan_page', $i - 1);
-                $link = $this->ctrl->getLinkTarget($this, 'index');
+                $this->ctrl->setParameter($parent, 'xpan_page', $i - 1);
+                $link = $this->ctrl->getLinkTarget($parent, 'index');
                 // top
                 $tpl->setCurrentBlock('page_top');
                 $tpl->setVariable('LINK_PAGE', $link);
@@ -192,7 +191,7 @@ class UserContentMainUI
         $this->tpl->addJavaScript("./Services/UIComponent/Modal/js/Modal.js");
 
 
-        return '<div class="row">'.$tpl->get().'</div>'.$lti_form .  $this->getModalPlayer();
+        return '<div class="xpan_flex">'.$tpl->get().'</div>'.$lti_form .  $this->getModalPlayer();
     }
 
 

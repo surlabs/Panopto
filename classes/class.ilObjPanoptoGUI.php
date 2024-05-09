@@ -1,5 +1,7 @@
 <?php
 declare(strict_types=1);
+
+use classes\ui\user\ManageVideosUI;
 use classes\ui\user\UserContentMainUI;
 /**
  * This file is part of the Panopto Repository Object plugin for ILIAS.
@@ -28,6 +30,8 @@ use classes\ui\user\UserContentMainUI;
 class ilObjPanoptoGUI extends ilObjectPluginGUI
 {
     protected UserContentMainUI $userContentMainUI;
+
+    protected ManageVideosUI $manageVideosUI;
 
     /**
      * @throws ilCtrlException
@@ -122,16 +126,26 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
         $this->addSubTabs("subShow");
 
         $this->userContentMainUI = new UserContentMainUI();
-        $this->tpl->setContent($this->userContentMainUI->render($this->object));
+        $this->tpl->setContent($this->userContentMainUI->render($this->object, $this));
     }
 
     /**
      * Show the manage videos page
      * @return void
+     * @throws ilObjectException
+     * @throws ilCtrlException
+     * @throws \platform\PanoptoException
      */
     public function manageVideos(): void
     {
-        $this->tpl->setContent("(En desarrollo) Cargar la página: manageVideos");
+        if (!$this->ctrl->isAsynch()) {
+            $this->initHeader();
+        }
+        $this->tabs->activateTab("videos");
+
+        $this->manageVideosUI = new manageVideosUI();
+        $this->tpl->setContent($this->manageVideosUI->render($this->object));
+
     }
 
     /**
@@ -153,5 +167,27 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
         $this->addSubTabs("subSorting");
 
         $this->tpl->setContent("(En desarrollo) Cargar la página: sorting");
+    }
+
+    /**
+     * @throws ilObjectException
+     */
+    protected function initHeader($render_locator = true): void
+    {
+        if ($render_locator) {
+            $this->setLocator();
+        }
+        $this->tpl->setTitleIcon(ilObjPanopto::_getIcon($this->object_id));
+        $this->tpl->setTitle($this->object->getTitle());
+        $this->tpl->setDescription($this->object->getDescription());
+
+        if (ilObjPanoptoAccess::_isOffline($this->object->getId())) {
+            /**
+             * @var $list_gui ilObjPanoptoListGUI
+             */
+            $list_gui = ilObjectListGUIFactory::_getListGUIByType('xpan');
+            $this->tpl->setAlertProperties($list_gui->getAlertProperties());
+        }
+
     }
 }
