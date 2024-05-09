@@ -3,9 +3,6 @@ declare(strict_types=1);
 
 namespace classes\ui\admin;
 
-use ilCtrlInterface;
-use ilException;
-
 /**
  * This file is part of the Panopto Repository Object plugin for ILIAS.
  * This plugin allows users to embed Panopto videos in ILIAS as repository objects.

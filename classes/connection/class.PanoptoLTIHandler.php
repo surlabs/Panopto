@@ -1,6 +1,5 @@
 <?php
 declare(strict_types=1);
-
 /**
  * This file is part of the Panopto Repository Object plugin for ILIAS.
  * This plugin allows users to embed Panopto videos in ILIAS as repository objects.
@@ -33,7 +32,7 @@ require_once __DIR__ . "/../../vendor/autoload.php";
 
 
 /**
- * Class PanoptoClient
+ * Class PanoptoLTIHandler
  * @authors Jesús Copado, Daniel Cazalla, Saúl Díaz, Juan Aguilar <info@surlabs.es>
  */
 class PanoptoLTIHandler

@@ -20,7 +20,6 @@ declare(strict_types=1);
 
 namespace connection;
 
-
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use platform\PanoptoConfig;
 use platform\PanoptoException;
@@ -31,7 +30,7 @@ use utils\DTO\ContentObjectBuilder;
 
 
 /**
- * Class PanoptoClient
+ * Class PanoptoRestClient
  * @authors Jesús Copado, Daniel Cazalla, Saúl Díaz, Juan Aguilar <info@surlabs.es>
  */
 class PanoptoRestClient

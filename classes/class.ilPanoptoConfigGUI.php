@@ -23,6 +23,10 @@ use ILIAS\UI\Factory;
 use classes\ui\admin\PluginConfigurationMainUI;
 
 /**
+ * Class ilPanoptoConfigGUI
+ * @authors Jesús Copado, Daniel Cazalla, Saúl Díaz, Juan Aguilar <info@surlabs.es>
+ */
+/**
  * @ilCtrl_IsCalledBy  ilPanoptoConfigGUI: ilComponentSettingsGUI
  */
 class ilPanoptoConfigGUI extends ilPluginConfigGUI
@@ -60,7 +64,6 @@ class ilPanoptoConfigGUI extends ilPluginConfigGUI
                 $sections = $this->config_ui->configure();
                 $form_action = $this->control->getLinkTargetByClass("ilPanoptoConfigGUI", "configure");
                 $rendered = $this->renderForm($form_action, $sections);
-//                $rendered = "HOLA";
                 break;
             default:
                 throw new ilException("command not defined");
