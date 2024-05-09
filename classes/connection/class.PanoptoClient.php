@@ -155,7 +155,7 @@ class PanoptoClient
 
 //        $this->log->write('Status: ' . substr($session_client->__last_response_headers, 0, strpos($session_client->__last_response_headers, "\r\n")));
 //        $this->log->write('Received ' . $sessions->getTotalNumberResults() . ' object(s).');
-        
+
 
         $sessions = ContentObjectBuilder::buildSessionsDTOsFromSessions($sessions->getResults()->getSession() ?? []);
         $playlists = $this->rest_client->getPlaylistsOfFolder($folder_id);

@@ -21,6 +21,7 @@ conf_rest_api_user_info#:#Panopto user which will be used to communicate with th
 conf_rest_api_password#:#API Password
 conf_rest_api_password_info#:#The API user's password
 conf_rest_client_name#:#Client Name
+conf_rest_client_name_info#:#Is configure in Panopto under 'API Clients'
 conf_rest_client_name_id#:#Is configure in Panopto under 'API Clients'
 conf_rest_client_id#:#Client ID
 conf_rest_client_id_info#:#Is configure in Panopto under 'API Clients'
