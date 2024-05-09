@@ -194,46 +194,14 @@ class UserContentMainUI
         return '<div class="xpan_flex">'.$tpl->get().'</div>'.$lti_form .  $this->getModalPlayer();
     }
 
-
-    /**
-     * @throws \ilCtrlException
-     */
-    protected function addSubTabs($active_sub_tab): void
-    {
-        global $DIC;
-
-        $DIC->tabs()->addSubTab(self::TAB_SUB_SHOW,
-            "Test",
-            $DIC->ctrl()->getLinkTarget($this, self::CMD_SHOW)
-        );
-
-        if ($DIC->access()->checkAccess("write", "", $this->parent_gui->getRefId())) {
-            $DIC->tabs()->addSubTab(self::TAB_SUB_SORTING,
-                "Test 2",
-                $DIC->ctrl()->getLinkTarget($this, self::CMD_SORTING)
-            );
-        }
-
-        $DIC->tabs()->activateSubTab($active_sub_tab);
-    }
-
     protected function formatDuration($duration_in_seconds): string
     {
         $t = floor($duration_in_seconds);
         return sprintf('%02d:%02d:%02d', ($t/3600),($t/60%60), $t%60);
     }
 
-    protected function getModalPlayer() {
-//        $this->tpl->addCss($this->pl->getDirectory() . '/templates/default/modal.css');
-//        $modal = ilModalGUI::getInstance();
-//        $modal->setId('xpan_modal_player');
-//        $modal->setType(ilModalGUI::TYPE_LARGE);
-////		$modal->setHeading('<div id="xoct_waiter_modal" class="xoct_waiter xoct_waiter_mini"></div>');
-//        $modal->setBody('<section><div id="xpan_video_container"></div></section>');
-//        $this->tpl->addOnLoadCode('$("#lti_form").submit();');
-////        return $modal->getHTML();
-
-
+    protected function getModalPlayer(): string
+    {
         global $DIC;
         $factory = $DIC->ui()->factory();
         $renderer = $DIC->ui()->renderer();
@@ -241,11 +209,8 @@ class UserContentMainUI
 //        $form_action = $DIC->ctrl()->getFormActionByClass('ilsystemstyledocumentationgui');
         $modal = $factory->modal()->roundtrip('', $message);
         $this->tpl->addOnLoadCode('$("#lti_form").submit();');
-        // Note: This modal is just rendered in the DOM but not displayed
-        // because its show/close signals are not triggered by any components
 
         return $renderer->render($modal);
-
 
     }
 
