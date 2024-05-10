@@ -2,16 +2,6 @@
 <?php
 global $DIC;
 $db = $DIC->database();
-if (!$db->tableExists('xpan_settings')) {
-    $fields = array(
-        'obj_id' => array('type' => 'integer', 'length' => 8),
-        'is_online' => array('type' => 'integer', 'length' => 1),
-        'folder_ext_id' => array('type' => 'integer', 'length' => 8)
-    );
-
-    $db->createTable('xpan_settings', $fields);
-    $db->addPrimaryKey('xpan_settings', array('obj_id'));
-}
 if (!$db->tableExists('xpan_config')) {
     $fields = array(
         'name' => array('type' => 'text', 'length' => 255),
@@ -28,13 +18,24 @@ if (!$db->tableExists('xpan_config')) {
 ?>
 <#3>
 <?php
-// Unnecessary step because the table rep_robj_srtr_entry always seems to be empty
+// Unnecessary step because the table rep_robj_srtr_entry will be replaced by the table xpan_order
 ?>
 <#4>
 <?php
-// Unnecessary step because all necessary xpan_setting columns have been added in step one and the columns needed for rework or future upgrades will be added from step 5.
+// Unnecessary step because the table xpan_session will be removed
 ?>
 <#5>
 <?php
-// Current Version
+global $DIC;
+$db = $DIC->database();
+if (!$db->tableExists('xpan_order')) {
+    $fields = array(
+        'obj_id' => array('type' => 'integer', 'length' => 8),
+        'precedence' => array('type' => 'integer', 'length' => 8),
+        'session_id' => array('type' => 'text', 'length' => 255),
+    );
+
+    $db->createTable('xpan_order', $fields);
+    $db->addPrimaryKey('xpan_order', array('obj_id', 'session_id'));
+}
 ?>

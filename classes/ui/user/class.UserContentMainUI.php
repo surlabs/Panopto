@@ -96,7 +96,7 @@ class UserContentMainUI
             $this->folder_id,
             true,
             $_GET['xpan_page'],
-            $panoptoObject->getReferenceId());
+            $panoptoObject->getFolderExtId());
 
         if (!$content_objects['count']) {
             $this->tpl->setOnScreenMessage("success", ilPanoptoPlugin::getInstance()->txt("msg_no_videos"), true);

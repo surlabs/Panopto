@@ -45,6 +45,7 @@ use Panopto\UserManagement\User;
 use Panopto\UserManagement\UserManagement;
 use Panopto\AccessManagement\SessionAccessDetails;
 use Panopto\SessionManagement\Pagination;
+use platform\SorterEntry;
 use utils\DTO\ContentObjectBuilder;
 use connection\PanoptoRestClient;
 use Exception;
@@ -159,8 +160,7 @@ class PanoptoClient
         $sessions = ContentObjectBuilder::buildSessionsDTOsFromSessions($sessions->getResults()->getSession() ?? []);
         $playlists = $this->rest_client->getPlaylistsOfFolder($folder_id);
         $objects = array_merge($sessions, $playlists);
-//        $objects = SorterEntry::generateSortedObjects($objects, $ref_id);
-        //TODO: Buscar SorterEntry y aplicarlo.
+        $objects = SorterEntry::generateSortedObjects($objects, $ref_id);
         if ($page_limit) {
             // Implement manual pagination
             return array(

@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * This file is part of the Panopto Repository Object plugin for ILIAS.
  * This plugin allows users to embed Panopto videos in ILIAS as repository objects.
@@ -18,43 +19,32 @@ declare(strict_types=1);
  *
  */
 
+namespace platform;
+
 /**
- * Class ilObjPanopto
+ * Class PanoptoRender
  * @authors Jesús Copado, Daniel Cazalla, Saúl Díaz, Juan Aguilar <info@surlabs.es>
  */
-class ilObjPanopto extends ilObjectPlugin
+class SorterEntry
 {
+
     /**
-     * Read the object from the database
+     * @param array $objects
+     * @param int   $ref_id
+     * @return array
      */
-    protected function doRead() :void
+    public static function generateSortedObjects(array $objects, int $ref_id = 0) : array
     {
+        $sorted = [];
 
-    }
+        if (count($objects) > 0) {
+//            dump($objects);
 
-    /**
-     * Set the type of the object as the id of the plugin
-     * @return void
-     */
-    protected function initType(): void
-    {
-        $this->setType("xpan");
-    }
+            $sorted = $objects;
 
-    /**
-     * Get the online status of the object
-     * @return bool
-     */
-    public function isOnline(): bool {
-        return $this->getOfflineStatus() == false;
-    }
+//            dump($objects); exit();
+        }
 
-    /**
-     * Get the folder external id
-     * @return int
-     */
-    public function getFolderExtId() : int
-    {
-        return $this->getRefId() ?: self::_getAllReferences($this->getId())[0];
+        return $sorted;
     }
 }
