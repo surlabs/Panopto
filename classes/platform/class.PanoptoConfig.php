@@ -31,7 +31,6 @@ use utils\DTO\RESTToken as RESTToken;
 class PanoptoConfig
 {
     private static array $config = [];
-    private static array $categories = [];
     private static array $updated = [];
 
     /**
@@ -50,16 +49,8 @@ class PanoptoConfig
                     $row['value'] = $json_decoded;
                 }
             }
-            if(isset($row['parameter_name'])){
-                self::$config[$row['parameter_name']] = $row['value'];
-                if (!isset(self::$categories[$row['group_name']])) {
-                    self::$categories[$row['group_name']] = array();
-                }
 
-                self::$categories[$row['parameter_name']] = $row['group_name'];
-            }
-
-
+            self::$config[$row['name']] = $row['value'];
         }
     }
 
@@ -67,10 +58,9 @@ class PanoptoConfig
      * Set the plugin configuration value for a given key to a given value
      * @param string $key
      * @param mixed $value
-     * @param string|null $category
      * @return void
      */
-    public static function set(string $key, $value, ?string $category = null): void {
+    public static function set(string $key, $value): void {
         if (isset(self::$config[$key])) {
             if (is_bool($value)) {
                 $value = (int) $value;
@@ -79,10 +69,6 @@ class PanoptoConfig
             if (self::$config[$key] !== $value) {
                 self::$config[$key] = $value;
                 self::$updated[$key] = true;
-
-                if (isset($category)) {
-                    self::$categories[$key] = $category;
-                }
             }
         }
     }
@@ -126,23 +112,10 @@ class PanoptoConfig
 
     /**
      * Gets all the plugin configuration values
-     * @param string|null $category
      * @return array
      */
-    public static function getAll(?string $category = null) :array {
-        if (isset($category)) {
-            $result = array();
-
-            foreach (self::$categories as $key => $value) {
-                if ($value === $category) {
-                    $result[$key] = self::$config[$key];
-                }
-            }
-
-            return $result;
-        } else {
-            return self::$config;
-        }
+    public static function getAll() :array {
+        return self::$config;
     }
 
     /**
@@ -161,14 +134,10 @@ class PanoptoConfig
                     } else {
                         $data['value'] = self::$config[$key];
                     }
-                    if(isset($data['group_name'])){
-                        $data['group_name'] = self::$categories[$key];
-
-                    }
 
                     try {
                         (new PanoptoDatabase)->update('xpan_config', $data, array(
-                            'parameter_name' => $key
+                            'name' => $key
                         ));
 
                         self::$updated[$key] = false;
