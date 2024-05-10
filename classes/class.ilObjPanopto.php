@@ -18,9 +18,6 @@ declare(strict_types=1);
  *
  */
 
-use platform\PanoptoDatabase;
-use platform\PanoptoException;
-
 /**
  * Class ilObjPanopto
  * @authors Jesús Copado, Daniel Cazalla, Saúl Díaz, Juan Aguilar <info@surlabs.es>
