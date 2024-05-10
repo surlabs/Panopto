@@ -85,7 +85,7 @@ class PanoptoSortingTableGUI extends ilTable2GUI
         }
         $this->folder_id = $folder->getId();
 
-        $objects = PanoptoClient::getInstance()->getContentObjectsOfFolder($this->folder_id, false, 0, $a_parent_obj->getReferenceId());
+        $objects = PanoptoClient::getInstance()->getContentObjectsOfFolder($this->folder_id, false, 0, $a_parent_obj->getFolderExtId());
         $this->parseData($objects);
 
     }

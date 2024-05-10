@@ -22,29 +22,59 @@ declare(strict_types=1);
 namespace platform;
 
 /**
- * Class PanoptoRender
+ * Class SorterEntry
  * @authors Jesús Copado, Daniel Cazalla, Saúl Díaz, Juan Aguilar <info@surlabs.es>
  */
 class SorterEntry
 {
-
     /**
      * @param array $objects
-     * @param int   $ref_id
+     * @param int $ref_id
      * @return array
+     * @throws PanoptoException
      */
     public static function generateSortedObjects(array $objects, int $ref_id = 0) : array
     {
         $sorted = [];
 
         if (count($objects) > 0) {
-//            dump($objects);
+            $order = (new PanoptoDatabase)->select("xpan_order", array(
+                "ref_id" => $ref_id
+            ), array("session_id"), "ORDER BY `position` ASC");
 
-            $sorted = $objects;
+            foreach ($order as $o) {
+                foreach ($objects as $key => $object) {
+                    if ($object->getId() == $o["session_id"]) {
+                        $sorted[] = $object;
+                        unset($objects[$key]);
+                        break;
+                    }
+                }
+            }
 
-//            dump($objects); exit();
+            $sorted = array_merge($sorted, $objects);
         }
 
         return $sorted;
+    }
+
+    /**
+     * @param array $ids
+     * @param int $ref_id
+     * @throws PanoptoException
+     */
+    public static function saveOrder(array $ids, int $ref_id = 0) : void
+    {
+        $db = new PanoptoDatabase();
+
+        $db->delete("xpan_order", ["ref_id" => $ref_id]);
+
+        foreach ($ids as $key => $id) {
+            $db->insert("xpan_order", [
+                "ref_id" => $ref_id,
+                "position" => $key,
+                "session_id" => $id,
+            ]);
+        }
     }
 }

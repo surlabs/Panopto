@@ -142,7 +142,7 @@ class PanoptoDatabase
      * @return array
      * @throws PanoptoException
      */
-    public function select(string $table, ?array $where = null, ?array $columns = null): array {
+    public function select(string $table, ?array $where = null, ?array $columns = null, ?string $extra = ""): array {
         try {
             $query = "SELECT " . (isset($columns) ? implode(", ", $columns) : "*") . " FROM " . $table;
 
@@ -153,6 +153,8 @@ class PanoptoDatabase
                         return $this->db->quote($value);
                     }, array_values($where))));
             }
+
+            $query .= " " . $extra;
 
             $result = $this->db->query($query);
 

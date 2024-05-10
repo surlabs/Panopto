@@ -30,12 +30,26 @@ global $DIC;
 $db = $DIC->database();
 if (!$db->tableExists('xpan_order')) {
     $fields = array(
-        'obj_id' => array('type' => 'integer', 'length' => 8),
-        'precedence' => array('type' => 'integer', 'length' => 8),
+        'ref_id' => array('type' => 'integer', 'length' => 8),
+        'position' => array('type' => 'integer', 'length' => 8),
         'session_id' => array('type' => 'text', 'length' => 255),
     );
 
     $db->createTable('xpan_order', $fields);
-    $db->addPrimaryKey('xpan_order', array('obj_id', 'session_id'));
+    $db->addPrimaryKey('xpan_order', array('ref_id', 'session_id'));
+}
+
+if ($db->tableExists('rep_robj_srtr_entry')) {
+    $rows = $db->query('SELECT * FROM rep_robj_srtr_entry');
+
+    foreach ($rows as $row) {
+        $db->insert('xpan_order', array(
+            'ref_id' => $row['ref_id'],
+            'position' => $row['precedence'],
+            'session_id' => $row['session_id']
+        ));
+    }
+
+    $db->dropTable('rep_robj_srtr_entry');
 }
 ?>

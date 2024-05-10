@@ -116,6 +116,10 @@ class PanoptoClient
 
     }
 
+    /**
+     * @throws PanoptoException
+     * @throws \ilException
+     */
     public function getContentObjectsOfFolder($folder_id, $page_limit = false, $page = 0, int $ref_id = 0) : array
     {
         $perpage = 10;

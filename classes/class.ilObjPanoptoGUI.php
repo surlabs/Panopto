@@ -4,7 +4,9 @@ declare(strict_types=1);
 use classes\ui\user\ManageVideosUI;
 use classes\ui\user\UserContentMainUI;
 use connection\PanoptoClient;
+use platform\PanoptoDatabase;
 use platform\PanoptoException;
+use platform\SorterEntry;
 
 /**
  * This file is part of the Panopto Repository Object plugin for ILIAS.
@@ -203,42 +205,17 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
     }
 
     /**
-     * @throws ilAtomQueryException
+     * @throws PanoptoException
      */
     public function reorder()
     {
-//        global $DIC;
-//        echo "HOla";
-//        exit;
-//        $atom_query = new ilAtomQueryLock($DIC->database());
-//        $atom_query->addTableLock(SorterEntry::TABLE_NAME);
-//        $atom_query->addTableLock(SorterEntry::TABLE_NAME . '_seq');
-//        $atom_query->addQueryCallable(function(ilDBInterface $db) {
-//            $ids = $_POST['ids'];
-//            $precedence = 1;
-//
-//            $existingEntries = SorterEntry::where(["ref_id" => $this->getObject()->getReferenceId()]);
-//
-//            // Delete previous entries
-//            if ($existingEntries->hasSets()) {
-//                foreach ($existingEntries->get() as $entry) {
-//                    $entry->delete();
-//                }
-//            }
-//
-//            foreach ($ids as $id) {
-//                $entry = new SorterEntry();
-//                $entry->setRefId($this->getObject()->getReferenceId());
-//                $entry->setPrecedence($precedence);
-//                $entry->setObjectId($id);
-//                $entry->create();
-//                $precedence++;
-//            }
-//
-//            //echo "{\"success\": true}";
-//            //exit;
-//        });
-//        $atom_query->run();
+        if (isset($_POST['ids'])) {
+            $ids = $_POST['ids'];
+
+            if (!empty($ids)) {
+                SorterEntry::saveOrder($ids, $this->object->getFolderExtId());
+            }
+        }
     }
 
 }
