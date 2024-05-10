@@ -43,7 +43,10 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
     protected function setTabs(): void
     {
         $this->tabs->addTab("content", $this->lng->txt("content"), $this->ctrl->getLinkTargetByClass("ilObjPanoptoGUI", "index"));
-        $this->tabs->addTab("info", $this->lng->txt('info_short'), $this->ctrl->getLinkTargetByClass(ilInfoScreenGUI::class));
+        $this->tabs->addTab("info_short", $this->lng->txt('info_short'), $this->ctrl->getLinkTargetByClass(array(
+            get_class($this),
+            "ilInfoScreenGUI",
+        ), "showSummary"));
 
         if (ilObjPanoptoAccess::hasWriteAccess()) {
             $this->tabs->addTab("videos", $this->plugin->txt('tab_videos'), $this->ctrl->getLinkTargetByClass("ilObjPanoptoGUI", "manageVideos"));
@@ -53,7 +56,7 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
         if ($this->checkPermissionBool("edit_permission")) {
             $this->tabs->addTab("perm_settings", $this->lng->txt("perm_settings"), $this->ctrl->getLinkTargetByClass(array(
                 get_class($this),
-                "ilpermissiongui",
+                "ilPermissionGUI",
             ), "perm"));
         }
     }
