@@ -1,20 +1,5 @@
 <?php
 declare(strict_types=1);
-
-namespace classes\ui\user;
-use connection\PanoptoClient;
-use connection\PanoptoLTIHandler;
-use DateTime;
-use ilCtrl;
-use ilException;
-use ilPanoptoPlugin;
-use ilTemplate;
-use platform\PanoptoConfig;
-use platform\PanoptoException;
-use utils\DTO\ContentObject;
-use utils\DTO\Session;
-use utils\PanoptoUtils;
-
 /**
  * This file is part of the Panopto Repository Object plugin for ILIAS.
  * This plugin allows users to embed Panopto videos in ILIAS as repository objects.
@@ -33,17 +18,29 @@ use utils\PanoptoUtils;
  *
  */
 
+
+namespace classes\ui\user;
+use connection\PanoptoClient;
+use connection\PanoptoLTIHandler;
+use DateTime;
+use Exception;
+use ilCtrl;
+use ilCtrlException;
+use ilException;
+use ilPanoptoPlugin;
+use ilTemplate;
+use platform\PanoptoConfig;
+use platform\PanoptoException;
+use utils\DTO\ContentObject;
+use utils\DTO\Session;
+use utils\PanoptoUtils;
+
 /**
  * Class UserContentMainUI
  * @authors Jesús Copado, Daniel Cazalla, Saúl Díaz, Juan Aguilar <info@surlabs.es>
  */
 class UserContentMainUI
 {
-    const CMD_SHOW = "index";
-    const CMD_SORTING = "sorting";
-    const TAB_SUB_SHOW = "subShow";
-    const TAB_SUB_SORTING = "subSorting";
-
     /**
      * @var PanoptoClient
      */
@@ -53,7 +50,7 @@ class UserContentMainUI
      */
     protected string $folder_id;
 
-    protected $tpl;
+    protected ilTemplate $tpl;
 
     /**
      * @var ilPanoptoPlugin
@@ -66,8 +63,8 @@ class UserContentMainUI
     protected ilCtrl $ctrl;
 
     /**
-     * @throws \ilCtrlException
-     * @throws \Exception
+     * @throws ilCtrlException
+     * @throws Exception
      */
     public function render($object, $parent): string
     {
@@ -77,6 +74,7 @@ class UserContentMainUI
 
         // Render the content
         $this->client = PanoptoClient::getInstance();
+
 
        $folder = $this->client->getFolderByExternalId($object->getFolderExtId());
         if (!$folder) {
@@ -91,7 +89,7 @@ class UserContentMainUI
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function createContentObject($panoptoObject, $parent): string
     {

@@ -50,14 +50,16 @@ class PanoptoConfig
                     $row['value'] = $json_decoded;
                 }
             }
+            if(isset($row['parameter_name'])){
+                self::$config[$row['parameter_name']] = $row['value'];
+                if (!isset(self::$categories[$row['group_name']])) {
+                    self::$categories[$row['group_name']] = array();
+                }
 
-            self::$config[$row['parameter_name']] = $row['value'];
-
-            if (!isset(self::$categories[$row['group_name']])) {
-                self::$categories[$row['group_name']] = array();
+                self::$categories[$row['parameter_name']] = $row['group_name'];
             }
 
-            self::$categories[$row['parameter_name']] = $row['group_name'];
+
         }
     }
 
@@ -147,7 +149,8 @@ class PanoptoConfig
      * Save the plugin configuration if the parameter is updated
      * @return bool|string
      */
-    public static function save() {
+    public static function save(): bool|string
+    {
         foreach (self::$updated as $key => $exist) {
             if ($exist) {
                 if (isset(self::$config[$key])) {
@@ -158,8 +161,10 @@ class PanoptoConfig
                     } else {
                         $data['value'] = self::$config[$key];
                     }
+                    if(isset($data['group_name'])){
+                        $data['group_name'] = self::$categories[$key];
 
-                    $data['group_name'] = self::$categories[$key];
+                    }
 
                     try {
                         (new PanoptoDatabase)->update('xpan_config', $data, array(

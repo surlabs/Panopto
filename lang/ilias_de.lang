@@ -28,6 +28,7 @@ conf_rest_client_id#:#Client ID
 conf_rest_client_id_info#:#Wird in Panopto unter 'API Clients' konfiguriert.
 conf_rest_client_secret#:#Client Secret
 conf_rest_client_secret_info#:#Wird in Panopto unter 'API Clients' konfiguriert.
+info_config_saved#:#Konfiguration erfolgreich gespeichert.
 msg_no_videos#:#Diesem Objekt wurden bisher keine Videos hinzugefügt.
 msg_success#:#Änderungen erfolgreich gespeichert.
 tab_videos#:#Videos

@@ -21,18 +21,17 @@ declare(strict_types=1);
 use ILIAS\UI\Renderer;
 use ILIAS\UI\Factory;
 use classes\ui\admin\PluginConfigurationMainUI;
+use platform\PanoptoConfig;
+use platform\PanoptoException;
 
 /**
  * Class ilPanoptoConfigGUI
  * @authors Jesús Copado, Daniel Cazalla, Saúl Díaz, Juan Aguilar <info@surlabs.es>
- */
-/**
- * @ilCtrl_IsCalledBy  ilPanoptoConfigGUI: ilComponentSettingsGUI
+ * @ilCtrl_IsCalledBy  ilPanoptoConfigGUI: ilObjComponentSettingsGUI
  */
 class ilPanoptoConfigGUI extends ilPluginConfigGUI
 {
 
-    private ilPanoptoConfig $object;
     private static Factory $factory;
     protected ilCtrlInterface $control;
     protected ilGlobalTemplateInterface $tpl;
@@ -40,17 +39,15 @@ class ilPanoptoConfigGUI extends ilPluginConfigGUI
     protected Renderer $renderer;
     protected PluginConfigurationMainUI $config_ui;
 
-
-
     /**
      * Handles all commands, default is "configure"
      * @throws ilException
+     * @throws PanoptoException
      */
     function performCommand(string $cmd): void
     {
         global $DIC;
-
-        $this->object = new ilPanoptoConfig();
+        self::$factory = $DIC->ui()->factory();
         $this->tpl = $DIC->ui()->mainTemplate();
         $this->control = $DIC->ctrl();
         $this->request = $DIC->http()->request();
@@ -60,6 +57,7 @@ class ilPanoptoConfigGUI extends ilPluginConfigGUI
         switch($cmd)
         {
             case "configure":
+                PanoptoConfig::load();
                 $this->control->setParameterByClass('ilPanoptoConfigGUI', 'cmd', 'configure');
                 $sections = $this->config_ui->configure();
                 $form_action = $this->control->getLinkTargetByClass("ilPanoptoConfigGUI", "configure");
@@ -100,6 +98,7 @@ class ilPanoptoConfigGUI extends ilPluginConfigGUI
 
     public function save(): string
     {
+        PanoptoConfig::save();
         return $this->renderer->render(self::$factory->messageBox()->success($this->plugin_object->txt('info_config_saved')));
     }
 

@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 use classes\ui\user\ManageVideosUI;
 use classes\ui\user\UserContentMainUI;
+use connection\PanoptoClient;
+use platform\PanoptoException;
+
 /**
  * This file is part of the Panopto Repository Object plugin for ILIAS.
  * This plugin allows users to embed Panopto videos in ILIAS as repository objects.
@@ -24,8 +27,8 @@ use classes\ui\user\UserContentMainUI;
 /**
  * Class ilObjPanoptoGUI
  * @authors Jesús Copado, Daniel Cazalla, Saúl Díaz, Juan Aguilar <info@surlabs.es>
- * @ilCtrl_isCalledBy ilObjPanoptoGUI: ilRepositoryGUI, ilObjPluginDispatchGUI, ilAdministrationGUI, UserContentMainUI
- * @ilCtrl_Calls      ilObjPanoptoGUI: ilPermissionGUI, ilInfoScreenGUI, ilCommonActionDispatcherGUI, UserContentMainUI
+ * @ilCtrl_isCalledBy ilObjPanoptoGUI: ilRepositoryGUI, ilObjPluginDispatchGUI, ilAdministrationGUI, UserContentMainUI, PanoptoSortingTableGUI
+ * @ilCtrl_Calls      ilObjPanoptoGUI: ilPermissionGUI, ilInfoScreenGUI, ilCommonActionDispatcherGUI, UserContentMainUI, PanoptoSortingTableGUI
  */
 class ilObjPanoptoGUI extends ilObjectPluginGUI
 {
@@ -118,23 +121,27 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
     /**
      * Show the index page of the object
      * @return void
-     * @throws ilCtrlException
      */
     public function index(): void
     {
-        $this->tabs->activateTab("content");
-        $this->addSubTabs("subShow");
 
-        $this->userContentMainUI = new UserContentMainUI();
-        $this->tpl->setContent($this->userContentMainUI->render($this->object, $this));
+        try{
+            $this->tabs->activateTab("content");
+            $this->userContentMainUI = new UserContentMainUI();
+            $this->tpl->setContent($this->userContentMainUI->render($this->object, $this));
+            $this->addSubTabs("subShow");
+
+        } catch (Exception $e) {
+            $this->tpl->setOnScreenMessage("failure", $e->getMessage(), true);
+
+        }
     }
 
     /**
      * Show the manage videos page
      * @return void
      * @throws ilObjectException
-     * @throws ilCtrlException
-     * @throws \platform\PanoptoException
+     * @throws PanoptoException
      */
     public function manageVideos(): void
     {
@@ -161,12 +168,13 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
      * Show the sorting page
      * @return void
      * @throws ilCtrlException
+     * @throws Exception
      */
     public function sorting(): void
     {
         $this->addSubTabs("subSorting");
-
-        $this->tpl->setContent("(En desarrollo) Cargar la página: sorting");
+        $sort_table_gui = new PanoptoSortingTableGUI($this->object, $this);
+        $this->tpl->setContent($sort_table_gui->getHTML());
     }
 
     /**
@@ -190,4 +198,44 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
         }
 
     }
+
+    /**
+     * @throws ilAtomQueryException
+     */
+    public function reorder()
+    {
+//        global $DIC;
+//        echo "HOla";
+//        exit;
+//        $atom_query = new ilAtomQueryLock($DIC->database());
+//        $atom_query->addTableLock(SorterEntry::TABLE_NAME);
+//        $atom_query->addTableLock(SorterEntry::TABLE_NAME . '_seq');
+//        $atom_query->addQueryCallable(function(ilDBInterface $db) {
+//            $ids = $_POST['ids'];
+//            $precedence = 1;
+//
+//            $existingEntries = SorterEntry::where(["ref_id" => $this->getObject()->getReferenceId()]);
+//
+//            // Delete previous entries
+//            if ($existingEntries->hasSets()) {
+//                foreach ($existingEntries->get() as $entry) {
+//                    $entry->delete();
+//                }
+//            }
+//
+//            foreach ($ids as $id) {
+//                $entry = new SorterEntry();
+//                $entry->setRefId($this->getObject()->getReferenceId());
+//                $entry->setPrecedence($precedence);
+//                $entry->setObjectId($id);
+//                $entry->create();
+//                $precedence++;
+//            }
+//
+//            //echo "{\"success\": true}";
+//            //exit;
+//        });
+//        $atom_query->run();
+    }
+
 }

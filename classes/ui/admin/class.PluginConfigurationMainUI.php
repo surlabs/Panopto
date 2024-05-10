@@ -3,6 +3,14 @@ declare(strict_types=1);
 
 namespace classes\ui\admin;
 
+use ilCtrlInterface;
+use ilException;
+use ILIAS\DI\Exceptions\Exception;
+use ILIAS\UI\Factory;
+use ilPanoptoConfig;
+use platform\PanoptoConfig;
+use platform\PanoptoException;
+
 /**
  * This file is part of the Panopto Repository Object plugin for ILIAS.
  * This plugin allows users to embed Panopto videos in ILIAS as repository objects.
@@ -29,12 +37,23 @@ class PluginConfigurationMainUI
 
     protected ilCtrlInterface $control;
 
+    protected Factory $factory;
+
+    private ilPanoptoConfig $object;
+
+    private \ilPanoptoPlugin $plugin_object;
+
+
+    /**
+     * @throws ilException|PanoptoException
+     */
     public function configure(): array
     {
         global $DIC;
-
-        self::$factory = $DIC->ui()->factory();
+        $this->object = new ilPanoptoConfig();
+        $this->factory = $DIC->ui()->factory();
         $this->control = $DIC->ctrl();
+        $this->plugin_object = \ilPanoptoPlugin::getInstance();
 
         try {
 
@@ -44,10 +63,10 @@ class PluginConfigurationMainUI
             //General section
             $form_fields_general = [];
 
-            $field = self::$factory->input()->field()->text(
+            $field = $this->factory->input()->field()->text(
                 $this->plugin_object->txt('conf_object_title'),
                 $this->plugin_object->txt('conf_object_title_info'))
-                ->withValue("TEST")
+                ->withValue('Cuando Saúl me arregle el get para traer esta info, aparecerá.')
                 ->withRequired(true)
                 ->withAdditionalTransformation($DIC->refinery()->custom()->transformation(
                     function ($v) use ($object) {
@@ -57,58 +76,59 @@ class PluginConfigurationMainUI
 
             $form_fields_general["object_title"] = $field;
 
-            $section_general = self::$factory->input()->field()->section($form_fields_general, $this->plugin_object->txt("conf_header_general"), "");
+            $section_general = $this->factory->input()->field()->section($form_fields_general, $this->plugin_object->txt("conf_header_general"), "");
 
             //SOAP Api section
             $form_fields_soap = [];
 
-            $field_api_user = self::$factory->input()->field()->text(
+            $field_api_user = $this->factory->input()->field()->text(
                 $this->plugin_object->txt('conf_rest_api_user'),
                 $this->plugin_object->txt('conf_rest_api_user_info'))
-                ->withValue("TEST2")
+                ->withValue(PanoptoConfig::get('api_user'))
                 ->withRequired(true)
                 ->withAdditionalTransformation($DIC->refinery()->custom()->transformation(
                     function ($v) use ($object) {
 //                        $object->setWebsocket($v);
+                        PanoptoConfig::set('rest_api_user', $v);
                     }
                 ));
 
             $form_fields_soap["api_user"] = $field_api_user;
 
-            $field_hostname = self::$factory->input()->field()->text(
+            $field_hostname = $this->factory->input()->field()->text(
                 $this->plugin_object->txt('conf_hostname'),
                 $this->plugin_object->txt('conf_hostname_info'))
-                ->withValue("TEST2")
+                ->withValue(PanoptoConfig::get('hostname'))
                 ->withRequired(true)
                 ->withAdditionalTransformation($DIC->refinery()->custom()->transformation(
                     function ($v) use ($object) {
-//                        $object->setWebsocket($v);
+                        PanoptoConfig::set('hostname', $v);
                     }
                 ));
 
             $form_fields_soap["hostname"] = $field_hostname;
 
-            $field_instance_name = self::$factory->input()->field()->text(
+            $field_instance_name = $this->factory->input()->field()->text(
                 $this->plugin_object->txt('conf_instance_name'),
                 $this->plugin_object->txt('conf_instance_name_info'))
-                ->withValue("TEST2")
+                ->withValue(PanoptoConfig::get('instance_name'))
                 ->withRequired(true)
                 ->withAdditionalTransformation($DIC->refinery()->custom()->transformation(
                     function ($v) use ($object) {
-//                        $object->setWebsocket($v);
+                        PanoptoConfig::set('instance_name', $v);
                     }
                 ));
 
             $form_fields_soap["instance_name"] = $field_instance_name;
 
-            $field_application_key = self::$factory->input()->field()->text(
+            $field_application_key = $this->factory->input()->field()->text(
                 $this->plugin_object->txt('conf_application_key'),
                 $this->plugin_object->txt('conf_application_key_info'))
-                ->withValue("TEST2")
+                ->withValue(PanoptoConfig::get('application_key'))
                 ->withRequired(true)
                 ->withAdditionalTransformation($DIC->refinery()->custom()->transformation(
                     function ($v) use ($object) {
-//                        $object->setWebsocket($v);
+                        PanoptoConfig::set('application_key', $v);
                     }
                 ));
 
@@ -120,66 +140,79 @@ class PluginConfigurationMainUI
                 'email' => $this->plugin_object->txt('conf_email')
             );
 
-            $field_identification = self::$factory->input()->field()->select(
+            $field_identification = $this->factory->input()->field()->select(
                 $this->plugin_object->txt('conf_user_id'),
                 $identification_options,
                 $this->plugin_object->txt('conf_user_id_info'))
-                ->withValue("login")
+                ->withValue(PanoptoConfig::get('user_id'))
                 ->withRequired(true)
                 ->withAdditionalTransformation($DIC->refinery()->custom()->transformation(
                     function ($v) use ($object) {
-//                        $object->setWebsocket($v);
+                        PanoptoConfig::set('user_id', $v);
                     }
                 ));
 
             $form_fields_soap["user_id"] = $field_identification;
 
-            $section_soap = self::$factory->input()->field()->section($form_fields_soap, $this->plugin_object->txt("conf_header_soap"), "");
+            $section_soap = $this->factory->input()->field()->section($form_fields_soap, $this->plugin_object->txt("conf_header_soap"), "");
 
 
             //REST API section
             $form_fields_rest = [];
 
-            $field_rest_api_user = self::$factory->input()->field()->text(
+            $field_rest_api_user = $this->factory->input()->field()->text(
                 $this->plugin_object->txt('conf_rest_api_user'),
                 $this->plugin_object->txt('conf_rest_api_user_info'))
-                ->withValue("TEST2")
+                ->withValue(PanoptoConfig::get('rest_api_user'))
                 ->withRequired(true)
                 ->withAdditionalTransformation($DIC->refinery()->custom()->transformation(
                     function ($v) use ($object) {
-//                        $object->setWebsocket($v);
+                        PanoptoConfig::set('rest_api_user', $v);
                     }
                 ));
 
             $form_fields_rest["rest_api_user"] = $field_rest_api_user;
 
-            $field_rest_api_password = self::$factory->input()->field()->text(
+            $field_rest_api_password = $this->factory->input()->field()->text(
                 $this->plugin_object->txt('conf_rest_api_password'),
                 $this->plugin_object->txt('conf_rest_api_password_info'))
-                ->withValue("TEST2")
+                ->withValue(PanoptoConfig::get('rest_api_password'))
                 ->withRequired(true)
                 ->withAdditionalTransformation($DIC->refinery()->custom()->transformation(
                     function ($v) use ($object) {
-//                        $object->setWebsocket($v);
+                        PanoptoConfig::set('rest_api_password', $v);
                     }
                 ));
 
             $form_fields_rest["rest_api_password"] = $field_rest_api_password;
 
-            $field_rest_client_name = self::$factory->input()->field()->text(
+            $field_rest_client_name = $this->factory->input()->field()->text(
                 $this->plugin_object->txt('conf_rest_client_name'),
                 $this->plugin_object->txt('conf_rest_client_name_info'))
-                ->withValue("TEST2")
+                ->withValue(PanoptoConfig::get('rest_client_name'))
                 ->withRequired(true)
                 ->withAdditionalTransformation($DIC->refinery()->custom()->transformation(
                     function ($v) use ($object) {
-//                        $object->setWebsocket($v);
+                        PanoptoConfig::set('rest_client_name', $v);
                     }
                 ));
 
             $form_fields_rest["rest_client_name"] = $field_rest_client_name;
 
-            $section_rest = self::$factory->input()->field()->section($form_fields_rest, $this->plugin_object->txt("conf_header_rest"), "");
+            $field_rest_client_secret = $this->factory->input()->field()->text(
+                $this->plugin_object->txt('conf_rest_client_secret'),
+                $this->plugin_object->txt('conf_rest_client_secret_info'))
+                ->withValue(PanoptoConfig::get('rest_client_secret'))
+                ->withRequired(true)
+                ->withAdditionalTransformation($DIC->refinery()->custom()->transformation(
+                    function ($v) use ($object) {
+                        PanoptoConfig::set('rest_client_secret', $v);
+                    }
+                ));
+
+            $form_fields_rest["rest_client_secret"] = $field_rest_client_secret;
+
+            $section_rest = $this->factory->input()->field()->section($form_fields_rest, $this->plugin_object->txt("conf_header_rest"), "");
 
             return ["config_general" => $section_general, "config_soap" => $section_soap, "config_rest" => $section_rest];
 

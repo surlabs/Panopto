@@ -27,6 +27,7 @@ conf_rest_client_id#:#Client ID
 conf_rest_client_id_info#:#Is configure in Panopto under 'API Clients'
 conf_rest_client_secret#:#Client-Secret
 conf_rest_client_secret_info#:#Is configure in Panopto under 'API Clients'
+info_config_saved#:#Configuration saved successfully.
 msg_no_videos#:#There are no videos yet.
 msg_success#:#Changes saved successfully.
 tab_videos#:#Videos

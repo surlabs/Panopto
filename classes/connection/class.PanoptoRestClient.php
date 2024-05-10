@@ -20,9 +20,11 @@ declare(strict_types=1);
 
 namespace connection;
 
+use ilException;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use platform\PanoptoConfig;
 use platform\PanoptoException;
+use utils\DTO\Playlist;
 use utils\DTO\RESTToken as RESTToken;
 use League\OAuth2\Client\Provider\GenericProvider as OAuth2Provider;
 use utils\DTO\ContentObjectBuilder;
@@ -41,7 +43,7 @@ class PanoptoRestClient
     protected static PanoptoRestClient $instance;
     private string $base_url;
     private OAuth2Provider $oauth2_provider;
-    private RESTToken $token;
+    public RESTToken $token;
 
 
     /**
@@ -78,20 +80,24 @@ class PanoptoRestClient
     }
 
     /**
-     * @throws IdentityProviderException
+     * @throws PanoptoException
      */
     private function loadToken(): void
     {
         $token = PanoptoConfig::getToken();
         if (!$token || $token->isExpired()) {
 //            $this->log('fetch access token');
-            $oauth2_token = $this->oauth2_provider->getAccessToken("password", [
-                "username" => PanoptoConfig::get('rest_api_user'),
-                "password" => PanoptoConfig::get('rest_api_password'),
-                "scope" => "api"
-            ]);
-            $token = new RESTToken($oauth2_token->getToken(), $oauth2_token->getExpires());
-            PanoptoConfig::set('rest_token', $token);
+            try{
+                $oauth2_token = $this->oauth2_provider->getAccessToken("password", [
+                    "username" => PanoptoConfig::get('rest_api_user'),
+                    "password" => PanoptoConfig::get('rest_api_password'),
+                    "scope" => "api"
+                ]);
+                $token = new RESTToken($oauth2_token->getToken(), $oauth2_token->getExpires());
+                PanoptoConfig::set('rest_token', $token);
+            } catch (IdentityProviderException $e) {
+                throw new PanoptoException('Could not fetch access token: ' . $e->getMessage());
+            }
         }
         $this->token = $token;
     }
@@ -105,31 +111,6 @@ class PanoptoRestClient
     {
         $response = $this->get('/Panopto/api/v1/folders/' . $folder_id . '/playlists');
         return ContentObjectBuilder::buildPlaylistDTOsFromArray($response["Results"]);
-    }
-
-    /**
-     * @param string $playlist_id
-     * @return array
-     * @throws ilException
-     */
-    public function getSessionsOfPlaylist(string $playlist_id) : array
-    {
-        $response = $this->get('/Panopto/api/v1/playlists/' . $playlist_id . '/sessions');
-        return ContentObjectBuilder::buildSessionDTOsFromArray($response['Results']);
-    }
-
-    /**
-     * @param string $playlist_id
-     * @return string
-     * @throws ilException
-     */
-    public function getFolderIdOfPlaylist(string $playlist_id) : string
-    {
-        $response = $this->get('/Panopto/api/v1/playlists/' . $playlist_id);
-        if (!isset($response['Folder']['Id'])) {
-            throw new ilException('Panopto REST: could not fetch folder id of playlist ' . $playlist_id);
-        }
-        return $response['Folder']['Id'];
     }
 
     /**
@@ -157,11 +138,6 @@ class PanoptoRestClient
         return json_decode($response, true);
     }
 
-    public static function jsonUnserializeToken(string $json) : self
-    {
-        $decoded = json_decode($json);
-        return new self($decoded->access_token, $decoded->expiry);
-    }
 
     private function log(string $message)
     {
