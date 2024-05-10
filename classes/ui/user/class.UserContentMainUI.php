@@ -22,18 +22,16 @@ declare(strict_types=1);
 namespace classes\ui\user;
 use connection\PanoptoClient;
 use connection\PanoptoLTIHandler;
-use DateTime;
 use Exception;
 use ilCtrl;
 use ilCtrlException;
 use ilException;
+use ilGlobalTemplateInterface;
 use ilPanoptoPlugin;
 use ilTemplate;
 use platform\PanoptoConfig;
-use platform\PanoptoException;
 use utils\DTO\ContentObject;
 use utils\DTO\Session;
-use utils\PanoptoUtils;
 
 /**
  * Class UserContentMainUI
@@ -50,7 +48,7 @@ class UserContentMainUI
      */
     protected string $folder_id;
 
-    protected ilTemplate $tpl;
+    protected ilGlobalTemplateInterface $tpl;
 
     /**
      * @var ilPanoptoPlugin
@@ -69,7 +67,7 @@ class UserContentMainUI
     public function render($object, $parent): string
     {
         global $DIC;
-        $this->tpl = $DIC['tpl'];
+        $this->tpl = $DIC->ui()->mainTemplate();
         $this->ctrl = $DIC->ctrl();
 
         // Render the content
