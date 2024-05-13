@@ -1,6 +1,12 @@
 {
     "require": {
+        "php": ">=7.4",
         "lucisgit/php-panopto-api": "^1.0",
         "league/oauth2-client": "^2.7"
+    },
+    "autoload": {
+        "classmap": [
+            "./classes/"
+        ]
     }
 }

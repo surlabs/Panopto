@@ -1,15 +1,6 @@
 <?php
 declare(strict_types=1);
 
-namespace classes\ui\admin;
-
-use ilCtrlInterface;
-use ilException;
-use ILIAS\DI\Exceptions\Exception;
-use ILIAS\UI\Factory;
-use platform\PanoptoConfig as PanoptoConfig;
-use platform\PanoptoException;
-
 /**
  * This file is part of the Panopto Repository Object plugin for ILIAS.
  * This plugin allows users to embed Panopto videos in ILIAS as repository objects.
@@ -27,6 +18,21 @@ use platform\PanoptoException;
  * info@surlabs.es
  *
  */
+
+namespace classes\ui\admin;
+
+use ilCtrlInterface;
+use ilException;
+use ILIAS\DI\Exceptions\Exception;
+use ILIAS\UI\Factory;
+use platform\PanoptoConfig as PanoptoConfig;
+use platform\PanoptoException;
+
+/**
+ * Class PluginConfigurationMainUI
+ * @authors Jesús Copado, Daniel Cazalla, Saúl Díaz, Juan Aguilar <info@surlabs.es>
+ */
+
 class PluginConfigurationMainUI
 {
     /**
@@ -81,14 +87,13 @@ class PluginConfigurationMainUI
             $form_fields_soap = [];
 
             $field_api_user = $this->factory->input()->field()->text(
-                $this->plugin_object->txt('conf_rest_api_user'),
-                $this->plugin_object->txt('conf_rest_api_user_info'))
+                $this->plugin_object->txt('conf_api_user'),
+                $this->plugin_object->txt('conf_api_user_info'))
                 ->withValue(PanoptoConfig::get('api_user'))
                 ->withRequired(true)
                 ->withAdditionalTransformation($DIC->refinery()->custom()->transformation(
                     function ($v) use ($object) {
-//                        $object->setWebsocket($v);
-                        PanoptoConfig::set('rest_api_user', $v);
+                        PanoptoConfig::set('api_user', $v);
                     }
                 ));
 
