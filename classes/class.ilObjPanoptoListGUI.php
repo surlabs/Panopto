@@ -52,7 +52,17 @@ class ilObjPanoptoListGUI extends ilObjectPluginListGUI
                 "permission" => "read",
                 "cmd" => "index",
                 "default" => true,
-            ]
+            ],
+            [
+                "permission" => "write",
+                "cmd" => "manageVideos",
+                "txt" => $this->txt("tab_videos"),
+            ],
+            [
+                "permission" => "write",
+                "cmd" => "editSettings",
+                "txt" => $this->lng->txt("settings"),
+            ],
         ];
     }
 
