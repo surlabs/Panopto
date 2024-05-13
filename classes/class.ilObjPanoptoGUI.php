@@ -145,14 +145,10 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
     /**
      * Show the manage videos page
      * @return void
-     * @throws ilObjectException
      * @throws PanoptoException
      */
     public function manageVideos(): void
     {
-        if (!$this->ctrl->isAsynch()) {
-            $this->initHeader();
-        }
         $this->tabs->activateTab("videos");
 
         $this->manageVideosUI = new manageVideosUI();
@@ -163,13 +159,10 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
     /**
      * Show the edit settings page
      * @return void
-     * @throws ilObjectException
+     * @throws ilCtrlException
      */
     public function editSettings(): void
     {
-        if (!$this->ctrl->isAsynch()) {
-            $this->initHeader();
-        }
         $this->tabs->activateTab("settings");
 
         $this->tpl->setContent($this->initSettingsForm());
@@ -195,6 +188,10 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
         $description->setValue($this->object->getDescription());
         $form->addItem($description);
 
+        $online = new ilCheckboxInputGUI($this->lng->txt("online"), "online");
+        $online->setChecked($this->object->getOfflineStatus() == false);
+        $form->addItem($online);
+
         $form->addCommandButton("saveSettings", $this->lng->txt("save"));
 
         return $form->getHTML();
@@ -212,6 +209,10 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
 
         if (isset($_POST['description'])) {
             $this->object->setDescription($_POST['description']);
+        }
+
+        if (isset($_POST['online'])) {
+            $this->object->setOfflineStatus(!$_POST['online']);
         }
 
         $this->object->update();

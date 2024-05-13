@@ -66,22 +66,22 @@ class PluginConfigurationMainUI
             $object = $this->object;
 
             //General section
-            $form_fields_general = [];
+//            $form_fields_general = [];
 
-            $field = $this->factory->input()->field()->text(
-                $this->plugin_object->txt('conf_object_title'),
-                $this->plugin_object->txt('conf_object_title_info'))
-                ->withValue('Cuando Saúl me arregle el get para traer esta info, aparecerá.')
-                ->withRequired(true)
-                ->withAdditionalTransformation($DIC->refinery()->custom()->transformation(
-                    function ($v) use ($object) {
-//                        $object->setWebsocket($v);
-                    }
-                ));
+//            $field = $this->factory->input()->field()->text(
+//                $this->plugin_object->txt('conf_object_title'),
+//                $this->plugin_object->txt('conf_object_title_info'))
+//                ->withValue('Cuando Saúl me arregle el get para traer esta info, aparecerá.')
+//                ->withRequired(true)
+//                ->withAdditionalTransformation($DIC->refinery()->custom()->transformation(
+//                    function ($v) use ($object) {
+////                        $object->setWebsocket($v);
+//                    }
+//                ));
+//
+//            $form_fields_general["object_title"] = $field;
 
-            $form_fields_general["object_title"] = $field;
-
-            $section_general = $this->factory->input()->field()->section($form_fields_general, $this->plugin_object->txt("conf_header_general"), "");
+//            $section_general = $this->factory->input()->field()->section($form_fields_general, $this->plugin_object->txt("conf_header_general"), "");
 
             //SOAP Api section
             $form_fields_soap = [];
@@ -218,7 +218,11 @@ class PluginConfigurationMainUI
 
             $section_rest = $this->factory->input()->field()->section($form_fields_rest, $this->plugin_object->txt("conf_header_rest"), "");
 
-            return ["config_general" => $section_general, "config_soap" => $section_soap, "config_rest" => $section_rest];
+            return [
+//                "config_general" => $section_general,
+                "config_soap" => $section_soap,
+                "config_rest" => $section_rest
+            ];
 
 
         } catch(Exception $e){
