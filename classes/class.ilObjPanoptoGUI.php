@@ -163,10 +163,62 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
     /**
      * Show the edit settings page
      * @return void
+     * @throws ilObjectException
      */
     public function editSettings(): void
     {
-        $this->tpl->setContent("(En desarrollo) Cargar la página: editSettings");
+        if (!$this->ctrl->isAsynch()) {
+            $this->initHeader();
+        }
+        $this->tabs->activateTab("settings");
+
+        $this->tpl->setContent($this->initSettingsForm());
+    }
+
+    /**
+     * Initialize the settings form
+     * @return string
+     * @throws ilCtrlException
+     */
+    public function initSettingsForm(): string
+    {
+        $form = new ilPropertyFormGUI();
+        $form->setFormAction($this->ctrl->getFormAction($this));
+        $form->setTitle($this->lng->txt("settings"));
+
+        $title = new ilTextInputGUI($this->lng->txt("title"), "title");
+        $title->setRequired(true);
+        $title->setValue($this->object->getTitle());
+        $form->addItem($title);
+
+        $description = new ilTextAreaInputGUI($this->lng->txt("description"), "description");
+        $description->setValue($this->object->getDescription());
+        $form->addItem($description);
+
+        $form->addCommandButton("saveSettings", $this->lng->txt("save"));
+
+        return $form->getHTML();
+    }
+
+    /**
+     * Save the settings
+     * @return void
+     * @throws ilCtrlException
+     */
+    public function saveSettings(): void {
+        if (isset($_POST['title'])) {
+            $this->object->setTitle($_POST['title']);
+        }
+
+        if (isset($_POST['description'])) {
+            $this->object->setDescription($_POST['description']);
+        }
+
+        $this->object->update();
+
+        $this->tpl->setOnScreenMessage("success", $this->lng->txt("msg_obj_modified"), true);
+
+        $this->ctrl->redirect($this, "editSettings");
     }
 
     /**
