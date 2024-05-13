@@ -19,6 +19,10 @@ namespace utils\DTO;
  *
  */
 
+/**
+ * Class Session
+ * @authors Jesús Copado, Daniel Cazalla, Saúl Díaz, Juan Aguilar <info@surlabs.es>
+ */
 class Session extends ContentObject
 {
     /**
@@ -32,7 +36,7 @@ class Session extends ContentObject
      * @param string $title
      * @param string $description
      * @param string $thumbnail_url
-     * @param int    $duration
+     * @param int|null $duration
      */
     public function __construct(string $id, string $title, string $description, string $thumbnail_url, ?int $duration)
     {
@@ -41,7 +45,7 @@ class Session extends ContentObject
     }
 
     /**
-     * @return int
+     * @return int|null
      */
     public function getDuration() : ?int
     {

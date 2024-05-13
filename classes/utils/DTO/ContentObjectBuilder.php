@@ -1,5 +1,4 @@
 <?php
-namespace utils\DTO;
 
 /**
  * This file is part of the Panopto Repository Object plugin for ILIAS.
@@ -19,6 +18,12 @@ namespace utils\DTO;
  *
  */
 
+namespace utils\DTO;
+
+/**
+ * Class ContentObjectBuilder
+ * @authors Jesús Copado, Daniel Cazalla, Saúl Díaz, Juan Aguilar <info@surlabs.es>
+ */
 class ContentObjectBuilder
 {
 
@@ -47,7 +52,6 @@ class ContentObjectBuilder
                 $session->getId(),
                 $session->getName(),
                 $session->getDescription() ?? '',
-         //       'https://' . xpanConfig::getConfig(xpanConfig::F_HOSTNAME) . $session->getThumbUrl(),
                 $session->getThumbUrl(),
                 $session->getDuration());
         }
@@ -58,7 +62,7 @@ class ContentObjectBuilder
      * @param array $array
      * @return Session
      */
-    public static function buildSessionDTOFromArray(array $array)
+    public static function buildSessionDTOFromArray(array $array): Session
     {
         return new Session(
             $array['Id'],
@@ -73,7 +77,7 @@ class ContentObjectBuilder
      * @param array $array
      * @return Session[]
      */
-    public static function buildSessionDTOsFromArray(array $array)
+    public static function buildSessionDTOsFromArray(array $array): array
     {
         $sessions = [];
         foreach ($array as $item) {

@@ -1,6 +1,4 @@
 <?php
-namespace utils\DTO;
-
 /**
  * This file is part of the Panopto Repository Object plugin for ILIAS.
  * This plugin allows users to embed Panopto videos in ILIAS as repository objects.
@@ -19,6 +17,14 @@ namespace utils\DTO;
  *
  */
 
+namespace utils\DTO;
+
+use stdClass;
+
+/**
+ * Class RESTToken
+ * @authors Jesús Copado, Daniel Cazalla, Saúl Díaz, Juan Aguilar <info@surlabs.es>
+ */
 class RESTToken
 {
     /**

@@ -24,7 +24,6 @@ use platform\PanoptoException;
  *
  */
 
-
 /**
  * Class PanoptoUtils
  * @authors Jesús Copado, Daniel Cazalla, Saúl Díaz, Juan Aguilar <info@surlabs.es>

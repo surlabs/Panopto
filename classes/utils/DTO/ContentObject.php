@@ -1,6 +1,4 @@
 <?php
-namespace utils\DTO;
-
 /**
  * This file is part of the Panopto Repository Object plugin for ILIAS.
  * This plugin allows users to embed Panopto videos in ILIAS as repository objects.
@@ -17,6 +15,13 @@ namespace utils\DTO;
  * If you need support, please contact the maintainer of this software at:
  * info@surlabs.es
  *
+ */
+
+namespace utils\DTO;
+
+/**
+ * Class ContentObject
+ * @authors Jesús Copado, Daniel Cazalla, Saúl Díaz, Juan Aguilar <info@surlabs.es>
  */
 class ContentObject
 {

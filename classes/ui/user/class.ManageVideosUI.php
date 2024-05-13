@@ -24,8 +24,6 @@ use connection\PanoptoLTIHandler;
 use ilPanoptoPlugin;
 use platform\PanoptoException;
 
-
-
 /**
  * Class UserContentMainUI
  * @authors Jesús Copado, Daniel Cazalla, Saúl Díaz, Juan Aguilar <info@surlabs.es>
