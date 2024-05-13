@@ -1,6 +1,8 @@
 <?php
 namespace connection;
 
+use stdClass;
+
 /**
  * This file is part of the Panopto Repository Object plugin for ILIAS.
  * This plugin allows users to embed Panopto videos in ILIAS as repository objects.

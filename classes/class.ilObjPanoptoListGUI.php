@@ -60,7 +60,7 @@ class ilObjPanoptoListGUI extends ilObjectPluginListGUI
      * Get the type of the object
      * @return void
      */
-    public function initType()
+    public function initType(): void
     {
         $this->setType("xpan");
     }

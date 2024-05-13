@@ -1,20 +1,6 @@
 <?php
 declare(strict_types=1);
 
-namespace classes\ui\user;
-use connection\PanoptoClient;
-use connection\PanoptoLTIHandler;
-use DateTime;
-use ilCtrl;
-use ilException;
-use ilPanoptoPlugin;
-use ilTemplate;
-use platform\PanoptoConfig;
-use platform\PanoptoException;
-use utils\DTO\ContentObject;
-use utils\DTO\Session;
-use utils\PanoptoUtils;
-
 /**
  * This file is part of the Panopto Repository Object plugin for ILIAS.
  * This plugin allows users to embed Panopto videos in ILIAS as repository objects.
@@ -32,6 +18,13 @@ use utils\PanoptoUtils;
  * info@surlabs.es
  *
  */
+
+namespace classes\ui\user;
+use connection\PanoptoLTIHandler;
+use ilPanoptoPlugin;
+use platform\PanoptoException;
+
+
 
 /**
  * Class UserContentMainUI

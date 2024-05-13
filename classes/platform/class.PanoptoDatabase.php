@@ -139,6 +139,7 @@ class PanoptoDatabase
      * @param string $table
      * @param array|null $where
      * @param array|null $columns
+     * @param string|null $extra
      * @return array
      * @throws PanoptoException
      */

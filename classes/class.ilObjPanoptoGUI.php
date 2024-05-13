@@ -1,13 +1,6 @@
 <?php
 declare(strict_types=1);
 
-use classes\ui\user\ManageVideosUI;
-use classes\ui\user\UserContentMainUI;
-use connection\PanoptoClient;
-use platform\PanoptoDatabase;
-use platform\PanoptoException;
-use platform\SorterEntry;
-
 /**
  * This file is part of the Panopto Repository Object plugin for ILIAS.
  * This plugin allows users to embed Panopto videos in ILIAS as repository objects.
@@ -25,6 +18,13 @@ use platform\SorterEntry;
  * info@surlabs.es
  *
  */
+
+
+use classes\ui\user\ManageVideosUI;
+use classes\ui\user\UserContentMainUI;
+use platform\PanoptoException;
+use platform\SorterEntry;
+
 
 /**
  * Class ilObjPanoptoGUI

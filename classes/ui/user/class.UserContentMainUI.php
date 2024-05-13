@@ -182,7 +182,7 @@ class UserContentMainUI
         $lti_form = PanoptoLTIHandler::launchTool($panoptoObject);
 
         $this->tpl->addCss($this->pl->getDirectory() . '/templates/default/content_list.css');
-        $this->tpl->addJavaScript($this->pl->getDirectory() . '/js/Panopto.js');
+        $this->tpl->addJavaScript($this->pl->getDirectory() . '/templates/js/Panopto.js');
         $this->tpl->addOnLoadCode('Panopto.base_url = "https://' . PanoptoConfig::get('hostname') . '";');
         $this->tpl->addJavaScript("./Services/UIComponent/Modal/js/Modal.js");
 
@@ -202,7 +202,6 @@ class UserContentMainUI
         $factory = $DIC->ui()->factory();
         $renderer = $DIC->ui()->renderer();
         $message = $factory->legacy('<section><div id="xpan_video_container"></div></section>');
-//        $form_action = $DIC->ctrl()->getFormActionByClass('ilsystemstyledocumentationgui');
         $modal = $factory->modal()->roundtrip('', $message);
         $this->tpl->addOnLoadCode('$("#lti_form").submit();');
 

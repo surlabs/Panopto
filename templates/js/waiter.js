@@ -1,10 +1,4 @@
-/**
- * srWaiter
- *
- * GUI-Overlay
- * @author Fabian Schmid <fs@studer-raimann.ch>
- */
-var srWaiter = {
+let srWaiter = {
 	possible_types: ['waiter', 'percentage'],
 	type: 'waiter',
 	count: 0,
@@ -12,7 +6,7 @@ var srWaiter = {
 
 	init: function (type) {
 		this.type = type ? type : this.type;
-		if (this.type == 'waiter') {
+		if (this.type === 'waiter') {
 			console.log('srWaiter: added sr_waiter to body');
 			$('body').append('<div id="sr_waiter" class="sr_waiter"></div>')
 		} else {
@@ -25,7 +19,7 @@ var srWaiter = {
 	},
 
 	show: function () {
-		if (this.count == 0) {
+		if (this.count === 0) {
 			this.timer = setTimeout(function () {
 				$('#sr_waiter').show();
 			}, 10);
@@ -37,8 +31,8 @@ var srWaiter = {
 	 *
 	 * @param type
 	 */
-	reinit: function (type) {
-		var type = type ? type : this.type;
+	reinit: function (type = null) {
+		type = type ? type : this.type;
 		this.count = 0;
 
 		$('#sr_waiter').attr('id', 'sr_waiter2');
@@ -48,7 +42,7 @@ var srWaiter = {
 
 	hide: function () {
 		this.count = this.count - 1;
-		if (this.count == 0) {
+		if (this.count === 0) {
 			window.clearTimeout(this.timer);
 			$('#sr_waiter').fadeOut(200);
 		}
@@ -63,7 +57,7 @@ var srWaiter = {
 	 * @param dom_selector_string
 	 */
 	addListener: function (dom_selector_string) {
-		var self = this;
+		let self = this;
 		$(document).ready(function () {
 			$(dom_selector_string).on("click", function () {
 
@@ -72,14 +66,14 @@ var srWaiter = {
 		});
 	},
 	addLinkOverlay: function (dom_selector_string) {
-		var self = this;
+		let self = this;
 		console.log('srWaiter: registered LinkOverlay: ' + dom_selector_string);
 		$(document).ready(function () {
 			$(dom_selector_string).on("click", function (e) {
 				e.preventDefault();
 				console.log('srWaiter: clicked on registered link');
 				self.show();
-				var href = $(this).attr('href');
+				let href = $(this).attr('href');
 				setTimeout(function () {
 					document.location.href = href;
 				}, 1000);

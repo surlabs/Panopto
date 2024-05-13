@@ -7,8 +7,7 @@ use ilCtrlInterface;
 use ilException;
 use ILIAS\DI\Exceptions\Exception;
 use ILIAS\UI\Factory;
-use ilPanoptoConfig;
-use platform\PanoptoConfig;
+use platform\PanoptoConfig as PanoptoConfig;
 use platform\PanoptoException;
 
 /**
@@ -39,7 +38,7 @@ class PluginConfigurationMainUI
 
     protected Factory $factory;
 
-    private ilPanoptoConfig $object;
+    private PanoptoConfig $object;
 
     private \ilPanoptoPlugin $plugin_object;
 
@@ -50,7 +49,7 @@ class PluginConfigurationMainUI
     public function configure(): array
     {
         global $DIC;
-        $this->object = new ilPanoptoConfig();
+        $this->object = new PanoptoConfig();
         $this->factory = $DIC->ui()->factory();
         $this->control = $DIC->ctrl();
         $this->plugin_object = \ilPanoptoPlugin::getInstance();

@@ -132,13 +132,6 @@ div.xpan_image_container img.xpan_play_icon {
 
 }
 
-.xpan_next_button {
-    /*float: right;*/
-}
-
-.xpan_previous_button {
-}
-
 .xpan_pagination_container {
     display: flex;
     width: 100%;
@@ -164,15 +157,16 @@ div.xpan_image_container img.xpan_play_icon {
     background-color: #ddd;
 }
 
+.xpan_flex{
+    display:flex;
+    flex-wrap:wrap;
+}
+
+
 .xpan_page_active:hover {
     color: white;
 }
 
 #xpan_video_container iframe{
     width: 100%;
-}
-
-.xpan_flex{
-    display:flex;
-    flex-wrap:wrap;
 }

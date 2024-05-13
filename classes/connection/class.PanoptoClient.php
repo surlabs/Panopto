@@ -21,37 +21,23 @@ declare(strict_types=1);
 namespace connection;
 require_once __DIR__."/../../vendor/autoload.php";
 
-use Panopto\AccessManagement\AccessManagement;
-use Panopto\AccessManagement\AccessRole;
+use ilException;
+use Panopto\SessionManagement\AuthenticationInfo;
 use Panopto\Client as PanoptoClientAPI;
-use Panopto\AccessManagement\FolderAccessDetails;
-use Panopto\AccessManagement\GetFolderAccessDetails;
-use Panopto\AccessManagement\GetSessionAccessDetails;
-use Panopto\AccessManagement\GetUserAccessDetails;
-use Panopto\AccessManagement\GrantUsersAccessToFolder;
-use Panopto\AccessManagement\GrantUsersViewerAccessToSession;
-use Panopto\AccessManagement\UserAccessDetails;
 use Panopto\SessionManagement\ArrayOfSessionState;
-use Panopto\SessionManagement\Folder;
 use Panopto\SessionManagement\GetAllFoldersByExternalId;
 use Panopto\SessionManagement\GetSessionsList;
 use Panopto\SessionManagement\ListSessionsRequest;
 use Panopto\SessionManagement\SessionManagement;
 use Panopto\SessionManagement\SessionState;
-use Panopto\UserManagement\CreateUser;
-use Panopto\UserManagement\GetUserByKey;
-use Panopto\UserManagement\SyncExternalUser;
-use Panopto\UserManagement\User;
-use Panopto\UserManagement\UserManagement;
-use Panopto\AccessManagement\SessionAccessDetails;
 use Panopto\SessionManagement\Pagination;
+use Panopto\SessionManagement\ArrayOfstring;
 use platform\SorterEntry;
 use utils\DTO\ContentObjectBuilder;
-use connection\PanoptoRestClient;
 use Exception;
-use Panopto\SessionManagement\Session;
 use platform\PanoptoConfig;
 use platform\PanoptoException;
+use Panopto\SessionManagement\Folder;
 
 
 /**
@@ -60,11 +46,6 @@ use platform\PanoptoException;
  */
 class PanoptoClient
 {
-//    const ROLE_VIEWER = AccessRole::Viewer;
-//    const ROLE_VIEWER_WITH_LINK = AccessRole::ViewerWithLink;
-//    const ROLE_CREATOR = AccessRole::Creator;
-//    const ROLE_PUBLISHER = AccessRole::Publisher;
-
     /**
      * @var self
      */
@@ -85,17 +66,17 @@ class PanoptoClient
 
 
     /**
-     * @var Client
+     * @var PanoptoClientAPI
      */
-    protected $panoptoclient;
+    protected PanoptoClientAPI $panoptoclient;
     /**
-     * @var \Panopto\stdClass
+     * @var AuthenticationInfo
      */
-    protected $auth;
+    protected AuthenticationInfo $auth;
     /**
      * @var PanoptoRestClient
      */
-    protected $rest_client;
+    protected PanoptoRestClient $rest_client;
 //    /**
 //     * @var xpanLog
 //     */
@@ -111,14 +92,18 @@ class PanoptoClient
         $arrContextOptions=array("ssl"=>array( "verify_peer"=>false, "verify_peer_name"=>false));
         $this->panoptoclient = new PanoptoClientAPI(PanoptoConfig::get('hostname'), array('trace' => 1, 'stream_context' => stream_context_create($arrContextOptions)));
         $this->panoptoclient->setAuthenticationInfo(PanoptoConfig::getApiUserKey(), '', PanoptoConfig::get('application_key'));
-        $this->auth = $this->panoptoclient->getAuthenticationInfo();
+        $this->auth = new AuthenticationInfo();
+        $this->auth->setUserKey(PanoptoConfig::getApiUserKey());
+        $this->auth->setPassword(null);
+        $this->auth->setAuthCode($this->panoptoclient->getAuthenticationInfo()->getAuthCode());
         $this->rest_client = PanoptoRestClient::getInstance();
 
     }
 
     /**
      * @throws PanoptoException
-     * @throws \ilException
+     * @throws ilException
+     * @throws Exception
      */
     public function getContentObjectsOfFolder($folder_id, $page_limit = false, $page = 0, int $ref_id = 0) : array
     {
@@ -180,12 +165,19 @@ class PanoptoClient
     /**
      * @throws Exception
      */
-    public function getFolderByExternalId($ext_id) {
-        $folders = $this->getAllFoldersByExternalId(array($ext_id));
+    public function getFolderByExternalId(int $ext_id): ?Folder
+    {
+        $extArray = new ArrayOfstring();
+        $extArray->setString(array($ext_id));
+        $folders = $this->getAllFoldersByExternalId($extArray);
         return array_shift($folders);
     }
 
-    public function getAllFoldersByExternalId(array $ext_ids): array
+    /**
+     * @throws PanoptoException
+     * @throws Exception
+     */
+    public function getAllFoldersByExternalId(ArrayOfstring $ext_ids): ?array
     {
 //        $this->log->write('*********');
 //        $this->log->write('SOAP call "GetAllFoldersByExternalId"');
@@ -194,21 +186,21 @@ class PanoptoClient
 //        $this->log->write("providerNames:");
 //        $this->log->write(print_r(array(xpanConfig::getConfig(xpanConfig::F_INSTANCE_NAME)), true));
 
-        $params = new GetAllFoldersByExternalId(
+        $instanceArray = new ArrayOfstring();
+        $instanceArray->setString(array(PanoptoConfig::get('instance_name')));
+
+
+        $params  = new GetAllFoldersByExternalId(
             $this->auth,
             $ext_ids,
-            array(PanoptoConfig::get('instance_name'))
+            $instanceArray
         );
 
 
         $session_client = $this->panoptoclient->SessionManagement();
 
-        try {
-            $return = $session_client->GetAllFoldersByExternalId($params)->getGetAllFoldersByExternalIdResult()->getFolder();
-        } catch (Exception $e) {
-//            $this->logException($e, $session_client);
-            throw $e;
-        }
+        $return = $session_client->GetAllFoldersByExternalId($params)->getGetAllFoldersByExternalIdResult()->getFolder();
+
 
 //        $this->log->write('Status: ' . substr($session_client->__last_response_headers, 0, strpos($session_client->__last_response_headers, "\r\n")));
         //        $this->log->write('Received ' . (int) count($return) . ' object(s).');

@@ -155,7 +155,8 @@ class PanoptoConfig
     /**
      * @throws PanoptoException
      */
-    public static function getApiUserKey() {
+    public static function getApiUserKey(): string
+    {
 
         //TODO: SAUL ARREGLA ESTO
         //TODO: SAUL ARREGLA ESTO
@@ -169,7 +170,10 @@ class PanoptoConfig
         return self::get('instance_name') . "\\" . self::get('api_user');
     }
 
-    public static function getToken()
+    /**
+     * @throws PanoptoException
+     */
+    public static function getToken(): ?RESTToken
     {
         $serialized_token = self::get('rest_token');
         return $serialized_token ? RESTToken::jsonUnserialize($serialized_token) : null;

@@ -19,7 +19,6 @@ td.xvmp_action.std.small {
 }
 
 div.xvmp_image_container {
-	/* round corners */
 	width:            170px;
 	height:           95px;
 	border-radius:    12px;
@@ -27,9 +26,6 @@ div.xvmp_image_container {
 	background-color: black;
 	position:         relative;
 	text-align:       center;
-	/* spacing */
-	/*margin-left: 15px;*/
-	/*margin-right: 25px;*/
 }
 
 div.xvmp_image_container img.xvmp_preview_image {
@@ -51,7 +47,6 @@ div.xvmp_sort_container {
 
 div.modal-content {
 	width:     100%;
-	/*height: fit-content;*/
 	max-width: 800px;
 	margin:    auto;
 }
@@ -59,10 +54,6 @@ div.modal-content {
 div.modal-body > section > iframe {
 	background:      black url('../images/vimp_logo.svg') center no-repeat;
 	background-size: contain;
-}
-
-.xvmp_row_added, .table-striped > tbody > tr:nth-child(odd).xvmp_row_added > td, .table-striped > tbody > tr:nth-child(odd).xvmp_row_added > th {
-	/*background-color: rgba(0, 255, 0, 0.7);*/
 }
 
 /* PLAY OVERLAY */
@@ -79,7 +70,6 @@ div.modal-body > section > iframe {
 	background-color: rgba(0, 0, 0, .7);
 	vertical-align:   middle;
 	display:          inline-block;
-	/*background: url('../images/play.svg') center no-repeat;*/
 }
 
 .xvmp_image_container:hover .xvmp_play_overlay, .box:hover .xvmp_play_icon {
