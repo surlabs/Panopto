@@ -11,18 +11,28 @@ if (!$db->tableExists('xpan_config')) {
     $db->createTable('xpan_config', $fields);
     $db->addPrimaryKey('xpan_config', array('name'));
 }
+if (!$db->tableExists('xpan_objects')) {
+    $fields = array(
+        'obj_id' => array('type' => 'integer', 'length' => 8),
+        'is_online' => array('type' => 'integer', 'length' => 1),
+        'folder_ext_id' => array('type' => 'integer', 'length' => 8),
+    );
+
+    $db->createTable('xpan_objects', $fields);
+    $db->addPrimaryKey('xpan_objects', array('obj_id'));
+}
 ?>
 <#2>
 <?php
-// Unnecessary step because now we will use the language files
+
 ?>
 <#3>
 <?php
-// Unnecessary step because the table rep_robj_srtr_entry will be replaced by the table xpan_order
+
 ?>
 <#4>
 <?php
-// Unnecessary step because the table xpan_session will be removed
+
 ?>
 <#5>
 <?php
@@ -51,5 +61,13 @@ if ($db->tableExists('rep_robj_srtr_entry')) {
     }
 
     $db->dropTable('rep_robj_srtr_entry');
+}
+?>
+<#6>
+<?php
+global $DIC;
+$db = $DIC->database();
+if ($db->tableExists('xpan_settings')) {
+    $db->renameTable('xpan_settings', 'xpan_objects');
 }
 ?>

@@ -18,18 +18,48 @@ declare(strict_types=1);
  *
  */
 
+use platform\PanoptoDatabase;
+use platform\PanoptoException;
+
 /**
  * Class ilObjPanopto
  * @authors Jesús Copado, Daniel Cazalla, Saúl Díaz, Juan Aguilar <info@surlabs.es>
  */
 class ilObjPanopto extends ilObjectPlugin
 {
+    private int $folder_ext_id;
+
+    /**
+     * Create a new object
+     * @param bool $clone_mode
+     * @throws PanoptoException
+     */
+    protected function doCreate(bool $clone_mode = false) : void {
+        $xpanDb = new PanoptoDatabase();
+
+        $xpanDb->insert("xpan_objects", [
+            "obj_id" => $this->getId(),
+            "is_online" => 1,
+            "folder_ext_id" => $this->getReferenceId()
+        ]);
+    }
+
     /**
      * Read the object from the database
+     * @throws PanoptoException
      */
     protected function doRead() :void
     {
+        $xpanDb = new PanoptoDatabase();
+        $result = $xpanDb->select("xpan_objects", ["obj_id" => $this->getId()], ["folder_ext_id"]);
 
+        if (empty($result)) {
+            $this->doCreate();
+
+            $this->folder_ext_id = $this->getReferenceId();
+        } else {
+            $this->folder_ext_id = (int) $result[0]["folder_ext_id"];
+        }
     }
 
     /**
@@ -50,11 +80,20 @@ class ilObjPanopto extends ilObjectPlugin
     }
 
     /**
+     * Get the reference id of the object
+     * @return int
+     */
+    public function getReferenceId() : int
+    {
+        return $this->getRefId() ?: self::_getAllReferences($this->getId())[0];
+    }
+
+    /**
      * Get the folder external id
      * @return int
      */
     public function getFolderExtId() : int
     {
-        return $this->getRefId() ?: self::_getAllReferences($this->getId())[0];
+        return $this->folder_ext_id ?: $this->getReferenceId();
     }
 }
