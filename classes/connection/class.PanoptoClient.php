@@ -339,13 +339,13 @@ class PanoptoClient
      * @return String
      * @throws Exception
      */
-    public function getUserGuid($user_id = 0): string
+    public function getUserGuid(int $user_id = 0): string
     {
         static $user_guids;
         if (!isset($user_guids[$user_id])) {
             global $DIC;
             $user_id = $user_id ? $user_id : $DIC->user()->getId();
-            $user_guids[$user_id] = $this->getUserByKey(xpanUtil::getUserKey($user_id))->getUserId();
+            $user_guids[$user_id] = $this->getUserByKey(PanoptoUtils::getUserKey($user_id))->getUserId();
         }
         return $user_guids[$user_id];
     }
@@ -355,7 +355,7 @@ class PanoptoClient
      * @return User
      * @throws Exception
      */
-    public function getUserByKey($user_key = ''): User
+    public function getUserByKey(string $user_key = ''): User
     {
         $user_key = $user_key ? $user_key : PanoptoUtils::getUserKey();
 
