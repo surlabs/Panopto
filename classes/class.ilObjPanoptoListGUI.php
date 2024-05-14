@@ -18,6 +18,8 @@ declare(strict_types=1);
  *
  */
 
+use platform\PanoptoException;
+
 /**
  * Class ilObjPanoptoListGUI
  * @authors Jesús Copado, Daniel Cazalla, Saúl Díaz, Juan Aguilar <info@surlabs.es>
@@ -73,5 +75,36 @@ class ilObjPanoptoListGUI extends ilObjectPluginListGUI
     public function initType(): void
     {
         $this->setType("xpan");
+    }
+
+    /**
+     * Get item properties
+     *
+     * @return    array        array of property arrays:
+     *                        'alert' (boolean) => display as an alert property (usually in red)
+     *                        'property' (string) => property name
+     *                        'value' (string) => property value
+     * @throws PanoptoException
+     */
+    public function getCustomProperties(array $prop): array
+    {
+        if(!isset($this->obj_id)) {
+            return [];
+        }
+
+        $props = parent::getCustomProperties($prop);
+
+
+        if (ilObjPanoptoAccess::_isOffline($this->obj_id)) {
+            $props[] = array(
+                'alert' => true,
+                'newline' => true,
+                'property' => 'Status',
+                'value' => 'Offline',
+                'propertyNameVisible' => true
+            );
+        }
+
+        return $props;
     }
 }

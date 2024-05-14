@@ -27,6 +27,7 @@ use platform\PanoptoException;
  */
 class ilObjPanopto extends ilObjectPlugin
 {
+    private bool $online;
     private int $folder_ext_id;
 
     /**
@@ -39,7 +40,7 @@ class ilObjPanopto extends ilObjectPlugin
 
         $xpanDb->insert("xpan_objects", [
             "obj_id" => $this->getId(),
-            "is_online" => 1,
+            "is_online" => 0,
             "folder_ext_id" => $this->getReferenceId()
         ]);
     }
@@ -51,15 +52,28 @@ class ilObjPanopto extends ilObjectPlugin
     protected function doRead() :void
     {
         $xpanDb = new PanoptoDatabase();
-        $result = $xpanDb->select("xpan_objects", ["obj_id" => $this->getId()], ["folder_ext_id"]);
+        $result = $xpanDb->select("xpan_objects", ["obj_id" => $this->getId()], ["is_online", "folder_ext_id"]);
 
         if (empty($result)) {
             $this->doCreate();
 
+            $this->online = false;
             $this->folder_ext_id = $this->getReferenceId();
         } else {
+            $this->online = (bool) $result[0]["is_online"];
             $this->folder_ext_id = (int) $result[0]["folder_ext_id"];
         }
+    }
+
+    /**
+     * Update the object in the database
+     * @throws PanoptoException
+     */
+    protected function doUpdate() : void
+    {
+        $xpanDb = new PanoptoDatabase();
+
+        $xpanDb->update("xpan_objects", ["is_online" => (int) $this->online, "folder_ext_id" => $this->folder_ext_id], ["obj_id" => $this->getId()]);
     }
 
     /**
@@ -76,7 +90,15 @@ class ilObjPanopto extends ilObjectPlugin
      * @return bool
      */
     public function isOnline(): bool {
-        return $this->getOfflineStatus() == false;
+        return $this->online;
+    }
+
+    /**
+     * Set the online status of the object
+     * @param bool $online
+     */
+    public function setOnline(bool $online): void {
+        $this->online = $online;
     }
 
     /**

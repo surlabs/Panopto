@@ -18,6 +18,9 @@ declare(strict_types=1);
  *
  */
 
+use platform\PanoptoDatabase;
+use platform\PanoptoException;
+
 /**
  * Class ilObjPanoptoAccess
  * @authors Jesús Copado, Daniel Cazalla, Saúl Díaz, Juan Aguilar <info@surlabs.es>
@@ -48,6 +51,7 @@ class ilObjPanoptoAccess extends ilObjectPluginAccess
      * Check if the user has write access
      * @param string|null $ref_id
      * @return bool
+     * @throws PanoptoException
      */
     public static function hasWriteAccess(?string $ref_id = null) : bool
     {
@@ -57,13 +61,14 @@ class ilObjPanoptoAccess extends ilObjectPluginAccess
     /**
      * Check if the user has X access
      *
-     * @param string   $cmd
-     * @param string   $permission
+     * @param string $cmd
+     * @param string $permission
      * @param int|null $ref_id
      * @param int|null $obj_id
      * @param int|null $user_id
      *
      * @return bool
+     * @throws PanoptoException
      */
     protected static function checkAccess(string $cmd, string $permission, ?int $ref_id, ?int $obj_id = null, ?int $user_id = null): bool
     {
@@ -79,6 +84,7 @@ class ilObjPanoptoAccess extends ilObjectPluginAccess
      * @param int|null $obj_id
      * @param int|null $user_id
      * @return bool
+     * @throws PanoptoException
      */
     public function _checkAccess(string $cmd, string $permission, ?int $ref_id, ?int $obj_id, ?int $user_id = null): bool {
         if ($ref_id === NULL) {
@@ -108,5 +114,19 @@ class ilObjPanoptoAccess extends ilObjectPluginAccess
             default:
                 return $this->access->checkAccessOfUser($user_id, $permission, "", $ref_id);
         }
+    }
+
+    /**
+     * Check if the object is offline
+     * @param int $obj_id
+     * @return bool
+     * @throws PanoptoException
+     */
+    public static function _isOffline(int $obj_id): bool
+    {
+        $xpanDb = new PanoptoDatabase();
+        $result = $xpanDb->select("xpan_objects", ["obj_id" => $obj_id], ["is_online"]);
+
+        return empty($result) || (int) $result[0]["is_online"] === 0;
     }
 }

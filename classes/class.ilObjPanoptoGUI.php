@@ -189,7 +189,7 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
         $form->addItem($description);
 
         $online = new ilCheckboxInputGUI($this->lng->txt("online"), "online");
-        $online->setChecked($this->object->getOfflineStatus() == false);
+        $online->setChecked($this->object->isOnline());
         $form->addItem($online);
 
         $form->addCommandButton("saveSettings", $this->lng->txt("save"));
@@ -212,7 +212,7 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
         }
 
         if (isset($_POST['online'])) {
-            $this->object->setOfflineStatus(!$_POST['online']);
+            $this->object->setOnline((bool) $_POST['online']);
         }
 
         $this->object->update();
@@ -237,6 +237,7 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
 
     /**
      * @throws ilObjectException
+     * @throws PanoptoException
      */
     protected function initHeader($render_locator = true): void
     {
