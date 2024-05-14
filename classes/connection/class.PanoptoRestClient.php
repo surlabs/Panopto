@@ -138,6 +138,20 @@ class PanoptoRestClient
         return json_decode($response, true);
     }
 
+    /**
+     * @param string $playlist_id
+     * @return string
+     * @throws ilException
+     */
+    public function getFolderIdOfPlaylist(string $playlist_id) : string
+    {
+        $response = $this->get('/Panopto/api/v1/playlists/' . $playlist_id);
+        if (!isset($response['Folder']['Id'])) {
+            throw new ilException('Panopto REST: could not fetch folder id of playlist ' . $playlist_id);
+        }
+        return $response['Folder']['Id'];
+    }
+
 
     private function log(string $message)
     {

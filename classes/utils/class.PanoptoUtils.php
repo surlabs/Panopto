@@ -49,4 +49,13 @@ class PanoptoUtils
         $ref_id = $ref_id ? $ref_id : $_GET['ref_id'];
         return ilObjPanopto::_lookupTitle(ilObjPanopto::_lookupObjId($_GET['ref_id'])) . ' (ID: ' . $ref_id . ')';
     }
+
+    /**
+     * @throws PanoptoException
+     */
+    public static function getUserKey($user_id = 0): string
+    {
+        return PanoptoConfig::get('instance_name') . '\\' . self::getUserIdentifier($user_id);
+    }
+
 }

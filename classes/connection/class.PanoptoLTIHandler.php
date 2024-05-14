@@ -102,7 +102,6 @@ class PanoptoLTIHandler
             "oauth_signature_method" => "HMAC_SHA1"
         ];
 
-
         $params = [
             "sign_method" => "HMAC_SHA1",
             "key" => $key,
@@ -126,4 +125,61 @@ class PanoptoLTIHandler
 
         return $html;
     }
+
+    /**
+     * @throws PanoptoException
+     */
+    public static function launchToolPageComponent(): string
+    {
+        global $DIC;
+        $launch_url = 'https://' . PanoptoConfig::get('hostname') . '/Panopto/BasicLTI/BasicLTILanding.aspx';
+        $key = PanoptoConfig::get('instance_name');
+        $secret = PanoptoConfig::get('application_key');
+
+
+        $launch_data = array(
+            "user_id" => PanoptoUtils::getUserIdentifier(),
+            "roles" => "Viewer",
+            "lis_person_name_full" => str_replace("'","`",($DIC->user()->getFullname())),
+            "lis_person_name_family" => str_replace("'","`",($DIC->user()->getLastname())),
+            "lis_person_name_given" => str_replace("'","`",($DIC->user()->getFirstname())),
+            "lis_person_contact_email_primary" => $DIC->user()->getEmail(),
+            "context_type" => "urn:lti:context-type:ilias/Object",
+            'launch_presentation_locale' => 'de',
+            'launch_presentation_document_target' => 'iframe',
+            "lti_version" => "LTI-1p0",
+            "lti_message_type" => "basic-lti-launch-request",
+            "oauth_callback" => "about:blank",
+            "oauth_consumer_key" => $key,
+            "oauth_version" => "1.0",
+            "oauth_nonce" => uniqid('', true),
+            "oauth_timestamp" => time(),
+            "oauth_signature_method" => "HMAC_SHA1"
+        );
+
+
+        $params = [
+            "sign_method" => "HMAC_SHA1",
+            "key" => $key,
+            "secret" => $secret,
+            "callback" => "about:blank",
+            "http_method" => "POST",
+            "url" => $launch_url,
+            "data" => $launch_data
+        ];
+
+        $oauth_params = self::signOAuth($params);
+
+
+        $html = '<form id="lti_form" action="' . $launch_url . '" method="post" target="basicltiLaunchFrame"
+      enctype="application/x-www-form-urlencoded">';
+        foreach ($oauth_params as $key => $value) {
+            $html .= "<input type='hidden' name='$key' value='" . htmlspecialchars((string)$value, ENT_QUOTES) . "'>";
+        }
+        $html .= '</form>';
+        $html .= '<iframe name="basicltiLaunchFrame"  id="basicltiLaunchFrame" src="" style="display:none;"></iframe>';
+
+        return $html;
+    }
 }
+
