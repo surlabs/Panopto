@@ -77,17 +77,17 @@ class PanoptoClient
      * @var PanoptoRestClient
      */
     protected PanoptoRestClient $rest_client;
-//    /**
-//     * @var xpanLog
-//     */
-//    protected $log;
+    /**
+     * @var PanoptoLog
+     */
+    protected PanoptoLog $log;
 
     /**
      * xpanClient constructor.
      * @throws PanoptoException
      */
     public function __construct() {
-//        $this->log = xpanLog::getInstance();
+        $this->log = PanoptoLog::getInstance();
 
         $arrContextOptions=array("ssl"=>array( "verify_peer"=>false, "verify_peer_name"=>false));
         $this->panoptoclient = new PanoptoClientAPI(PanoptoConfig::get('hostname'), array('trace' => 1, 'stream_context' => stream_context_create($arrContextOptions)));
@@ -120,10 +120,10 @@ class PanoptoClient
         $states->setSessionState(array( SessionState::Complete, SessionState::Broadcasting, SessionState::Scheduled ));
         $request->setStates($states);
 
-//        $this->log->write('*********');
-//        $this->log->write('SOAP call "GetSessionsList"');
-//        $this->log->write("request:");
-//        $this->log->write(print_r($request, true));
+        $this->log->write('*********');
+        $this->log->write('SOAP call "GetSessionsList"');
+        $this->log->write("request:");
+        $this->log->write(print_r($request, true));
 
         $params = new GetSessionsList(
             $this->auth,
@@ -136,14 +136,14 @@ class PanoptoClient
         try {
             $sessions_result = $session_client->GetSessionsList($params);
         } catch (Exception $e) {
-//            $this->logException($e, $session_client);
+            $this->log->logError($e->getCode(), $e->getMessage());
             throw $e;
         }
 
         $sessions = $sessions_result->getGetSessionsListResult();
 
-//        $this->log->write('Status: ' . substr($session_client->__last_response_headers, 0, strpos($session_client->__last_response_headers, "\r\n")));
-//        $this->log->write('Received ' . $sessions->getTotalNumberResults() . ' object(s).');
+        $this->log->write('Status: ' . substr($session_client->__last_response_headers, 0, strpos($session_client->__last_response_headers, "\r\n")));
+        $this->log->write('Received ' . $sessions->getTotalNumberResults() . ' object(s).');
 
 
         $sessions = ContentObjectBuilder::buildSessionsDTOsFromSessions($sessions->getResults()->getSession() ?? []);
@@ -179,12 +179,12 @@ class PanoptoClient
      */
     public function getAllFoldersByExternalId(ArrayOfstring $ext_ids): ?array
     {
-//        $this->log->write('*********');
-//        $this->log->write('SOAP call "GetAllFoldersByExternalId"');
-//        $this->log->write("folderExternalIds:");
-//        $this->log->write(print_r($ext_ids, true));
-//        $this->log->write("providerNames:");
-//        $this->log->write(print_r(array(xpanConfig::getConfig(xpanConfig::F_INSTANCE_NAME)), true));
+        $this->log->write('*********');
+        $this->log->write('SOAP call "GetAllFoldersByExternalId"');
+        $this->log->write("folderExternalIds:");
+        $this->log->write(print_r($ext_ids, true));
+        $this->log->write("providerNames:");
+        $this->log->write(print_r(array(PanoptoConfig::get("instance_name")), true));
 
         $instanceArray = new ArrayOfstring();
         $instanceArray->setString(array(PanoptoConfig::get('instance_name')));
@@ -202,8 +202,8 @@ class PanoptoClient
         $return = $session_client->GetAllFoldersByExternalId($params)->getGetAllFoldersByExternalIdResult()->getFolder();
 
 
-//        $this->log->write('Status: ' . substr($session_client->__last_response_headers, 0, strpos($session_client->__last_response_headers, "\r\n")));
-        //        $this->log->write('Received ' . (int) count($return) . ' object(s).');
+        $this->log->write('Status: ' . substr($session_client->__last_response_headers, 0, strpos($session_client->__last_response_headers, "\r\n")));
+        $this->log->write('Received ' . (int) count($return) . ' object(s).');
         return is_array($return) ? $return : array();
     }
 
