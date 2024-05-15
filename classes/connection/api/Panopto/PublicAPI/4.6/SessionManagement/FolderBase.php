@@ -292,7 +292,7 @@ class FolderBase
     }
 
     /**
-     * @return guid
+     * @return string
      */
     public function getId()
     {

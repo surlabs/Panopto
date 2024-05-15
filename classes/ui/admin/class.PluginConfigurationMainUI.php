@@ -25,6 +25,7 @@ use ilCtrlInterface;
 use ilException;
 use ILIAS\DI\Exceptions\Exception;
 use ILIAS\UI\Factory;
+use ilPanoptoPlugin;
 use platform\PanoptoConfig as PanoptoConfig;
 use platform\PanoptoException;
 
@@ -39,14 +40,14 @@ class PluginConfigurationMainUI
      * Configure screen
      * @throws ilException
      */
-
+    /**
+     * @var ilCtrlInterface
+     */
     protected ilCtrlInterface $control;
-
+    /**
+     * @var Factory
+     */
     protected Factory $factory;
-
-    private PanoptoConfig $object;
-
-    private \ilPanoptoPlugin $plugin_object;
 
 
     /**
@@ -55,15 +56,15 @@ class PluginConfigurationMainUI
     public function configure(): array
     {
         global $DIC;
-        $this->object = new PanoptoConfig();
+        $object1 = new PanoptoConfig();
         $this->factory = $DIC->ui()->factory();
         $this->control = $DIC->ctrl();
-        $this->plugin_object = \ilPanoptoPlugin::getInstance();
+        $plugin_object = ilPanoptoPlugin::getInstance();
 
         try {
 
 
-            $object = $this->object;
+            $object = $object1;
 
             //General section
 //            $form_fields_general = [];
@@ -87,8 +88,8 @@ class PluginConfigurationMainUI
             $form_fields_soap = [];
 
             $field_api_user = $this->factory->input()->field()->text(
-                $this->plugin_object->txt('conf_api_user'),
-                $this->plugin_object->txt('conf_api_user_info'))
+                $plugin_object->txt('conf_api_user'),
+                $plugin_object->txt('conf_api_user_info'))
                 ->withValue(PanoptoConfig::get('api_user'))
                 ->withRequired(true)
                 ->withAdditionalTransformation($DIC->refinery()->custom()->transformation(
@@ -100,8 +101,8 @@ class PluginConfigurationMainUI
             $form_fields_soap["api_user"] = $field_api_user;
 
             $field_hostname = $this->factory->input()->field()->text(
-                $this->plugin_object->txt('conf_hostname'),
-                $this->plugin_object->txt('conf_hostname_info'))
+                $plugin_object->txt('conf_hostname'),
+                $plugin_object->txt('conf_hostname_info'))
                 ->withValue(PanoptoConfig::get('hostname'))
                 ->withRequired(true)
                 ->withAdditionalTransformation($DIC->refinery()->custom()->transformation(
@@ -113,8 +114,8 @@ class PluginConfigurationMainUI
             $form_fields_soap["hostname"] = $field_hostname;
 
             $field_instance_name = $this->factory->input()->field()->text(
-                $this->plugin_object->txt('conf_instance_name'),
-                $this->plugin_object->txt('conf_instance_name_info'))
+                $plugin_object->txt('conf_instance_name'),
+                $plugin_object->txt('conf_instance_name_info'))
                 ->withValue(PanoptoConfig::get('instance_name'))
                 ->withRequired(true)
                 ->withAdditionalTransformation($DIC->refinery()->custom()->transformation(
@@ -126,8 +127,8 @@ class PluginConfigurationMainUI
             $form_fields_soap["instance_name"] = $field_instance_name;
 
             $field_application_key = $this->factory->input()->field()->text(
-                $this->plugin_object->txt('conf_application_key'),
-                $this->plugin_object->txt('conf_application_key_info'))
+                $plugin_object->txt('conf_application_key'),
+                $plugin_object->txt('conf_application_key_info'))
                 ->withValue(PanoptoConfig::get('application_key'))
                 ->withRequired(true)
                 ->withAdditionalTransformation($DIC->refinery()->custom()->transformation(
@@ -139,15 +140,15 @@ class PluginConfigurationMainUI
             $form_fields_soap["application_key"] = $field_application_key;
 
             $identification_options = array(
-                'login' => $this->plugin_object->txt('conf_login'),
-                'external_account' => $this->plugin_object->txt('conf_external_account'),
-                'email' => $this->plugin_object->txt('conf_email')
+                'login' => $plugin_object->txt('conf_login'),
+                'external_account' => $plugin_object->txt('conf_external_account'),
+                'email' => $plugin_object->txt('conf_email')
             );
 
             $field_identification = $this->factory->input()->field()->select(
-                $this->plugin_object->txt('conf_user_id'),
+                $plugin_object->txt('conf_user_id'),
                 $identification_options,
-                $this->plugin_object->txt('conf_user_id_info'))
+                $plugin_object->txt('conf_user_id_info'))
                 ->withValue(PanoptoConfig::get('user_id'))
                 ->withRequired(true)
                 ->withAdditionalTransformation($DIC->refinery()->custom()->transformation(
@@ -158,15 +159,15 @@ class PluginConfigurationMainUI
 
             $form_fields_soap["user_id"] = $field_identification;
 
-            $section_soap = $this->factory->input()->field()->section($form_fields_soap, $this->plugin_object->txt("conf_header_soap"), "");
+            $section_soap = $this->factory->input()->field()->section($form_fields_soap, $plugin_object->txt("conf_header_soap"), "");
 
 
             //REST API section
             $form_fields_rest = [];
 
             $field_rest_api_user = $this->factory->input()->field()->text(
-                $this->plugin_object->txt('conf_rest_api_user'),
-                $this->plugin_object->txt('conf_rest_api_user_info'))
+                $plugin_object->txt('conf_rest_api_user'),
+                $plugin_object->txt('conf_rest_api_user_info'))
                 ->withValue(PanoptoConfig::get('rest_api_user'))
                 ->withRequired(true)
                 ->withAdditionalTransformation($DIC->refinery()->custom()->transformation(
@@ -178,8 +179,8 @@ class PluginConfigurationMainUI
             $form_fields_rest["rest_api_user"] = $field_rest_api_user;
 
             $field_rest_api_password = $this->factory->input()->field()->text(
-                $this->plugin_object->txt('conf_rest_api_password'),
-                $this->plugin_object->txt('conf_rest_api_password_info'))
+                $plugin_object->txt('conf_rest_api_password'),
+                $plugin_object->txt('conf_rest_api_password_info'))
                 ->withValue(PanoptoConfig::get('rest_api_password'))
                 ->withRequired(true)
                 ->withAdditionalTransformation($DIC->refinery()->custom()->transformation(
@@ -191,8 +192,8 @@ class PluginConfigurationMainUI
             $form_fields_rest["rest_api_password"] = $field_rest_api_password;
 
             $field_rest_client_name = $this->factory->input()->field()->text(
-                $this->plugin_object->txt('conf_rest_client_name'),
-                $this->plugin_object->txt('conf_rest_client_name_info'))
+                $plugin_object->txt('conf_rest_client_name'),
+                $plugin_object->txt('conf_rest_client_name_info'))
                 ->withValue(PanoptoConfig::get('rest_client_name'))
                 ->withRequired(true)
                 ->withAdditionalTransformation($DIC->refinery()->custom()->transformation(
@@ -204,8 +205,8 @@ class PluginConfigurationMainUI
             $form_fields_rest["rest_client_name"] = $field_rest_client_name;
 
             $field_rest_client_secret = $this->factory->input()->field()->text(
-                $this->plugin_object->txt('conf_rest_client_secret'),
-                $this->plugin_object->txt('conf_rest_client_secret_info'))
+                $plugin_object->txt('conf_rest_client_secret'),
+                $plugin_object->txt('conf_rest_client_secret_info'))
                 ->withValue(PanoptoConfig::get('rest_client_secret'))
                 ->withRequired(true)
                 ->withAdditionalTransformation($DIC->refinery()->custom()->transformation(
@@ -216,7 +217,7 @@ class PluginConfigurationMainUI
 
             $form_fields_rest["rest_client_secret"] = $field_rest_client_secret;
 
-            $section_rest = $this->factory->input()->field()->section($form_fields_rest, $this->plugin_object->txt("conf_header_rest"), "");
+            $section_rest = $this->factory->input()->field()->section($form_fields_rest, $plugin_object->txt("conf_header_rest"), "");
 
             return [
 //                "config_general" => $section_general,
