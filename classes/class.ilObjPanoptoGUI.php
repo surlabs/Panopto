@@ -30,7 +30,7 @@ use platform\SorterEntry;
  * Class ilObjPanoptoGUI
  * @authors Jesús Copado, Daniel Cazalla, Saúl Díaz, Juan Aguilar <info@surlabs.es>
  * @ilCtrl_isCalledBy ilObjPanoptoGUI: ilRepositoryGUI, ilObjPluginDispatchGUI, ilAdministrationGUI, UserContentMainUI, PanoptoSortingTableGUI
- * @ilCtrl_Calls      ilObjPanoptoGUI: ilPermissionGUI, ilInfoScreenGUI, ilCommonActionDispatcherGUI, UserContentMainUI, PanoptoSortingTableGUI
+ * @ilCtrl_Calls      ilObjPanoptoGUI: ilObjectCopyGUI, ilPermissionGUI, ilInfoScreenGUI, ilCommonActionDispatcherGUI, UserContentMainUI, PanoptoSortingTableGUI
  */
 class ilObjPanoptoGUI extends ilObjectPluginGUI
 {
