@@ -61,15 +61,13 @@ class PanoptoConfig
      * @return void
      */
     public static function set(string $key, $value): void {
-        if (isset(self::$config[$key])) {
-            if (is_bool($value)) {
-                $value = (int) $value;
-            }
+        if (is_bool($value)) {
+            $value = (int) $value;
+        }
 
-            if (self::$config[$key] !== $value) {
-                self::$config[$key] = $value;
-                self::$updated[$key] = true;
-            }
+        if (!isset(self::$config[$key]) || self::$config[$key] !== $value) {
+            self::$config[$key] = $value;
+            self::$updated[$key] = true;
         }
     }
 
@@ -106,7 +104,7 @@ class PanoptoConfig
 
             return $config[0]['value'];
         } else {
-            return null;
+            return "";
         }
     }
 
@@ -127,7 +125,9 @@ class PanoptoConfig
         foreach (self::$updated as $key => $exist) {
             if ($exist) {
                 if (isset(self::$config[$key])) {
-                    $data = array();
+                    $data = array(
+                        'name' => $key
+                    );
 
                     if (is_array(self::$config[$key])) {
                         $data['value'] = json_encode(self::$config[$key]);
@@ -136,9 +136,7 @@ class PanoptoConfig
                     }
 
                     try {
-                        (new PanoptoDatabase)->update('xpan_config', $data, array(
-                            'name' => $key
-                        ));
+                        (new PanoptoDatabase)->insertOnDuplicatedKey('xpan_config', $data);
 
                         self::$updated[$key] = false;
                     } catch (PanoptoException $e) {

@@ -38,6 +38,7 @@ class ilPanoptoPlugin extends ilRepositoryObjectPlugin
         global $DIC;
         $DIC->database()->dropTable("xpan_config");
         $DIC->database()->dropTable("xpan_order");
+        $DIC->database()->dropTable("xpan_objects");
     }
 
 

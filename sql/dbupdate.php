@@ -23,17 +23,8 @@ if (!$db->tableExists('xpan_objects')) {
 }
 ?>
 <#2>
-<?php
-
-?>
 <#3>
-<?php
-
-?>
 <#4>
-<?php
-
-?>
 <#5>
 <?php
 global $DIC;
