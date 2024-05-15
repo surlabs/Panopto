@@ -41,7 +41,7 @@ class ilObjPanopto extends ilObjectPlugin
         $xpanDb->insert("xpan_objects", [
             "obj_id" => $this->getId(),
             "is_online" => 0,
-            "folder_ext_id" => $this->getReferenceId()
+            "folder_ext_id" => $this->getFolderExtId()
         ]);
     }
 
@@ -58,7 +58,7 @@ class ilObjPanopto extends ilObjectPlugin
             $this->doCreate();
 
             $this->online = false;
-            $this->folder_ext_id = $this->getReferenceId();
+            $this->folder_ext_id = $this->getFolderExtId();
         } else {
             $this->online = (bool) $result[0]["is_online"];
             $this->folder_ext_id = (int) $result[0]["folder_ext_id"];
@@ -113,9 +113,18 @@ class ilObjPanopto extends ilObjectPlugin
     /**
      * Get the folder external id
      * @return int
+     * @throws PanoptoException
      */
     public function getFolderExtId() : int
     {
-        return $this->folder_ext_id ?: $this->getReferenceId();
+        if (!isset($this->folder_ext_id) || $this->folder_ext_id != $this->getRefId()) {
+            $xpanDb = new PanoptoDatabase();
+
+            $this->folder_ext_id = $this->getRefId();
+
+            $xpanDb->update("xpan_objects", ["folder_ext_id" => $this->folder_ext_id], ["obj_id" => $this->getId()]);
+        }
+
+        return $this->folder_ext_id;
     }
 }
