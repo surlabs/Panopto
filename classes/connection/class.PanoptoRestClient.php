@@ -19,6 +19,7 @@ declare(strict_types=1);
  */
 
 namespace connection;
+require_once __DIR__ . "/../../vendor/autoload.php";
 
 use ilException;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;

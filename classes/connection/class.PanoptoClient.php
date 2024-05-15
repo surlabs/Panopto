@@ -19,7 +19,7 @@ declare(strict_types=1);
  */
 
 namespace connection;
-require_once __DIR__."/../../vendor/autoload.php";
+//require_once __DIR__."/../../vendor/autoload.php";
 
 use ilException;
 use Panopto\AccessManagement\AccessManagement;
@@ -527,6 +527,8 @@ class PanoptoClient
      */
     public function grantViewerAccessToSession(string $session_id, $user_id = 0): void
     {
+        $this->grantUserViewerAccessToSession($session_id, $user_id);
+
         if (!$this->hasUserViewerAccessOnSession($session_id, $user_id)) {
             $this->grantUserViewerAccessToSession($session_id, $user_id);
         }

@@ -28,7 +28,7 @@ use platform\PanoptoConfig;
 use platform\PanoptoException;
 use utils\PanoptoUtils;
 
-require_once __DIR__ . "/../../vendor/autoload.php";
+//require_once __DIR__ . "/../../vendor/autoload.php";
 
 
 /**
@@ -129,7 +129,7 @@ class PanoptoLTIHandler
     /**
      * @throws PanoptoException
      */
-    public static function launchToolPageComponent(): string
+    public static function launchToolPageComponent(): bool|string
     {
         global $DIC;
         $launch_url = 'https://' . PanoptoConfig::get('hostname') . '/Panopto/BasicLTI/BasicLTILanding.aspx';
@@ -177,9 +177,10 @@ class PanoptoLTIHandler
             $html .= "<input type='hidden' name='$key' value='" . htmlspecialchars((string)$value, ENT_QUOTES) . "'>";
         }
         $html .= '</form>';
-        $html .= '<iframe name="basicltiLaunchFrame"  id="basicltiLaunchFrame" src="" style="display:none;"></iframe>';
+//        $html .= '<iframe name="basicltiLaunchFrame"  id="basicltiLaunchFrame" src="'.$launch_url.'" style="display:none;"></iframe>';
 
-        return $html;
+
+        return json_encode($oauth_params);
     }
 }
 
