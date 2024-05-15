@@ -39,8 +39,8 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
     protected ManageVideosUI $manageVideosUI;
 
     /**
-     * @throws ilCtrlException
      * @return void
+     * @throws ilCtrlException|PanoptoException
      */
     protected function setTabs(): void
     {
