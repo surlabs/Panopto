@@ -47,7 +47,7 @@ class ilObjPanoptoListGUI extends ilObjectPluginListGUI
         $this->info_screen_enabled = true;
         $this->delete_enabled = true;
         $this->cut_enabled = false;
-        $this->copy_enabled = true;
+        $this->copy_enabled = false;
 
         return [
             [
