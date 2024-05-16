@@ -5,7 +5,7 @@ $db = $DIC->database();
 if (!$db->tableExists('xpan_config')) {
     $fields = array(
         'name' => array('type' => 'text', 'length' => 255),
-        'value' => array('type' => 'text', 'length' => 255)
+        'value' => array('type' => 'text', 'length' => 4000)
     );
 
     $db->createTable('xpan_config', $fields);
