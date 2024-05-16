@@ -272,4 +272,11 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
         }
     }
 
+    /**
+     * @return bool
+     */
+    protected function supportsCloning(): bool
+    {
+        return false;
+    }
 }
