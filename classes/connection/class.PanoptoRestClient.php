@@ -87,7 +87,7 @@ class PanoptoRestClient
     private function loadToken(): void
     {
         $serialized_token = PanoptoConfig::get("rest_token");
-        $token = (isset($serialized_token) && $serialized_token != "") ? RESTToken::jsonUnserialize($serialized_token) : null;
+        $token = (isset($serialized_token) && $serialized_token != "") ? new RESTToken($serialized_token["access_token"], $serialized_token["expiry"]) : null;
         if (!$token || $token->isExpired()) {
             $this->log('fetch access token');
             try{
