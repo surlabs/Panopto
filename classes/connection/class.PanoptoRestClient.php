@@ -45,6 +45,7 @@ class PanoptoRestClient
     private string $base_url;
     private OAuth2Provider $oauth2_provider;
     public RESTToken $token;
+    private PanoptoLog $log;
 
 
     /**
@@ -63,7 +64,7 @@ class PanoptoRestClient
      * @throws PanoptoException
      */
     public function __construct() {
-//        $this->log = xpanLog::getInstance();
+        $this->log = PanoptoLog::getInstance();
         $host = PanoptoConfig::get('hostname');
         if (str_starts_with($host, 'https://')) {
             $host = substr($host, 8);
@@ -85,9 +86,10 @@ class PanoptoRestClient
      */
     private function loadToken(): void
     {
-        $token = PanoptoConfig::getToken();
+        $serialized_token = PanoptoConfig::get("rest_token");
+        $token = (isset($serialized_token) && $serialized_token != "") ? RESTToken::jsonUnserialize($serialized_token) : null;
         if (!$token || $token->isExpired()) {
-//            $this->log('fetch access token');
+            $this->log('fetch access token');
             try{
                 $oauth2_token = $this->oauth2_provider->getAccessToken("password", [
                     "username" => PanoptoConfig::get('rest_api_user'),
@@ -95,7 +97,8 @@ class PanoptoRestClient
                     "scope" => "api"
                 ]);
                 $token = new RESTToken($oauth2_token->getToken(), $oauth2_token->getExpires());
-                PanoptoConfig::set('rest_token', $token);
+                PanoptoConfig::set('rest_token', $token->jsonSerialize());
+                PanoptoConfig::save();
             } catch (IdentityProviderException $e) {
                 throw new PanoptoException('Could not fetch access token: ' . $e->getMessage());
             }
@@ -156,7 +159,7 @@ class PanoptoRestClient
 
     private function log(string $message)
     {
-//        $this->log->write('Panopto REST Client: ' . $message);
+        $this->log->write('Panopto REST Client: ' . $message);
     }
 
 

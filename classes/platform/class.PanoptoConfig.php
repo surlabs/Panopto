@@ -167,14 +167,4 @@ class PanoptoConfig
 
         return self::get('instance_name') . "\\" . self::get('api_user');
     }
-
-    /**
-     * @throws PanoptoException
-     */
-    public static function getToken(): ?RESTToken
-    {
-        $serialized_token = self::get('rest_token');
-        return $serialized_token ? RESTToken::jsonUnserialize($serialized_token) : null;
-    }
-
 }

@@ -305,10 +305,10 @@ class PanoptoClient
         $user_id = $user_id ? $user_id : $DIC->user()->getId();
         if (!isset($user_access_details[$user_id])) {
             $guid = $this->getUserGuid($user_id);
-//            $this->log->write('*********');
-//            $this->log->write('SOAP call "GetUserAccessDetails"');
-//            $this->log->write("userId:");
-//            $this->log->write(print_r($guid, true));
+            $this->log->write('*********');
+            $this->log->write('SOAP call "GetUserAccessDetails"');
+            $this->log->write("userId:");
+            $this->log->write(print_r($guid, true));
 
             $params = new GetUserAccessDetails(
                 $this->auth,
@@ -320,13 +320,13 @@ class PanoptoClient
             try {
                 $user_access_details[$user_id] = $access_management->GetUserAccessDetails($params)->getGetUserAccessDetailsResult();
             } catch (Exception $e) {
-//                $this->logException($e, $access_management);
+                $this->log->logError($e->getCode(), $e->getMessage());
                 throw $e;
             }
 
 
-//            $this->log->write('Status: ' . substr($access_management->__last_response_headers, 0, strpos($access_management->__last_response_headers, "\r\n")));
-//            $this->log->write('Received ' . (is_array($user_access_details[$user_id]) ? (int) count($user_access_details[$user_id]) : 0) . ' object(s).');
+            $this->log->write('Status: ' . substr($access_management->__last_response_headers, 0, strpos($access_management->__last_response_headers, "\r\n")));
+            $this->log->write('Received ' . (is_array($user_access_details[$user_id]) ? (int) count($user_access_details[$user_id]) : 0) . ' object(s).');
         }
         return $user_access_details[$user_id];
     }
@@ -356,10 +356,10 @@ class PanoptoClient
     {
         $user_key = $user_key ? $user_key : PanoptoUtils::getUserKey();
 
-//        $this->log->write('*********');
-//        $this->log->write('SOAP call "getUserByKey"');
-//        $this->log->write("userKey:");
-//        $this->log->write(print_r($user_key, true));
+        $this->log->write('*********');
+        $this->log->write('SOAP call "getUserByKey"');
+        $this->log->write("userKey:");
+        $this->log->write(print_r($user_key, true));
 
         /** @var UserManagement $user_management */
         $user_management = $this->panoptoclient->UserManagement();
@@ -377,27 +377,27 @@ class PanoptoClient
         try {
             $return = $user_management->GetUserByKey($params)->getGetUserByKeyResult();
         } catch (Exception $e) {
-//            $this->logException($e, $user_management);
+            $this->log->logError($e->getCode(), $e->getMessage());
             throw $e;
         }
 
         if ($return->getUserId() == '00000000-0000-0000-0000-000000000000') {
-//            $this->log->write('Status: User Not Found');
+            $this->log->write('Status: User Not Found');
             $this->createUser($user_key, $newAuth);
 
             try {
-//                $this->log->write('*********');
-//                $this->log->write('SOAP call "getUserByKey"');
-//                $this->log->write("userKey:");
-//                $this->log->write(print_r($user_key, true));
+                $this->log->write('*********');
+                $this->log->write('SOAP call "getUserByKey"');
+                $this->log->write("userKey:");
+                $this->log->write(print_r($user_key, true));
                 $return = $user_management->GetUserByKey($params)->getGetUserByKeyResult();
             } catch (Exception $e) {
-//                $this->logException($e, $user_management);
+                $this->log->logError($e->getCode(), $e->getMessage());
                 throw $e;
             }
         }
-//        $this->log->write('Status: ' . substr($user_management->__last_response_headers, 0, strpos($user_management->__last_response_headers, "\r\n")));
-//        $this->log->write('Found user with id: ' . $return->getUserId());
+        $this->log->write('Status: ' . substr($user_management->__last_response_headers, 0, strpos($user_management->__last_response_headers, "\r\n")));
+        $this->log->write('Found user with id: ' . $return->getUserId());
 
         return $return;
     }
@@ -410,10 +410,10 @@ class PanoptoClient
     public function createUser($user_key, $auth): void
     {
         global $DIC;
-//        $this->log->write('*********');
-//        $this->log->write('SOAP call "createUser"');
-//        $this->log->write("userKey:");
-//        $this->log->write(print_r($user_key, true));
+        $this->log->write('*********');
+        $this->log->write('SOAP call "createUser"');
+        $this->log->write("userKey:");
+        $this->log->write(print_r($user_key, true));
 
         $user = new User();
         $user->setFirstName($DIC->user()->getFirstname());
@@ -432,11 +432,11 @@ class PanoptoClient
         try {
             $user_management->CreateUser($params);
         } catch (Exception $e) {
-//            $this->logException($e, $user_management);
+            $this->log->logError($e->getCode(), $e->getMessage());
             throw $e;
         }
 
-//        $this->log->write('Status: ' . substr($user_management->__last_response_headers, 0, strpos($user_management->__last_response_headers, "\r\n")));
+        $this->log->write('Status: ' . substr($user_management->__last_response_headers, 0, strpos($user_management->__last_response_headers, "\r\n")));
     }
 
     /**
@@ -467,14 +467,14 @@ class PanoptoClient
             $guids[] = $this->getUserGuid($user_id);
         }
 
-//        $this->log->write('*********');
-//        $this->log->write('SOAP call "GrantUsersAccessToFolder"');
-//        $this->log->write("folderId:");
-//        $this->log->write(print_r($folder_id, true));
-//        $this->log->write("userIds:");
-//        $this->log->write(print_r($guids, true));
-//        $this->log->write("role:");
-//        $this->log->write(print_r($role, true));
+        $this->log->write('*********');
+        $this->log->write('SOAP call "GrantUsersAccessToFolder"');
+        $this->log->write("folderId:");
+        $this->log->write(print_r($folder_id, true));
+        $this->log->write("userIds:");
+        $this->log->write(print_r($guids, true));
+        $this->log->write("role:");
+        $this->log->write(print_r($role, true));
         $arrayOfGuids = new ArrayOfguid();
         $arrayOfGuids->setGuid($guids);
 
@@ -490,11 +490,11 @@ class PanoptoClient
         try {
             $access_management->GrantUsersAccessToFolder($params);
         } catch (Exception $e) {
-//            $this->logException($e, $access_management);
+            $this->log->logError($e->getCode(), $e->getMessage());
             throw $e;
         }
 
-//        $this->log->write('Status: ' . substr($access_management->__last_response_headers, 0, strpos($access_management->__last_response_headers, "\r\n")));
+        $this->log->write('Status: ' . substr($access_management->__last_response_headers, 0, strpos($access_management->__last_response_headers, "\r\n")));
     }
 
     /**
@@ -606,12 +606,12 @@ class PanoptoClient
             $guids[] = $this->getUserGuid($user_id);
         }
 
-//        $this->log->write('*********');
-//        $this->log->write('SOAP call "GrantUsersViewerAccessToSession"');
-//        $this->log->write("sessionId:");
-//        $this->log->write(print_r($session_id, true));
-//        $this->log->write("userIds:");
-//        $this->log->write(print_r($guids, true));
+        $this->log->write('*********');
+        $this->log->write('SOAP call "GrantUsersViewerAccessToSession"');
+        $this->log->write("sessionId:");
+        $this->log->write(print_r($session_id, true));
+        $this->log->write("userIds:");
+        $this->log->write(print_r($guids, true));
 
         $arrayGuids = new ArrayOfguid();
         $arrayGuids->setGuid($guids);
@@ -627,11 +627,11 @@ class PanoptoClient
         try {
             $access_management->GrantUsersViewerAccessToSession($params);
         } catch (Exception $e) {
-//            $this->logException($e, $access_management);
+            $this->log->logError($e->getCode(), $e->getMessage());
             throw $e;
         }
 
-//        $this->log->write('Status: ' . substr($access_management->__last_response_headers, 0, strpos($access_management->__last_response_headers, "\r\n")));
+        $this->log->write('Status: ' . substr($access_management->__last_response_headers, 0, strpos($access_management->__last_response_headers, "\r\n")));
 
     }
         /**
@@ -643,10 +643,10 @@ class PanoptoClient
     {
         static $session_access_details;
         if (!isset($session_access_details[$session_id])) {
-//            $this->log->write('*********');
-//            $this->log->write('SOAP call "GetSessionAccessDetails"');
-//            $this->log->write("sessionId:");
-//            $this->log->write(print_r($session_id, true));
+            $this->log->write('*********');
+            $this->log->write('SOAP call "GetSessionAccessDetails"');
+            $this->log->write("sessionId:");
+            $this->log->write(print_r($session_id, true));
 
             $params = new GetSessionAccessDetails(
                 $this->auth,
@@ -658,15 +658,15 @@ class PanoptoClient
             try {
                 $session_access_details[$session_id] = $access_management->GetSessionAccessDetails($params)->getGetSessionAccessDetailsResult();
             } catch (Exception $e) {
-//                $this->logException($e, $access_management);
+                $this->log->logError($e->getCode(), $e->getMessage());
                 throw $e;
             }
 
-//            $this->log->write('Status: ' . substr($access_management->__last_response_headers, 0, strpos($access_management->__last_response_headers, "\r\n")));
-//            $this->log->write('Received ' .
-//                (is_array($session_access_details[$session_id]) ? (int) count($session_access_details[$session_id]) : 0 ) .
-//                ' object(s).'
-//            );
+            $this->log->write('Status: ' . substr($access_management->__last_response_headers, 0, strpos($access_management->__last_response_headers, "\r\n")));
+            $this->log->write('Received ' .
+                (is_array($session_access_details[$session_id]) ? (int) count($session_access_details[$session_id]) : 0 ) .
+                ' object(s).'
+            );
         }
         return $session_access_details[$session_id];
     }
