@@ -94,6 +94,7 @@ class PanoptoRestClient
                 $token = new RESTToken($serialized_token["access_token"], $serialized_token["expiry"]);
             } else if (is_string($serialized_token)) {
                 $token = RESTToken::jsonUnserialize($serialized_token);
+            }
         }
 
         if (!$token || $token->isExpired()) {
