@@ -105,9 +105,9 @@ class PanoptoClient
 
         $arrContextOptions=array("ssl"=>array( "verify_peer"=>false, "verify_peer_name"=>false));
         $this->panoptoclient = new PanoptoClientAPI(PanoptoConfig::get('hostname'), array('trace' => 1, 'stream_context' => stream_context_create($arrContextOptions)));
-        $this->panoptoclient->setAuthenticationInfo(PanoptoConfig::getApiUserKey(), '', PanoptoConfig::get('application_key'));
+        $this->panoptoclient->setAuthenticationInfo(PanoptoConfig::get('instance_name') . "\\" . PanoptoConfig::get('api_user'), '', PanoptoConfig::get('application_key'));
         $this->auth = new AuthenticationInfo();
-        $this->auth->setUserKey(PanoptoConfig::getApiUserKey());
+        $this->auth->setUserKey(PanoptoConfig::get('instance_name') . "\\" . PanoptoConfig::get('api_user'));
         $this->auth->setPassword(null);
         $this->auth->setAuthCode($this->panoptoclient->getAuthenticationInfo()->getAuthCode());
         $this->rest_client = PanoptoRestClient::getInstance();
@@ -365,7 +365,7 @@ class PanoptoClient
         $user_management = $this->panoptoclient->UserManagement();
 
         $newAuth = new \Panopto\UserManagement\AuthenticationInfo();
-        $newAuth->setUserKey(PanoptoConfig::getApiUserKey());
+        $newAuth->setUserKey(PanoptoConfig::get('instance_name') . "\\" . PanoptoConfig::get('api_user'));
         $newAuth->setPassword(null);
         $newAuth->setAuthCode($this->panoptoclient->getAuthenticationInfo()->getAuthCode());
 

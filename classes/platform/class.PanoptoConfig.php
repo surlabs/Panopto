@@ -149,22 +149,4 @@ class PanoptoConfig
         // In case there is nothing to update, return true to avoid error messages
         return true;
     }
-
-    /**
-     * @throws PanoptoException
-     */
-    public static function getApiUserKey(): string
-    {
-
-        //TODO: SAUL ARREGLA ESTO
-        //TODO: SAUL ARREGLA ESTO
-        //TODO: SAUL ARREGLA ESTO
-        //TODO: SAUL ARREGLA ESTO
-        //TODO: SAUL ARREGLA ESTO
-        //TODO: SAUL ARREGLA ESTO
-        //TODO: SAUL ARREGLA ESTO
-        //TODO: SAUL ARREGLA ESTO
-
-        return self::get('instance_name') . "\\" . self::get('api_user');
-    }
 }
