@@ -204,6 +204,19 @@ class PluginConfigurationMainUI
 
             $form_fields_rest["rest_client_name"] = $field_rest_client_name;
 
+            $field_rest_client_id = $this->factory->input()->field()->text(
+                $plugin_object->txt('conf_rest_client_id'),
+                $plugin_object->txt('conf_rest_client_id_info'))
+                ->withValue(PanoptoConfig::get('rest_client_id'))
+                ->withRequired(true)
+                ->withAdditionalTransformation($DIC->refinery()->custom()->transformation(
+                    function ($v) use ($object) {
+                        PanoptoConfig::set('rest_client_id', $v);
+                    }
+                ));
+
+            $form_fields_rest["rest_client_id"] = $field_rest_client_id;
+
             $field_rest_client_secret = $this->factory->input()->field()->text(
                 $plugin_object->txt('conf_rest_client_secret'),
                 $plugin_object->txt('conf_rest_client_secret_info'))
