@@ -217,7 +217,7 @@ class PanoptoClient
 
 
         $this->log->write('Status: ' . substr($session_client->__last_response_headers, 0, strpos($session_client->__last_response_headers, "\r\n")));
-        $this->log->write('Received ' . (int) count($return) . ' object(s).');
+        $this->log->write('Received ' . (isset($return) ? count($return) : 0) . ' object(s).');
         return is_array($return) ? $return : array();
     }
 
