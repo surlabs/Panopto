@@ -40,7 +40,7 @@ class ArrayOfRemoteRecorderDevice implements \ArrayAccess, \Iterator, \Countable
      * @param mixed $offset An offset to check for
      * @return boolean true on success or false on failure
      */
-    public function offsetExists($offset)
+    public function offsetExists(mixed $offset): bool
     {
       return isset($this->RemoteRecorderDevice[$offset]);
     }
@@ -51,7 +51,7 @@ class ArrayOfRemoteRecorderDevice implements \ArrayAccess, \Iterator, \Countable
      * @param mixed $offset The offset to retrieve
      * @return RemoteRecorderDevice
      */
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
       return $this->RemoteRecorderDevice[$offset];
     }
@@ -63,7 +63,7 @@ class ArrayOfRemoteRecorderDevice implements \ArrayAccess, \Iterator, \Countable
      * @param RemoteRecorderDevice $value The value to set
      * @return void
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet(mixed $offset, mixed $value): void
     {
       if (!isset($offset)) {
         $this->RemoteRecorderDevice[] = $value;
@@ -78,7 +78,7 @@ class ArrayOfRemoteRecorderDevice implements \ArrayAccess, \Iterator, \Countable
      * @param mixed $offset The offset to unset
      * @return void
      */
-    public function offsetUnset($offset)
+    public function offsetUnset(mixed $offset): void
     {
       unset($this->RemoteRecorderDevice[$offset]);
     }
@@ -88,7 +88,7 @@ class ArrayOfRemoteRecorderDevice implements \ArrayAccess, \Iterator, \Countable
      *
      * @return RemoteRecorderDevice Return the current element
      */
-    public function current()
+    public function current(): mixed
     {
       return current($this->RemoteRecorderDevice);
     }
@@ -99,7 +99,7 @@ class ArrayOfRemoteRecorderDevice implements \ArrayAccess, \Iterator, \Countable
      *
      * @return void
      */
-    public function next()
+    public function next(): void
     {
       next($this->RemoteRecorderDevice);
     }
@@ -109,7 +109,7 @@ class ArrayOfRemoteRecorderDevice implements \ArrayAccess, \Iterator, \Countable
      *
      * @return string|null Return the key of the current element or null
      */
-    public function key()
+    public function key(): mixed
     {
       return key($this->RemoteRecorderDevice);
     }
@@ -119,7 +119,7 @@ class ArrayOfRemoteRecorderDevice implements \ArrayAccess, \Iterator, \Countable
      *
      * @return boolean Return the validity of the current position
      */
-    public function valid()
+    public function valid(): bool
     {
       return $this->key() !== null;
     }
@@ -130,7 +130,7 @@ class ArrayOfRemoteRecorderDevice implements \ArrayAccess, \Iterator, \Countable
      *
      * @return void
      */
-    public function rewind()
+    public function rewind(): void
     {
       reset($this->RemoteRecorderDevice);
     }
@@ -140,7 +140,7 @@ class ArrayOfRemoteRecorderDevice implements \ArrayAccess, \Iterator, \Countable
      *
      * @return RemoteRecorderDevice Return count of elements
      */
-    public function count()
+    public function count(): int
     {
       return count($this->RemoteRecorderDevice);
     }

@@ -53,7 +53,7 @@ class ContentObjectBuilder
                 $session->getName(),
                 $session->getDescription() ?? '',
                 $session->getThumbUrl(),
-                $session->getDuration());
+                (int) $session->getDuration());
         }
         return $sessions_array;
     }
@@ -69,7 +69,7 @@ class ContentObjectBuilder
             $array['Name'],
             $array['Description'] ?? '',
             $array['Urls']['ThumbnailUrl'] ?? '',
-            $array['Duration']
+            (int) $array['Duration']
         );
     }
 

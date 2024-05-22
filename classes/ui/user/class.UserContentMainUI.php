@@ -163,7 +163,7 @@ class UserContentMainUI
         foreach ($content_objects['objects'] as $object) {
             if ($object instanceof Session) {
                 $tpl->setCurrentBlock('duration');
-                $tpl->setVariable('DURATION', $this->formatDuration($object->getDuration()));
+                $tpl->setVariable('DURATION', $this->formatDuration((int) $object->getDuration()));
                 $tpl->parseCurrentBlock();
                 $tpl->setVariable('IS_PLAYLIST', 'false');
             } else {
@@ -190,10 +190,15 @@ class UserContentMainUI
         return '<div class="xpan_flex">'.$tpl->get().'</div>'.$lti_form .  $this->getModalPlayer();
     }
 
-    protected function formatDuration($duration_in_seconds): string
+    protected function formatDuration(int $duration_in_seconds): string
     {
         $t = floor($duration_in_seconds);
-        return sprintf('%02d:%02d:%02d', ($t/3600),($t/60%60), $t%60);
+
+        $hours = (int)($t / 3600);
+        $minutes = (int)(($t % 3600) / 60);
+        $seconds = $t % 60;
+
+        return sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
     }
 
     /**

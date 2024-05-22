@@ -40,7 +40,7 @@ class ArrayOfSession implements \ArrayAccess, \Iterator, \Countable
      * @param mixed $offset An offset to check for
      * @return boolean true on success or false on failure
      */
-    public function offsetExists($offset)
+    public function offsetExists(mixed $offset): bool
     {
       return isset($this->Session[$offset]);
     }
@@ -51,7 +51,7 @@ class ArrayOfSession implements \ArrayAccess, \Iterator, \Countable
      * @param mixed $offset The offset to retrieve
      * @return Session
      */
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
       return $this->Session[$offset];
     }
@@ -63,7 +63,7 @@ class ArrayOfSession implements \ArrayAccess, \Iterator, \Countable
      * @param Session $value The value to set
      * @return void
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet(mixed $offset, mixed $value): void
     {
       if (!isset($offset)) {
         $this->Session[] = $value;
@@ -78,7 +78,7 @@ class ArrayOfSession implements \ArrayAccess, \Iterator, \Countable
      * @param mixed $offset The offset to unset
      * @return void
      */
-    public function offsetUnset($offset)
+    public function offsetUnset(mixed $offset): void
     {
       unset($this->Session[$offset]);
     }
@@ -88,7 +88,7 @@ class ArrayOfSession implements \ArrayAccess, \Iterator, \Countable
      *
      * @return Session Return the current element
      */
-    public function current()
+    public function current(): mixed
     {
       return current($this->Session);
     }
@@ -99,7 +99,7 @@ class ArrayOfSession implements \ArrayAccess, \Iterator, \Countable
      *
      * @return void
      */
-    public function next()
+    public function next(): void
     {
       next($this->Session);
     }
@@ -109,7 +109,7 @@ class ArrayOfSession implements \ArrayAccess, \Iterator, \Countable
      *
      * @return string|null Return the key of the current element or null
      */
-    public function key()
+    public function key(): mixed
     {
       return key($this->Session);
     }
@@ -119,7 +119,7 @@ class ArrayOfSession implements \ArrayAccess, \Iterator, \Countable
      *
      * @return boolean Return the validity of the current position
      */
-    public function valid()
+    public function valid(): bool
     {
       return $this->key() !== null;
     }
@@ -130,7 +130,7 @@ class ArrayOfSession implements \ArrayAccess, \Iterator, \Countable
      *
      * @return void
      */
-    public function rewind()
+    public function rewind(): void
     {
       reset($this->Session);
     }
@@ -140,7 +140,7 @@ class ArrayOfSession implements \ArrayAccess, \Iterator, \Countable
      *
      * @return Session Return count of elements
      */
-    public function count()
+    public function count(): int
     {
       return count($this->Session);
     }

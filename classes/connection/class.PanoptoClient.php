@@ -156,9 +156,7 @@ class PanoptoClient
 
         $sessions = $sessions_result->getGetSessionsListResult();
 
-        $this->log->write('Status: ' . substr($session_client->__last_response_headers, 0, strpos($session_client->__last_response_headers, "\r\n")));
         $this->log->write('Received ' . $sessions->getTotalNumberResults() . ' object(s).');
-
 
         $sessions = ContentObjectBuilder::buildSessionsDTOsFromSessions($sessions->getResults()->getSession() ?? []);
         $playlists = $this->rest_client->getPlaylistsOfFolder($folder_id);
@@ -216,7 +214,6 @@ class PanoptoClient
         $return = $session_client->GetAllFoldersByExternalId($params)->getGetAllFoldersByExternalIdResult()->getFolder();
 
 
-        $this->log->write('Status: ' . substr($session_client->__last_response_headers, 0, strpos($session_client->__last_response_headers, "\r\n")));
         $this->log->write('Received ' . (isset($return) ? count($return) : 0) . ' object(s).');
         return is_array($return) ? $return : array();
     }
@@ -325,7 +322,6 @@ class PanoptoClient
             }
 
 
-            $this->log->write('Status: ' . substr($access_management->__last_response_headers, 0, strpos($access_management->__last_response_headers, "\r\n")));
             $this->log->write('Received ' . (is_array($user_access_details[$user_id]) ? (int) count($user_access_details[$user_id]) : 0) . ' object(s).');
         }
         return $user_access_details[$user_id];
@@ -396,7 +392,6 @@ class PanoptoClient
                 throw $e;
             }
         }
-        $this->log->write('Status: ' . substr($user_management->__last_response_headers, 0, strpos($user_management->__last_response_headers, "\r\n")));
         $this->log->write('Found user with id: ' . $return->getUserId());
 
         return $return;
@@ -435,8 +430,6 @@ class PanoptoClient
             $this->log->logError($e->getCode(), $e->getMessage());
             throw $e;
         }
-
-        $this->log->write('Status: ' . substr($user_management->__last_response_headers, 0, strpos($user_management->__last_response_headers, "\r\n")));
     }
 
     /**
@@ -493,8 +486,6 @@ class PanoptoClient
             $this->log->logError($e->getCode(), $e->getMessage());
             throw $e;
         }
-
-        $this->log->write('Status: ' . substr($access_management->__last_response_headers, 0, strpos($access_management->__last_response_headers, "\r\n")));
     }
 
     /**
@@ -630,9 +621,6 @@ class PanoptoClient
             $this->log->logError($e->getCode(), $e->getMessage());
             throw $e;
         }
-
-        $this->log->write('Status: ' . substr($access_management->__last_response_headers, 0, strpos($access_management->__last_response_headers, "\r\n")));
-
     }
         /**
      * @param $session_id
@@ -662,7 +650,6 @@ class PanoptoClient
                 throw $e;
             }
 
-            $this->log->write('Status: ' . substr($access_management->__last_response_headers, 0, strpos($access_management->__last_response_headers, "\r\n")));
             $this->log->write('Received ' .
                 (is_array($session_access_details[$session_id]) ? (int) count($session_access_details[$session_id]) : 0 ) .
                 ' object(s).'
