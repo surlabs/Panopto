@@ -33,8 +33,8 @@ class ilPanoptoConfigGUI extends ilPluginConfigGUI
 {
 
     private static Factory $factory;
-    protected ilCtrlInterface $control;
-    protected ilGlobalTemplateInterface $tpl;
+    protected ilCtrl $control;
+    protected ilGlobalPageTemplate $tpl;
     protected $request;
     protected Renderer $renderer;
     protected PluginConfigurationMainUI $config_ui;
@@ -44,7 +44,7 @@ class ilPanoptoConfigGUI extends ilPluginConfigGUI
      * @throws ilException
      * @throws PanoptoException
      */
-    function performCommand(string $cmd): void
+    function performCommand($cmd): void
     {
         global $DIC;
         self::$factory = $DIC->ui()->factory();

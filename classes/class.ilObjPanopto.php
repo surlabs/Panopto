@@ -28,7 +28,7 @@ use platform\PanoptoException;
 class ilObjPanopto extends ilObjectPlugin
 {
     private bool $online;
-    private int $folder_ext_id;
+    private ?int $folder_ext_id;
 
     /**
      * Create a new object
@@ -112,15 +112,15 @@ class ilObjPanopto extends ilObjectPlugin
 
     /**
      * Get the folder external id
-     * @return int
+     * @return int|null
      * @throws PanoptoException
      */
-    public function getFolderExtId() : int
+    public function getFolderExtId() : ?int
     {
         if (!isset($this->folder_ext_id) || $this->folder_ext_id != $this->getRefId()) {
             $xpanDb = new PanoptoDatabase();
 
-            $this->folder_ext_id = $this->getRefId();
+            $this->folder_ext_id = (int) $this->getRefId();
 
             $xpanDb->update("xpan_objects", ["folder_ext_id" => $this->folder_ext_id], ["obj_id" => $this->getId()]);
         }

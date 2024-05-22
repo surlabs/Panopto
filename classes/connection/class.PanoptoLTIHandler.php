@@ -20,16 +20,13 @@ declare(strict_types=1);
 
 namespace connection;
 
-use ILIAS\LTIOAuth\OAuthConsumer;
-use ILIAS\LTIOAuth\OAuthToken;
-use ILIAS\LTIOAuth\OAuthRequest;
-use ILIAS\LTIOAuth\OAuthSignatureMethod_HMAC_SHA1;
+require_once __DIR__ . "/../../vendor/autoload.php";
+
+use League\OAuth1\Client as OAuth1;
+
 use platform\PanoptoConfig;
 use platform\PanoptoException;
 use utils\PanoptoUtils;
-
-//require_once __DIR__ . "/../../vendor/autoload.php";
-
 
 /**
  * Class PanoptoLTIHandler
@@ -37,33 +34,22 @@ use utils\PanoptoUtils;
  */
 class PanoptoLTIHandler
 {
-    private static function signOAuth($params): ?array
+    /**
+     * @throws PanoptoException
+     */
+    private static function signOAuth($launch_data, $launch_url): string
     {
+        $key = PanoptoConfig::get('instance_name');
+        $secret = PanoptoConfig::get('application_key');
 
-        switch ($params['sign_method']) {
-            case "HMAC_SHA1":
-                $method = new OAuthSignatureMethod_HMAC_SHA1();
-                break;
+        $credentials = new OAuth1\Credentials\ClientCredentials();
+        $credentials->setIdentifier($key);
+        $credentials->setSecret($secret);
 
-            default:
-                return ["ERROR: unsupported signature method!"];
-        }
+        ksort($launch_data);
+        $signature = new OAuth1\Signature\HmacSha1Signature($credentials);
 
-
-        $consumer = new OAuthConsumer($params["key"], $params["secret"], $params["callback"]);
-        $token = new OAuthToken($params["key"], $params["secret"]);
-
-
-        $request = OAuthRequest::from_consumer_and_token(
-            $consumer,
-            $token,
-            $params["http_method"],
-            $params["url"],
-            $params["data"]
-        );
-        $request->sign_request($method, $consumer, null);
-
-        return $request->get_parameters();
+        return $signature->sign($launch_url . '/Panopto/BasicLTI/BasicLTILanding.aspx', $launch_data);
     }
 
     /**
@@ -72,10 +58,7 @@ class PanoptoLTIHandler
     public static function launchTool($object, $showIframe = false): string
     {
         global $DIC;
-        $launch_url = 'https://' . PanoptoConfig::get('hostname') . '/Panopto/BasicLTI/BasicLTILanding.aspx';
-        $key = PanoptoConfig::get('instance_name');
-        $secret = PanoptoConfig::get('application_key');
-
+        $launch_url = 'https://' . PanoptoConfig::get('hostname');
 
         $launch_data = [
             "user_id" => PanoptoUtils::getUserIdentifier(),
@@ -95,29 +78,17 @@ class PanoptoLTIHandler
             "lti_version" => "LTI-1p0",
             "lti_message_type" => "basic-lti-launch-request",
             "oauth_callback" => "about:blank",
-            "oauth_consumer_key" => $key,
+            "oauth_consumer_key" => PanoptoConfig::get('instance_name'),
             "oauth_version" => "1.0",
             "oauth_nonce" => uniqid('', true),
             "oauth_timestamp" => time(),
             "oauth_signature_method" => "HMAC_SHA1"
         ];
 
-        $params = [
-            "sign_method" => "HMAC_SHA1",
-            "key" => $key,
-            "secret" => $secret,
-            "callback" => "about:blank",
-            "http_method" => "POST",
-            "url" => $launch_url,
-            "data" => $launch_data
-        ];
+        $launch_data['oauth_signature'] = self::signOAuth($launch_data, $launch_url);
 
-        $oauth_params = self::signOAuth($params);
-
-
-        $html = '<form id="lti_form" action="' . $launch_url . '" method="post" target="basicltiLaunchFrame"
-      enctype="application/x-www-form-urlencoded">';
-        foreach ($oauth_params as $key => $value) {
+        $html = '<form id="lti_form" action="' . $launch_url . '/Panopto/BasicLTI/BasicLTILanding.aspx" method="post" target="basicltiLaunchFrame" enctype="application/x-www-form-urlencoded">';
+        foreach ($launch_data as $key => $value) {
             $html .= "<input type='hidden' name='$key' value='" . htmlspecialchars((string)$value, ENT_QUOTES) . "'>";
         }
         $html .= '</form>';
@@ -129,13 +100,10 @@ class PanoptoLTIHandler
     /**
      * @throws PanoptoException
      */
-    public static function launchToolPageComponent(): bool|string
+    public static function launchToolPageComponent()
     {
         global $DIC;
         $launch_url = 'https://' . PanoptoConfig::get('hostname') . '/Panopto/BasicLTI/BasicLTILanding.aspx';
-        $key = PanoptoConfig::get('instance_name');
-        $secret = PanoptoConfig::get('application_key');
-
 
         $launch_data = array(
             "user_id" => PanoptoUtils::getUserIdentifier(),
@@ -150,37 +118,16 @@ class PanoptoLTIHandler
             "lti_version" => "LTI-1p0",
             "lti_message_type" => "basic-lti-launch-request",
             "oauth_callback" => "about:blank",
-            "oauth_consumer_key" => $key,
+            "oauth_consumer_key" => PanoptoConfig::get('instance_name'),
             "oauth_version" => "1.0",
             "oauth_nonce" => uniqid('', true),
             "oauth_timestamp" => time(),
             "oauth_signature_method" => "HMAC_SHA1"
         );
 
+        $launch_data['oauth_signature'] = self::signOAuth($launch_data, $launch_url);
 
-        $params = [
-            "sign_method" => "HMAC_SHA1",
-            "key" => $key,
-            "secret" => $secret,
-            "callback" => "about:blank",
-            "http_method" => "POST",
-            "url" => $launch_url,
-            "data" => $launch_data
-        ];
-
-        $oauth_params = self::signOAuth($params);
-
-
-        $html = '<form id="lti_form" action="' . $launch_url . '" method="post" target="basicltiLaunchFrame"
-      enctype="application/x-www-form-urlencoded">';
-        foreach ($oauth_params as $key => $value) {
-            $html .= "<input type='hidden' name='$key' value='" . htmlspecialchars((string)$value, ENT_QUOTES) . "'>";
-        }
-        $html .= '</form>';
-//        $html .= '<iframe name="basicltiLaunchFrame"  id="basicltiLaunchFrame" src="'.$launch_url.'" style="display:none;"></iframe>';
-
-
-        return json_encode($oauth_params);
+        return json_encode($launch_data);
     }
 }
 

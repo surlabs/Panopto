@@ -21,7 +21,7 @@ declare(strict_types=1);
 
 namespace classes\ui\admin;
 
-use ilCtrlInterface;
+use ilCtrl;
 use ilException;
 use ILIAS\DI\Exceptions\Exception;
 use ILIAS\UI\Factory;
@@ -41,9 +41,9 @@ class PluginConfigurationMainUI
      * @throws ilException
      */
     /**
-     * @var ilCtrlInterface
+     * @var ilCtrl
      */
-    protected ilCtrlInterface $control;
+    protected ilCtrl $control;
     /**
      * @var Factory
      */

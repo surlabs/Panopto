@@ -86,7 +86,7 @@ class ilObjPanoptoListGUI extends ilObjectPluginListGUI
      *                        'value' (string) => property value
      * @throws PanoptoException
      */
-    public function getCustomProperties(array $prop): array
+    public function getCustomProperties($prop): array
     {
         if(!isset($this->obj_id)) {
             return [];

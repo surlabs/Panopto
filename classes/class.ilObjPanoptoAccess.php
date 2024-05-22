@@ -86,7 +86,7 @@ class ilObjPanoptoAccess extends ilObjectPluginAccess
      * @return bool
      * @throws PanoptoException
      */
-    public function _checkAccess(string $cmd, string $permission, ?int $ref_id, ?int $obj_id, ?int $user_id = null): bool {
+    public function _checkAccess($cmd, $permission, $ref_id, $obj_id, $user_id = ""): bool {
         if ($ref_id === NULL) {
             $ref_id = (int) filter_input(INPUT_GET, "ref_id");
         }
@@ -95,7 +95,7 @@ class ilObjPanoptoAccess extends ilObjectPluginAccess
             $obj_id = ilObjPanopto::_lookupObjectId($ref_id);
         }
 
-        if ($user_id == NULL) {
+        if ($user_id == "") {
             $user_id = $this->user->getId();
         }
 
@@ -122,7 +122,7 @@ class ilObjPanoptoAccess extends ilObjectPluginAccess
      * @return bool
      * @throws PanoptoException
      */
-    public static function _isOffline(int $obj_id): bool
+    public static function _isOffline($obj_id): bool
     {
         $xpanDb = new PanoptoDatabase();
         $result = $xpanDb->select("xpan_objects", ["obj_id" => $obj_id], ["is_online"]);

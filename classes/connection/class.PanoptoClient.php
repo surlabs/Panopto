@@ -253,7 +253,7 @@ class PanoptoClient
      * @return bool|string Creator, Viewer or false
      * @throws Exception
      */
-    public function getUserAccessOnFolder($folder_id, int $user_id = 0): bool|string
+    public function getUserAccessOnFolder($folder_id, int $user_id = 0)
     {
         $user_details = $this->getUserAccessDetails($user_id);
         $user_groups_details = $user_details->getGroupMembershipAccess()->getGroupAccessDetails();

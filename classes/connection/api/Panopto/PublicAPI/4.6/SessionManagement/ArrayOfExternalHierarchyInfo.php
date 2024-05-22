@@ -40,7 +40,7 @@ class ArrayOfExternalHierarchyInfo implements \ArrayAccess, \Iterator, \Countabl
      * @param mixed $offset An offset to check for
      * @return bool True on success or false on failure
      */
-    public function offsetExists(mixed $offset): bool
+    public function offsetExists($offset): bool
     {
         return isset($this->ExternalHierarchyInfo[$offset]);
     }
@@ -51,7 +51,7 @@ class ArrayOfExternalHierarchyInfo implements \ArrayAccess, \Iterator, \Countabl
      * @param mixed $offset The offset to retrieve
      * @return ExternalHierarchyInfo
      */
-    public function offsetGet(mixed $offset): ExternalHierarchyInfo
+    public function offsetGet($offset): ExternalHierarchyInfo
     {
         return $this->ExternalHierarchyInfo[$offset];
     }
@@ -63,7 +63,7 @@ class ArrayOfExternalHierarchyInfo implements \ArrayAccess, \Iterator, \Countabl
      * @param ExternalHierarchyInfo $value The value to set
      * @return void
      */
-    public function offsetSet(mixed $offset, mixed $value): void
+    public function offsetSet($offset, $value): void
     {
         if (!isset($offset)) {
             $this->ExternalHierarchyInfo[] = $value;
@@ -78,7 +78,7 @@ class ArrayOfExternalHierarchyInfo implements \ArrayAccess, \Iterator, \Countabl
      * @param mixed $offset The offset to unset
      * @return void
      */
-    public function offsetUnset(mixed $offset): void
+    public function offsetUnset($offset): void
     {
         unset($this->ExternalHierarchyInfo[$offset]);
     }
