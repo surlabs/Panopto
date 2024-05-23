@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace tests;
 
 use PHPUnit\Framework\TestCase;
+use platform\PanoptoConfig;
 
 /**
  * Class PanoptoLTIHandlerTest
@@ -29,5 +30,11 @@ use PHPUnit\Framework\TestCase;
  */
 class PanoptoLTIHandlerTest extends TestCase
 {
+    public function test() {
+        // Hasta ahora el objetivo es que carguen las clases de ilias al usar php unit, por que si no, mal vamos
 
+        // Por el momento el erro que tiene es que al no estar ilias iniciado por ejemplo $DIC no esta definido
+        // entonces da error al llamar $DIC->database() en PanoptoDatabase.php el cual se llama en PanoptoConfig.php
+        print PanoptoConfig::get("hostname");
+    }
 }
