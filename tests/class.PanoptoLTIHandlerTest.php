@@ -23,6 +23,7 @@ namespace tests;
 
 use PHPUnit\Framework\TestCase;
 use platform\PanoptoConfig;
+use platform\PanoptoException;
 
 /**
  * Class PanoptoLTIHandlerTest
@@ -30,6 +31,9 @@ use platform\PanoptoConfig;
  */
 class PanoptoLTIHandlerTest extends TestCase
 {
+    /**
+     * @throws PanoptoException
+     */
     public function test() {
         // Hasta ahora el objetivo es que carguen las clases de ilias al usar php unit, por que si no, mal vamos
 
