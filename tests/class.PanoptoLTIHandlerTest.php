@@ -24,10 +24,10 @@ namespace tests;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class PanoptoException
+ * Class PanoptoLTIHandlerTest
  * @authors Jesús Copado, Daniel Cazalla, Saúl Díaz, Juan Aguilar <info@surlabs.es>
  */
-class PanoptoTest extends TestCase
+class PanoptoLTIHandlerTest extends TestCase
 {
 
 }
