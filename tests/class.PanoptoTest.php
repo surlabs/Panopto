@@ -19,7 +19,7 @@ declare(strict_types=1);
  *
  */
 
-namespace platform;
+namespace tests;
 
 use PHPUnit\Framework\TestCase;
 
