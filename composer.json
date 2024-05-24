@@ -1,8 +1,7 @@
 {
     "require": {
         "php": ">=7.4",
-        "league/oauth2-client": "^2.7",
-        "phpunit/phpunit": "^9.6"
+        "league/oauth2-client": "^2.7"
     },
     "autoload": {
         "classmap": [
