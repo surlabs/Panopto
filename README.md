@@ -1,3 +1,11 @@
+<div alt style="text-align: center; transform: scale(.5);">
+	<picture>
+		<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/surlabs/STACK/ilias7_stack2021/templates/assets/stack-collage.png" />
+		<img alt="STACK" src="https://raw.githubusercontent.com/surlabs/PanoptoRW/ilias8/templates/images/BannerGithub.png" />
+	</picture>
+</div>
+
+
 # PanoptoRW
 Versión aún privada, del Panopto Reworkeado por SURLABS.
 
