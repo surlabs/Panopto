@@ -1,7 +1,7 @@
 <div alt style="text-align: center; transform: scale(.5);">
 	<picture>
 		<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/surlabs/PanoptoRW/ilias8/templates/images/BannerGithub.png" />
-		<img alt="STACK" src="https://raw.githubusercontent.com/surlabs/PanoptoRW/ilias8/templates/images/BannerGithub.png" />
+		<img alt="STACK" src="https://raw.githubusercontent.com/surlabs/PanoptoRW/ilias8/templates/images/GitBannerPanopto" />
 	</picture>
 </div>
 
