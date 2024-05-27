@@ -22,17 +22,25 @@ git clone https://github.com/surlabs/Panopto.git
 git checkout ilias8
 ```
 
+Ensure you run composer install at platform root before you install/update the plugin
+```bash
+composer install --no-dev
+```
+
+Run ILIAS update script at platform root
+```bash
+php setup/setup.php update
+```
+
 ## Configuration
-### Panopto
-Login to your Panopto instance as administrator. 
+### Panopto Instance
 
 #### Identity Provider
 1. Add new Provider:
-* Navigate to "System" -> "Identity Providers" and add a new provider. Enter the following data:
+* Login to your Panopto instance as administrator, Navigate to "System" -> "Identity Providers" and add a new provider with the following data:
 * **Provider Type**: *BLTI*
 * **Instance Name**: choose an identifier, e.g: "*ilias.myinstitution*" (will be needed in the plugin configuration)
 * **Friendly Description**:	choose any description
-* **Bounce Page URL**: http://{your-ilias-installation}/Customizing/global/plugins/Services/Repository/RepositoryObject/Panopto/classes/bounce.php
 * **Parent folder name**: choose a folder, where all objects coming from this ILIAS instance will be created
 * **Suppress access permission sync on LTI link**: Set 'true' if you want to stop the behavior to revoke Viewer permission of other course folders.
 * **Application Key**: save this key for the plugin configuration
@@ -64,9 +72,8 @@ Unfortunately, the previously created api user can not be used for the REST api,
     * uncheck the Options "Email user when recorded..." and "Create a personal folder..."
 * Create the user
 
-#### ILIAS
-
-Now, login to your ILIAS instance as an administrator. Navigate to "Administration" -> "Plugins" and look for the "Panopto" plugin. Install/Update the plugin if it's not up-to-date yet and afterwards choose "Configure". Configure the plugin as followed:
+### ILIAS
+Login to your ILIAS platform as an administrator. Navigate to "Administration" -> "Plugins" and look for the "Panopto" plugin and choose "Configure". Configure the plugin as follows:
 * **General**
     * **Object Title**: choose how this object type should be named in ILIAS (displayed e.g. when creating a new object in the repository)
 * **SOAP API**
