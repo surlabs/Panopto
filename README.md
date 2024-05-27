@@ -35,6 +35,8 @@ Run ILIAS update script at platform root
 php setup/setup.php update
 ```
 
+**Ensure you don't ignore plugins at the ilias .gitignore files and don't use --no-plugins option at ILIAS setup**
+
 ## Configuration
 ### Panopto Instance
 
