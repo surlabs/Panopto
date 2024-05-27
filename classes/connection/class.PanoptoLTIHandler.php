@@ -37,7 +37,7 @@ use utils\PanoptoUtils;
  */
 class PanoptoLTIHandler
 {
-    private static function signOAuth($params): ?array
+    public static function signOAuth($params): ?array
     {
 
         switch ($params['sign_method']) {
