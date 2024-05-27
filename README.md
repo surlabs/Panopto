@@ -11,13 +11,16 @@ This plugin allows users to embed Panopto videos in ILIAS as repository objects
 ## Installation & Update
 
 ### Installation steps
-1. Create subdirectories, if necessary for Customizing/global/plugins/Services/Repository/RepositoryObject/
-2. In Customizing/global/plugins/Services/Repository/RepositoryObject/ **ensure you delete any previous Panopto folder**
-3. Then, execute:
+1. Create subdirectories, if necessary for Customizing/global/plugins/Services/Repository/RepositoryObject/ or run the following script from the ILIAS root
+   ```bash
+   mkdir -p Customizing/global/plugins/Services/Repository/RepositoryObject
+   cd Customizing/global/plugins/Services/Repository/RepositoryObject
+   ```
+
+3. In Customizing/global/plugins/Services/Repository/RepositoryObject/ **ensure you delete any previous Panopto folder**
+4. Then, execute:
 
 ```bash
-mkdir -p Customizing/global/plugins/Services/Repository/RepositoryObject
-cd Customizing/global/plugins/Services/Repository/RepositoryObject
 git clone https://github.com/surlabs/Panopto.git
 git checkout ilias8
 ```
