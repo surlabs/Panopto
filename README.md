@@ -5,7 +5,7 @@
 	</picture>
 </div>
 
-# Panopto Repository Object Plugin for ILIAS
+# Panopto Repository Object Plugin for ILIAS 8
 This plugin allows users to embed Panopto videos in ILIAS as repository objects
 
 ## Installation & Update
