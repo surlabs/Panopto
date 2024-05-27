@@ -5,9 +5,10 @@
 	</picture>
 </div>
 
-
 # Panopto Repository Object Plugin for ILIAS
 This plugin allows users to embed Panopto videos in ILIAS as repository objects
+
+## Installation & Update
 
 ### Installation steps
 1. Create subdirectories, if necessary for Customizing/global/plugins/Services/Repository/RepositoryObject/
@@ -26,7 +27,8 @@ git checkout ilias8
 Login to your Panopto instance as administrator. 
 
 #### Identity Provider
-Navigate to "System" -> "Identity Providers" and add a new provider. Enter the following data:
+1. Add new Provider:
+* Navigate to "System" -> "Identity Providers" and add a new provider. Enter the following data:
 * **Provider Type**: *BLTI*
 * **Instance Name**: choose an identifier, e.g: "*ilias.myinstitution*" (will be needed in the plugin configuration)
 * **Friendly Description**:	choose any description
@@ -40,7 +42,7 @@ Navigate to "System" -> "Identity Providers" and add a new provider. Enter the f
 * **LTI Username parameter override**:	Leave empty
 * **Show this in Sign-in Dropdown**: False (don't check)
 
-Now, to create an api user:
+2. Create an API User:
 * Navigate to "System" -> "Users" 
 * Click on "Batch Create" (for some reason you can't create single external users)
 * As "Provider", choose the previously created identity provider
@@ -79,3 +81,16 @@ Now, login to your ILIAS instance as an administrator. Navigate to "Administrati
     * **Client Name**: name of REST Client created in the section [REST Client](#rest-client)
     * **Client ID**: ID of REST Client created in the section [REST Client](#rest-client)
     * **Client-Secret**: Secret of REST Client created in the section [REST Client](#rest-client)
+ 
+# Authors
+* A previous version of this plugin was developed and maintained by Fluxlabs, and it is no longer maintained.
+* This plugin is created and maintained by Jesús Copado, Saúl Díaz and Daniel Cazalla through [SURLABS](https://surlabs.es)
+
+# Bug Reports & Discussion
+- Bug Reports: [Mantis](https://www.ilias.de/mantis) (Choose project "ILIAS plugins" and filter by category "Panopto")
+- SIG Panopto [Forum](https://docu.ilias.de/goto_docu_frm_13755.html)
+
+# Version History
+* The version 9.x.x for **ILIAS 9** developed and maintained by SURLABS can be found in the Github branch **ilias9**
+* The version 8.x.x for **ILIAS 8** developed and maintained by SURLABS can be found in the Github branch **ilias8**
+* The version 9.x.x for **ILIAS 9** developed and maintained by SURLABS can be found in the Github branch **ilias7**
