@@ -32,7 +32,8 @@ class PanoptoDatabase
 {
     private ilDBInterface $db;
 
-    public function __construct() {
+    public function __construct()
+    {
         global $DIC;
 
         $this->db = $DIC->database();
@@ -48,7 +49,8 @@ class PanoptoDatabase
      * @return void
      * @throws PanoptoException
      */
-    public function insert(string $table, array $data): void {
+    public function insert(string $table, array $data): void
+    {
         try {
             $this->db->query("INSERT INTO " . $table . " (" . implode(", ", array_keys($data)) . ") VALUES (" . implode(", ", array_map(function ($value) {
                     return $this->db->quote($value);
@@ -68,7 +70,8 @@ class PanoptoDatabase
      * @return void
      * @throws PanoptoException
      */
-    public function insertOnDuplicatedKey(string $table, array $data): void {
+    public function insertOnDuplicatedKey(string $table, array $data): void
+    {
         try {
             $this->db->query("INSERT INTO " . $table . " (" . implode(", ", array_keys($data)) . ") VALUES (" . implode(", ", array_map(function ($value) {
                     return $this->db->quote($value);
@@ -93,7 +96,8 @@ class PanoptoDatabase
      * @return void
      * @throws PanoptoException
      */
-    public function update(string $table, array $data, array $where): void {
+    public function update(string $table, array $data, array $where): void
+    {
         try {
             $this->db->query("UPDATE " . $table . " SET " . implode(", ", array_map(function ($key, $value) {
                     return $key . " = " . $value;
@@ -119,7 +123,8 @@ class PanoptoDatabase
      * @return void
      * @throws PanoptoException
      */
-    public function delete(string $table, array $where): void {
+    public function delete(string $table, array $where): void
+    {
         try {
             $this->db->query("DELETE FROM " . $table . " WHERE " . implode(" AND ", array_map(function ($key, $value) {
                     return $key . " = " . $value;
@@ -143,7 +148,8 @@ class PanoptoDatabase
      * @return array
      * @throws PanoptoException
      */
-    public function select(string $table, ?array $where = null, ?array $columns = null, ?string $extra = ""): array {
+    public function select(string $table, ?array $where = null, ?array $columns = null, ?string $extra = ""): array
+    {
         try {
             $query = "SELECT " . (isset($columns) ? implode(", ", $columns) : "*") . " FROM " . $table;
 
@@ -180,7 +186,8 @@ class PanoptoDatabase
      * @return int
      * @throws PanoptoException
      */
-    public function nextId(string $table) :int {
+    public function nextId(string $table): int
+    {
         try {
             return $this->db->nextId($table);
         } catch (Exception $e) {

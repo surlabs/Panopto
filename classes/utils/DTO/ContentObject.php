@@ -60,7 +60,7 @@ class ContentObject
     /**
      * @return string
      */
-    public function getId() : string
+    public function getId(): string
     {
         return $this->id;
     }
@@ -68,7 +68,7 @@ class ContentObject
     /**
      * @return string
      */
-    public function getTitle() : string
+    public function getTitle(): string
     {
         return $this->title;
     }
@@ -76,7 +76,7 @@ class ContentObject
     /**
      * @return string
      */
-    public function getDescription() : string
+    public function getDescription(): string
     {
         return $this->description;
     }
@@ -84,7 +84,7 @@ class ContentObject
     /**
      * @return string
      */
-    public function getThumbnailUrl() : string
+    public function getThumbnailUrl(): string
     {
         return $this->thumbnail_url;
     }

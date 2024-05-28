@@ -42,7 +42,8 @@ class ilPanoptoPlugin extends ilRepositoryObjectPlugin
     }
 
 
-    public static function getInstance() {
+    public static function getInstance()
+    {
         if (!isset(self::$instance)) {
             self::$instance = new self();
         }

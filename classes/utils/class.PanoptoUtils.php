@@ -1,6 +1,7 @@
 <?php
 
 namespace utils;
+
 use ilObjPanopto;
 use ilObjUser;
 use platform\PanoptoConfig;

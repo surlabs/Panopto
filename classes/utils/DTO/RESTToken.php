@@ -39,7 +39,7 @@ class RESTToken
     /**
      * RESTToken constructor.
      * @param string $access_token
-     * @param int    $expiry
+     * @param int $expiry
      */
     public function __construct(string $access_token, int $expiry)
     {
@@ -50,7 +50,7 @@ class RESTToken
     /**
      * @return string
      */
-    public function getAccessToken() : string
+    public function getAccessToken(): string
     {
         return $this->access_token;
     }
@@ -58,17 +58,17 @@ class RESTToken
     /**
      * @return int
      */
-    public function getExpiry() : int
+    public function getExpiry(): int
     {
         return $this->expiry;
     }
 
-    public function isExpired() : bool
+    public function isExpired(): bool
     {
         return time() > $this->expiry;
     }
 
-    public function jsonSerialize() : string
+    public function jsonSerialize(): string
     {
         $std_class = new stdClass();
         $std_class->access_token = $this->access_token;
@@ -76,7 +76,7 @@ class RESTToken
         return json_encode($std_class);
     }
 
-    public static function jsonUnserialize(string $json) : self
+    public static function jsonUnserialize(string $json): self
     {
         $decoded = json_decode($json);
         return new self($decoded->access_token, $decoded->expiry);

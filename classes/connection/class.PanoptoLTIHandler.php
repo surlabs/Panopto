@@ -108,9 +108,9 @@ class PanoptoLTIHandler
         $launch_data = array(
             "user_id" => PanoptoUtils::getUserIdentifier(),
             "roles" => "Viewer",
-            "lis_person_name_full" => str_replace("'","`",($DIC->user()->getFullname())),
-            "lis_person_name_family" => str_replace("'","`",($DIC->user()->getLastname())),
-            "lis_person_name_given" => str_replace("'","`",($DIC->user()->getFirstname())),
+            "lis_person_name_full" => str_replace("'", "`", ($DIC->user()->getFullname())),
+            "lis_person_name_family" => str_replace("'", "`", ($DIC->user()->getLastname())),
+            "lis_person_name_given" => str_replace("'", "`", ($DIC->user()->getFirstname())),
             "lis_person_contact_email_primary" => $DIC->user()->getEmail(),
             "context_type" => "urn:lti:context-type:ilias/Object",
             'launch_presentation_locale' => 'de',

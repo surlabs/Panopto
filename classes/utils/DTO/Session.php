@@ -1,4 +1,5 @@
 <?php
+
 namespace utils\DTO;
 
 /**
@@ -47,7 +48,7 @@ class Session extends ContentObject
     /**
      * @return int|null
      */
-    public function getDuration() : ?int
+    public function getDuration(): ?int
     {
         return $this->duration;
     }

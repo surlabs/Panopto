@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * This file is part of the Panopto Repository Object plugin for ILIAS.
  * This plugin allows users to embed Panopto videos in ILIAS as repository objects.
@@ -53,7 +54,7 @@ class ilObjPanoptoAccess extends ilObjectPluginAccess
      * @return bool
      * @throws PanoptoException
      */
-    public static function hasWriteAccess(?string $ref_id = null) : bool
+    public static function hasWriteAccess(?string $ref_id = null): bool
     {
         return self::checkAccess("write", "write", $ref_id);
     }
@@ -86,9 +87,10 @@ class ilObjPanoptoAccess extends ilObjectPluginAccess
      * @return bool
      * @throws PanoptoException
      */
-    public function _checkAccess($cmd, $permission, $ref_id, $obj_id, $user_id = ""): bool {
+    public function _checkAccess($cmd, $permission, $ref_id, $obj_id, $user_id = ""): bool
+    {
         if ($ref_id === NULL) {
-            $ref_id = (int) filter_input(INPUT_GET, "ref_id");
+            $ref_id = (int)filter_input(INPUT_GET, "ref_id");
         }
 
         if ($obj_id === NULL) {
@@ -127,6 +129,6 @@ class ilObjPanoptoAccess extends ilObjectPluginAccess
         $xpanDb = new PanoptoDatabase();
         $result = $xpanDb->select("xpan_objects", ["obj_id" => $obj_id], ["is_online"]);
 
-        return empty($result) || (int) $result[0]["is_online"] === 0;
+        return empty($result) || (int)$result[0]["is_online"] === 0;
     }
 }

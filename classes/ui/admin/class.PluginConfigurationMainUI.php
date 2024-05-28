@@ -33,7 +33,6 @@ use platform\PanoptoException;
  * Class PluginConfigurationMainUI
  * @authors Jesús Copado, Daniel Cazalla, Saúl Díaz, Juan Aguilar <info@surlabs.es>
  */
-
 class PluginConfigurationMainUI
 {
     /**
@@ -239,7 +238,7 @@ class PluginConfigurationMainUI
             ];
 
 
-        } catch(Exception $e){
+        } catch (Exception $e) {
             throw new ilException($e->getMessage());
         }
 

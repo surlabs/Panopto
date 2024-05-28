@@ -20,6 +20,7 @@ declare(strict_types=1);
  */
 
 namespace classes\ui\user;
+
 use connection\PanoptoLTIHandler;
 use ilPanoptoPlugin;
 use platform\PanoptoException;

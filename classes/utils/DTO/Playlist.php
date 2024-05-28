@@ -1,4 +1,5 @@
 <?php
+
 namespace utils\DTO;
 
 /**
@@ -18,7 +19,6 @@ namespace utils\DTO;
  * info@surlabs.es
  *
  */
-
 class Playlist extends ContentObject
 {
 

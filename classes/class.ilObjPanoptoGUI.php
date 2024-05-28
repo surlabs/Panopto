@@ -130,7 +130,7 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
     public function index(): void
     {
 
-        try{
+        try {
             $this->tabs->activateTab("content");
             $this->userContentMainUI = new UserContentMainUI();
             $this->tpl->setContent($this->userContentMainUI->render($this->object, $this));
@@ -202,7 +202,8 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
      * @return void
      * @throws ilCtrlException
      */
-    public function saveSettings(): void {
+    public function saveSettings(): void
+    {
         if (isset($_POST['title'])) {
             $this->object->setTitle($_POST['title']);
         }
@@ -212,7 +213,7 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
         }
 
         if (isset($_POST['online'])) {
-            $this->object->setOnline((bool) $_POST['online']);
+            $this->object->setOnline((bool)$_POST['online']);
         }
 
         $this->object->update();

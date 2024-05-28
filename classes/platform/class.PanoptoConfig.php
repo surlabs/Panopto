@@ -38,11 +38,12 @@ class PanoptoConfig
      * @return void
      * @throws PanoptoException
      */
-    public static function load() :void {
+    public static function load(): void
+    {
         $config = (new PanoptoDatabase)->select('xpan_config');
 
         foreach ($config as $row) {
-            if(isset($row['value']) && $row['value'] !== ''){
+            if (isset($row['value']) && $row['value'] !== '') {
                 $json_decoded = json_decode($row['value'], true);
 
                 if (json_last_error() === JSON_ERROR_NONE) {
@@ -60,9 +61,10 @@ class PanoptoConfig
      * @param mixed $value
      * @return void
      */
-    public static function set(string $key, $value): void {
+    public static function set(string $key, $value): void
+    {
         if (is_bool($value)) {
-            $value = (int) $value;
+            $value = (int)$value;
         }
 
         if (!isset(self::$config[$key]) || self::$config[$key] !== $value) {
@@ -88,7 +90,8 @@ class PanoptoConfig
      * @return mixed
      * @throws PanoptoException
      */
-    public static function getFromDB(string $key) {
+    public static function getFromDB(string $key)
+    {
         $config = (new PanoptoDatabase)->select('xpan_config', array(
             'name' => $key
         ));
@@ -112,7 +115,8 @@ class PanoptoConfig
      * Gets all the plugin configuration values
      * @return array
      */
-    public static function getAll() :array {
+    public static function getAll(): array
+    {
         return self::$config;
     }
 
