@@ -31,7 +31,6 @@ use League\OAuth2\Client\Provider\GenericProvider as OAuth2Provider;
 use utils\DTO\ContentObjectBuilder;
 
 
-
 /**
  * Class PanoptoRestClient
  * @authors Jesús Copado, Daniel Cazalla, Saúl Díaz, Juan Aguilar <info@surlabs.es>
@@ -63,7 +62,8 @@ class PanoptoRestClient
     /**
      * @throws PanoptoException
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->log = PanoptoLog::getInstance();
         $host = PanoptoConfig::get('hostname');
         if (str_starts_with($host, 'https://')) {
@@ -99,7 +99,7 @@ class PanoptoRestClient
 
         if (!$token || $token->isExpired()) {
             $this->log('fetch access token');
-            try{
+            try {
                 $oauth2_token = $this->oauth2_provider->getAccessToken("password", [
                     "username" => PanoptoConfig::get('rest_api_user'),
                     "password" => PanoptoConfig::get('rest_api_password'),
@@ -120,7 +120,7 @@ class PanoptoRestClient
      * @return Playlist[]
      * @throws ilException
      */
-    public function getPlaylistsOfFolder(string $folder_id) : array
+    public function getPlaylistsOfFolder(string $folder_id): array
     {
         $response = $this->get('/Panopto/api/v1/folders/' . $folder_id . '/playlists');
         return ContentObjectBuilder::buildPlaylistDTOsFromArray($response["Results"]);
@@ -131,7 +131,7 @@ class PanoptoRestClient
      * @return array
      * @throws ilException
      */
-    private function get(string $relative_url) : array
+    private function get(string $relative_url): array
     {
         $this->log('GET ' . $relative_url);
         $url = $this->base_url . $relative_url;
@@ -156,7 +156,7 @@ class PanoptoRestClient
      * @return string
      * @throws ilException
      */
-    public function getFolderIdOfPlaylist(string $playlist_id) : string
+    public function getFolderIdOfPlaylist(string $playlist_id): string
     {
         $response = $this->get('/Panopto/api/v1/playlists/' . $playlist_id);
         if (!isset($response['Folder']['Id'])) {

@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * This file is part of the Panopto Repository Object plugin for ILIAS.
  * This plugin allows users to embed Panopto videos in ILIAS as repository objects.
@@ -88,7 +89,7 @@ class ilObjPanoptoListGUI extends ilObjectPluginListGUI
      */
     public function getCustomProperties(array $prop): array
     {
-        if(!isset($this->obj_id)) {
+        if (!isset($this->obj_id)) {
             return [];
         }
 

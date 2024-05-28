@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * This file is part of the Panopto Repository Object plugin for ILIAS.
  * This plugin allows users to embed Panopto videos in ILIAS as repository objects.
@@ -54,8 +55,7 @@ class ilPanoptoConfigGUI extends ilPluginConfigGUI
         $this->renderer = $DIC->ui()->renderer();
         $this->config_ui = new PluginConfigurationMainUI();
 
-        switch($cmd)
-        {
+        switch ($cmd) {
             case "configure":
                 PanoptoConfig::load();
                 $this->control->setParameterByClass('ilPanoptoConfigGUI', 'cmd', 'configure');
@@ -88,7 +88,7 @@ class ilPanoptoConfigGUI extends ilPluginConfigGUI
         if ($this->request->getMethod() == "POST") {
             $form = $form->withRequest($this->request);
             $result = $form->getData();
-            if($result){
+            if ($result) {
                 $saving_info = $this->save();
             }
         }

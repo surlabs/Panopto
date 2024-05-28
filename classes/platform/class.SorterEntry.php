@@ -33,7 +33,7 @@ class SorterEntry
      * @return array
      * @throws PanoptoException
      */
-    public static function generateSortedObjects(array $objects, int $ref_id = 0) : array
+    public static function generateSortedObjects(array $objects, int $ref_id = 0): array
     {
         $sorted = [];
 
@@ -63,7 +63,7 @@ class SorterEntry
      * @param int $ref_id
      * @throws PanoptoException
      */
-    public static function saveOrder(array $ids, int $ref_id = 0) : void
+    public static function saveOrder(array $ids, int $ref_id = 0): void
     {
         $db = new PanoptoDatabase();
 
