@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 
 namespace classes\ui\user;
+
 use connection\PanoptoClient;
 use connection\PanoptoLTIHandler;
 use Exception;
@@ -74,11 +75,11 @@ class UserContentMainUI
         $this->client = PanoptoClient::getInstance();
 
 
-       $folder = $this->client->getFolderByExternalId($object->getFolderExtId());
+        $folder = $this->client->getFolderByExternalId($object->getFolderExtId());
         if (!$folder) {
             throw new ilException('No external folder found for this object.');
         }
-       $this->folder_id = $folder->getId();
+        $this->folder_id = $folder->getId();
 
         $this->pl = ilPanoptoPlugin::getInstance();
 
@@ -128,7 +129,7 @@ class UserContentMainUI
                 // top
                 $tpl->setCurrentBlock('page_top');
                 $tpl->setVariable('LINK_PAGE', $link);
-                if (($i-1) == $_GET['xpan_page']) {
+                if (($i - 1) == $_GET['xpan_page']) {
                     $tpl->setVariable('ADDITIONAL_CLASS', 'xpan_page_active');
                 }
                 $tpl->setVariable('LABEL_PAGE', $i);
@@ -136,7 +137,7 @@ class UserContentMainUI
                 // bottom
                 $tpl->setCurrentBlock('page_bottom');
                 $tpl->setVariable('LINK_PAGE', $link);
-                if (($i-1) == $_GET['xpan_page']) {
+                if (($i - 1) == $_GET['xpan_page']) {
                     $tpl->setVariable('ADDITIONAL_CLASS', 'xpan_page_active');
                 }
                 $tpl->setVariable('LABEL_PAGE', $i);
@@ -145,7 +146,7 @@ class UserContentMainUI
         }
 
         // "next" button
-        if ($content_objects['count'] > (($_GET['xpan_page'] + 1)*10)) {
+        if ($content_objects['count'] > (($_GET['xpan_page'] + 1) * 10)) {
             $this->ctrl->setParameter($this, 'xpan_page', $_GET['xpan_page'] + 1);
             $link = $this->ctrl->getLinkTarget($this, 'index');
             // top
@@ -163,7 +164,7 @@ class UserContentMainUI
         foreach ($content_objects['objects'] as $object) {
             if ($object instanceof Session) {
                 $tpl->setCurrentBlock('duration');
-                $tpl->setVariable('DURATION', $this->formatDuration((int) $object->getDuration()));
+                $tpl->setVariable('DURATION', $this->formatDuration((int)$object->getDuration()));
                 $tpl->parseCurrentBlock();
                 $tpl->setVariable('IS_PLAYLIST', 'false');
             } else {
@@ -187,7 +188,7 @@ class UserContentMainUI
         $this->tpl->addJavaScript("./Services/UIComponent/Modal/js/Modal.js");
 
 
-        return '<div class="xpan_flex">'.$tpl->get().'</div>'.$lti_form .  $this->getModalPlayer();
+        return '<div class="xpan_flex">' . $tpl->get() . '</div>' . $lti_form . $this->getModalPlayer();
     }
 
     protected function formatDuration(int $duration_in_seconds): string

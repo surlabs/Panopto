@@ -53,7 +53,6 @@ class PanoptoSortingTableGUI extends ilTable2GUI
     private ilPanoptoPlugin $pl;
 
 
-
     /**
      * xpanTableGUI constructor.
      * @param                 $a_parent_obj

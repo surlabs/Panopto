@@ -28,7 +28,8 @@ use ilLogLevel;
  * Class PanoptoLog
  * @authors Jesús Copado, Daniel Cazalla, Saúl Díaz, Juan Aguilar <info@surlabs.es>
  */
-class PanoptoLog {
+class PanoptoLog
+{
     private static PanoptoLog $instance;
     private string $path;
     private string $filename;
@@ -167,7 +168,7 @@ class PanoptoLog {
      */
     public function logError(string|int $a_code, string $a_msg): void
     {
-        $a_code = (int) $a_code;
+        $a_code = (int)$a_code;
         switch ($a_code) {
             case 3:
                 return; // don't log messages

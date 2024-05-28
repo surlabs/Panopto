@@ -31,7 +31,7 @@ class ContentObjectBuilder
      * @param array $results
      * @return Playlist[]
      */
-    public static function buildPlaylistDTOsFromArray(array $results) : array
+    public static function buildPlaylistDTOsFromArray(array $results): array
     {
         $playlists = [];
         foreach ($results as $result) {
@@ -44,7 +44,7 @@ class ContentObjectBuilder
      * @param \Panopto\SessionManagement\Session[] $sessions
      * @return Session[]
      */
-    public static function buildSessionsDTOsFromSessions(array $sessions) : array
+    public static function buildSessionsDTOsFromSessions(array $sessions): array
     {
         $sessions_array = [];
         foreach ($sessions as $session) {
@@ -53,7 +53,7 @@ class ContentObjectBuilder
                 $session->getName(),
                 $session->getDescription() ?? '',
                 $session->getThumbUrl(),
-                (int) $session->getDuration());
+                (int)$session->getDuration());
         }
         return $sessions_array;
     }
@@ -69,7 +69,7 @@ class ContentObjectBuilder
             $array['Name'],
             $array['Description'] ?? '',
             $array['Urls']['ThumbnailUrl'] ?? '',
-            (int) $array['Duration']
+            (int)$array['Duration']
         );
     }
 

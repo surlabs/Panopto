@@ -100,10 +100,11 @@ class PanoptoClient
      * xpanClient constructor.
      * @throws PanoptoException
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->log = PanoptoLog::getInstance();
 
-        $arrContextOptions=array("ssl"=>array( "verify_peer"=>false, "verify_peer_name"=>false));
+        $arrContextOptions = array("ssl" => array("verify_peer" => false, "verify_peer_name" => false));
         $this->panoptoclient = new PanoptoClientAPI(PanoptoConfig::get('hostname'), array('trace' => 1, 'stream_context' => stream_context_create($arrContextOptions)));
         $this->panoptoclient->setAuthenticationInfo(PanoptoConfig::get('instance_name') . "\\" . PanoptoConfig::get('api_user'), '', PanoptoConfig::get('application_key'));
         $this->auth = new AuthenticationInfo();
@@ -119,7 +120,7 @@ class PanoptoClient
      * @throws ilException
      * @throws Exception
      */
-    public function getContentObjectsOfFolder($folder_id, $page_limit = false, $page = 0, int $ref_id = 0) : array
+    public function getContentObjectsOfFolder($folder_id, $page_limit = false, $page = 0, int $ref_id = 0): array
     {
         $perpage = 10;
         $request = new ListSessionsRequest();
@@ -131,7 +132,7 @@ class PanoptoClient
         $request->setPagination($pagination);
 
         $states = new ArrayOfSessionState();
-        $states->setSessionState(array( SessionState::Complete, SessionState::Broadcasting, SessionState::Scheduled ));
+        $states->setSessionState(array(SessionState::Complete, SessionState::Broadcasting, SessionState::Scheduled));
         $request->setStates($states);
 
         $this->log->write('*********');
@@ -165,7 +166,7 @@ class PanoptoClient
         if ($page_limit) {
             // Implement manual pagination
             return array(
-                "count"    => count($objects),
+                "count" => count($objects),
                 "objects" => array_slice($objects, $page * $perpage, $perpage),
             );
         } else {
@@ -202,7 +203,7 @@ class PanoptoClient
         $instanceArray->setString(array(PanoptoConfig::get('instance_name')));
 
 
-        $params  = new GetAllFoldersByExternalId(
+        $params = new GetAllFoldersByExternalId(
             $this->auth,
             $ext_ids,
             $instanceArray
@@ -322,7 +323,7 @@ class PanoptoClient
             }
 
 
-            $this->log->write('Received ' . (is_array($user_access_details[$user_id]) ? (int) count($user_access_details[$user_id]) : 0) . ' object(s).');
+            $this->log->write('Received ' . (is_array($user_access_details[$user_id]) ? (int)count($user_access_details[$user_id]) : 0) . ' object(s).');
         }
         return $user_access_details[$user_id];
     }
@@ -490,7 +491,7 @@ class PanoptoClient
 
     /**
      * @param string $playlist_id
-     * @param int    $user_id
+     * @param int $user_id
      * @throws ilException|Exception
      */
     public function grantViewerAccessToPlaylistFolder(string $playlist_id, $user_id = 0): void
@@ -506,14 +507,14 @@ class PanoptoClient
      * @return string
      * @throws ilException
      */
-    public function getFolderIdOfPlaylist(string $playlist_id) : string
+    public function getFolderIdOfPlaylist(string $playlist_id): string
     {
         return $this->rest_client->getFolderIdOfPlaylist($playlist_id);
     }
 
     /**
      * @param string $session_id
-     * @param int    $user_id
+     * @param int $user_id
      * @throws Exception
      */
     public function grantViewerAccessToSession(string $session_id, $user_id = 0): void
@@ -622,7 +623,8 @@ class PanoptoClient
             throw $e;
         }
     }
-        /**
+
+    /**
      * @param $session_id
      * @return SessionAccessDetails
      * @throws Exception
@@ -651,7 +653,7 @@ class PanoptoClient
             }
 
             $this->log->write('Received ' .
-                (is_array($session_access_details[$session_id]) ? (int) count($session_access_details[$session_id]) : 0 ) .
+                (is_array($session_access_details[$session_id]) ? (int)count($session_access_details[$session_id]) : 0) .
                 ' object(s).'
             );
         }
