@@ -40,7 +40,7 @@ class ArrayOfExtendedFolder implements \ArrayAccess, \Iterator, \Countable
      * @param mixed $offset An offset to check for
      * @return bool True on success or false on failure
      */
-    public function offsetExists(mixed $offset): bool
+    public function offsetExists($offset): bool
     {
         return isset($this->ExtendedFolder[$offset]);
     }
@@ -51,7 +51,7 @@ class ArrayOfExtendedFolder implements \ArrayAccess, \Iterator, \Countable
      * @param mixed $offset The offset to retrieve
      * @return ExtendedFolder
      */
-    public function offsetGet(mixed $offset): ExtendedFolder
+    public function offsetGet($offset): ExtendedFolder
     {
         return $this->ExtendedFolder[$offset];
     }
@@ -63,7 +63,7 @@ class ArrayOfExtendedFolder implements \ArrayAccess, \Iterator, \Countable
      * @param ExtendedFolder $value The value to set
      * @return void
      */
-    public function offsetSet(mixed $offset, mixed $value): void
+    public function offsetSet($offset, $value): void
     {
         if (!isset($offset)) {
             $this->ExtendedFolder[] = $value;
@@ -78,7 +78,7 @@ class ArrayOfExtendedFolder implements \ArrayAccess, \Iterator, \Countable
      * @param mixed $offset The offset to unset
      * @return void
      */
-    public function offsetUnset(mixed $offset): void
+    public function offsetUnset($offset): void
     {
         unset($this->ExtendedFolder[$offset]);
     }

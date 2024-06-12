@@ -38,11 +38,16 @@ class PanoptoUtils
     {
         global $DIC;
         $user = $user_id ? new ilObjUser($user_id) : $DIC->user();
-        return match (PanoptoConfig::get('user_id')) {
-            'login' => $user->getLogin(),
-            'email' => $user->getEmail(),
-            default => $user->getExternalAccount(),
-        };
+
+        switch (PanoptoConfig::get('user_id')) {
+            case 'login':
+                return $user->getLogin();
+            case 'email':
+                return $user->getEmail();
+            default:
+                return $user->getExternalAccount();
+        }
+
     }
 
     public static function getExternalIdOfObjectById($ref_id = 0): string

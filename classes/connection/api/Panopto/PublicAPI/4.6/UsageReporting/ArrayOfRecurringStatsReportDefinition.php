@@ -40,7 +40,7 @@ class ArrayOfRecurringStatsReportDefinition implements \ArrayAccess, \Iterator, 
      * @param mixed $offset An offset to check for
      * @return bool True on success or false on failure
      */
-    public function offsetExists(mixed $offset): bool
+    public function offsetExists($offset): bool
     {
         return isset($this->RecurringStatsReportDefinition[$offset]);
     }
@@ -51,7 +51,7 @@ class ArrayOfRecurringStatsReportDefinition implements \ArrayAccess, \Iterator, 
      * @param mixed $offset The offset to retrieve
      * @return RecurringStatsReportDefinition
      */
-    public function offsetGet(mixed $offset): RecurringStatsReportDefinition
+    public function offsetGet($offset): RecurringStatsReportDefinition
     {
         return $this->RecurringStatsReportDefinition[$offset];
     }
@@ -63,7 +63,7 @@ class ArrayOfRecurringStatsReportDefinition implements \ArrayAccess, \Iterator, 
      * @param RecurringStatsReportDefinition $value The value to set
      * @return void
      */
-    public function offsetSet(mixed $offset, mixed $value): void
+    public function offsetSet($offset, $value): void
     {
         if (!isset($offset)) {
             $this->RecurringStatsReportDefinition[] = $value;
@@ -78,7 +78,7 @@ class ArrayOfRecurringStatsReportDefinition implements \ArrayAccess, \Iterator, 
      * @param mixed $offset The offset to unset
      * @return void
      */
-    public function offsetUnset(mixed $offset): void
+    public function offsetUnset($offset): void
     {
         unset($this->RecurringStatsReportDefinition[$offset]);
     }

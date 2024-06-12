@@ -166,7 +166,7 @@ class PanoptoLog
      * To log manually please use $this::write
      * @throws ilLogException
      */
-    public function logError(string|int $a_code, string $a_msg): void
+    public function logError($a_code, string $a_msg): void
     {
         $a_code = (int)$a_code;
         switch ($a_code) {

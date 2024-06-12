@@ -129,7 +129,7 @@ class PanoptoLTIHandler
     /**
      * @throws PanoptoException
      */
-    public static function launchToolPageComponent(): bool|string
+    public static function launchToolPageComponent()
     {
         global $DIC;
         $launch_url = 'https://' . PanoptoConfig::get('hostname') . '/Panopto/BasicLTI/BasicLTILanding.aspx';

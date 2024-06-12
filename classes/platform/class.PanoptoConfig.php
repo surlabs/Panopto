@@ -79,7 +79,7 @@ class PanoptoConfig
      * @return mixed
      * @throws PanoptoException
      */
-    public static function get(string $key): mixed
+    public static function get(string $key)
     {
         return self::$config[$key] ?? self::getFromDB($key);
     }
@@ -124,7 +124,7 @@ class PanoptoConfig
      * Save the plugin configuration if the parameter is updated
      * @return bool|string
      */
-    public static function save(): bool|string
+    public static function save()
     {
         foreach (self::$updated as $key => $exist) {
             if ($exist) {
