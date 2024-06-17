@@ -24,6 +24,7 @@ require_once __DIR__ . "/../../vendor/autoload.php";
 
 use League\OAuth1\Client as OAuth1;
 
+use League\OAuth1\Client\Credentials\ClientCredentials;
 use platform\PanoptoConfig;
 use platform\PanoptoException;
 use utils\PanoptoUtils;
@@ -42,7 +43,7 @@ class PanoptoLTIHandler
         $key = PanoptoConfig::get('instance_name');
         $secret = PanoptoConfig::get('application_key');
 
-        $credentials = new OAuth1\Credentials\ClientCredentials();
+        $credentials = new ClientCredentials();
         $credentials->setIdentifier($key);
         $credentials->setSecret($secret);
 
