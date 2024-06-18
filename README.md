@@ -25,6 +25,11 @@ git clone https://github.com/surlabs/Panopto.git
 git checkout ilias7
 ```
 
+Ensure you run composer install at plugin root before you install/update the plugin
+```bash
+composer install --no-dev
+```
+
 Ensure you run composer install at platform root before you install/update the plugin
 ```bash
 composer install --no-dev
