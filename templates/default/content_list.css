@@ -163,14 +163,36 @@ div.xpan_image_container img.xpan_play_icon {
 	gap:10px;
 }
 
-.xpan_flex a{
-	width:100%;
-}
-
 .xpan_page_active:hover {
     color: white;
 }
 
 #xpan_video_container iframe{
     width: 100%;
+}
+
+@media(max-width:768px){
+    .xpan_flex .col-xs-12{
+	width:100%;
+    }	
+}
+
+@media (min-width: 768px) {
+    .xpan_flex .col-sm-6 {
+        flex: 0 0 auto;
+        width: calc(50% - 10px);
+    }
+}
+
+@media (min-width: 992px) {
+    .col-md-4 {
+        flex: 0 0 auto;
+        width: 33.3333333333% !important;
+    }
+}
+@media (min-width: 1200px) {
+    .col-lg-3 {
+        flex: 0 0 auto;
+        width: 25% !important;
+    }
 }
