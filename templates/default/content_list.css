@@ -160,8 +160,12 @@ div.xpan_image_container img.xpan_play_icon {
 .xpan_flex{
     display:flex;
     flex-wrap:wrap;
+	gap:10px;
 }
 
+.xpan_flex a{
+	width:100%;
+}
 
 .xpan_page_active:hover {
     color: white;
