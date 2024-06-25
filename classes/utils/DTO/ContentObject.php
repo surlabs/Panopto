@@ -54,7 +54,7 @@ class ContentObject
         $this->id = $id;
         $this->title = $title;
         $this->thumbnail_url = $thumbnail_url;
-        $this->description = $description;
+        $this->description = (string)$description;
     }
 
     /**
