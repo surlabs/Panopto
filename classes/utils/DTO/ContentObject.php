@@ -49,7 +49,7 @@ class ContentObject
      * @param string $description
      * @param string $thumbnail_url
      */
-    public function __construct(string $id, string $title, string $description, string $thumbnail_url)
+    public function __construct(string $id, string $title, $description, string $thumbnail_url)
     {
         $this->id = $id;
         $this->title = $title;
