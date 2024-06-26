@@ -55,6 +55,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'lucisgit/php-panopto-api' => array(
+            'pretty_version' => 'v1.0.4+14.12.0.00020',
+            'version' => '1.0.4.0',
+            'reference' => '973911efaab6733ac4fa29ea8ad0b1ac79aa17ea',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../lucisgit/php-panopto-api',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'paragonie/random_compat' => array(
             'pretty_version' => 'v9.99.100',
             'version' => '9.99.100.0',

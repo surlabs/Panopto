@@ -19,7 +19,8 @@ declare(strict_types=1);
  */
 
 namespace connection;
-//require_once __DIR__."/../../vendor/autoload.php";
+
+require_once __DIR__."/../../vendor/autoload.php";
 
 use ilException;
 use Panopto\AccessManagement\AccessManagement;
@@ -184,6 +185,7 @@ class PanoptoClient
     {
         $extArray = new ArrayOfstring();
         $extArray->setString(array($ext_id));
+
         $folders = $this->getAllFoldersByExternalId($extArray);
         return array_shift($folders);
     }
@@ -210,7 +212,6 @@ class PanoptoClient
             $ext_ids,
             $instanceArray
         );
-
 
         $session_client = $this->panoptoclient->SessionManagement();
 

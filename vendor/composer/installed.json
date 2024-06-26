@@ -408,6 +408,68 @@
             "install-path": "../league/oauth2-client"
         },
         {
+            "name": "lucisgit/php-panopto-api",
+            "version": "v1.0.4+14.12.0.00020",
+            "version_normalized": "1.0.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lucisgit/php-panopto-api.git",
+                "reference": "973911efaab6733ac4fa29ea8ad0b1ac79aa17ea"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lucisgit/php-panopto-api/zipball/973911efaab6733ac4fa29ea8ad0b1ac79aa17ea",
+                "reference": "973911efaab6733ac4fa29ea8ad0b1ac79aa17ea",
+                "shasum": ""
+            },
+            "require": {
+                "ext-soap": "*",
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "wsdl2phpgenerator/wsdl2phpgenerator": "^3.5"
+            },
+            "time": "2024-02-09T16:57:35+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Panopto\\": "lib/"
+                },
+                "exclude-from-classmap": [
+                    "/examples/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Lancaster University ISS",
+                    "homepage": "http://www.lancaster.ac.uk"
+                },
+                {
+                    "name": "Ruslan Kabalin",
+                    "homepage": "http://github.com/kabalin",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PHP Panopto API client and libraries.",
+            "homepage": "http://github.com/lucisgit/php-panopto-api",
+            "keywords": [
+                "api",
+                "panopto",
+                "php",
+                "soap"
+            ],
+            "support": {
+                "issues": "https://github.com/lucisgit/php-panopto-api/issues",
+                "source": "https://github.com/lucisgit/php-panopto-api/tree/v1.0.4+14.12.0.00020"
+            },
+            "install-path": "../lucisgit/php-panopto-api"
+        },
+        {
             "name": "paragonie/random_compat",
             "version": "v9.99.100",
             "version_normalized": "9.99.100.0",
