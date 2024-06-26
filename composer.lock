@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7915dc4cbdc37891513efa8beb14fd63",
+    "content-hash": "2037c14ef050ce3962e2b8d0104f1104",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -400,6 +400,65 @@
                 "source": "https://github.com/thephpleague/oauth2-client/tree/2.7.0"
             },
             "time": "2023-04-16T18:19:15+00:00"
+        },
+        {
+            "name": "lucisgit/php-panopto-api",
+            "version": "v1.0.4+14.12.0.00020",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lucisgit/php-panopto-api.git",
+                "reference": "973911efaab6733ac4fa29ea8ad0b1ac79aa17ea"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lucisgit/php-panopto-api/zipball/973911efaab6733ac4fa29ea8ad0b1ac79aa17ea",
+                "reference": "973911efaab6733ac4fa29ea8ad0b1ac79aa17ea",
+                "shasum": ""
+            },
+            "require": {
+                "ext-soap": "*",
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "wsdl2phpgenerator/wsdl2phpgenerator": "^3.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Panopto\\": "lib/"
+                },
+                "exclude-from-classmap": [
+                    "/examples/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Lancaster University ISS",
+                    "homepage": "http://www.lancaster.ac.uk"
+                },
+                {
+                    "name": "Ruslan Kabalin",
+                    "homepage": "http://github.com/kabalin",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PHP Panopto API client and libraries.",
+            "homepage": "http://github.com/lucisgit/php-panopto-api",
+            "keywords": [
+                "api",
+                "panopto",
+                "php",
+                "soap"
+            ],
+            "support": {
+                "issues": "https://github.com/lucisgit/php-panopto-api/issues",
+                "source": "https://github.com/lucisgit/php-panopto-api/tree/v1.0.4+14.12.0.00020"
+            },
+            "time": "2024-02-09T16:57:35+00:00"
         },
         {
             "name": "paragonie/random_compat",
