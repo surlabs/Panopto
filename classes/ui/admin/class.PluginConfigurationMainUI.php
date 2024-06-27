@@ -65,24 +65,6 @@ class PluginConfigurationMainUI
 
             $object = $object1;
 
-            //General section
-//            $form_fields_general = [];
-
-//            $field = $this->factory->input()->field()->text(
-//                $this->plugin_object->txt('conf_object_title'),
-//                $this->plugin_object->txt('conf_object_title_info'))
-//                ->withValue('Cuando Saúl me arregle el get para traer esta info, aparecerá.')
-//                ->withRequired(true)
-//                ->withAdditionalTransformation($DIC->refinery()->custom()->transformation(
-//                    function ($v) use ($object) {
-////                        $object->setWebsocket($v);
-//                    }
-//                ));
-//
-//            $form_fields_general["object_title"] = $field;
-
-//            $section_general = $this->factory->input()->field()->section($form_fields_general, $this->plugin_object->txt("conf_header_general"), "");
-
             //SOAP Api section
             $form_fields_soap = [];
 
