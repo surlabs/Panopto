@@ -3,9 +3,7 @@ let Panopto = {
     base_url: '',
 
     playVideo: function (sid, is_playlist, title) {
-        console.log('playVideo ' + sid);
-        console.log('is playlist ' + is_playlist);
-        let $modal = $('.modal');
+        let $modal = $('#xpan_video_container').parent().parent().parent().parent().parent();
         $(".modal-dialog").addClass("modal-lg").css("width", "100%").css("max-width", "800px");
         $modal.modal('show');
         let $iframe = '<iframe src="' + Panopto.base_url + '/Panopto/Pages/Embed.aspx?' + (is_playlist ? 'p' : '') + 'id=' + sid + '" width="720" height="405" style="padding: 0px; border: 1px solid #464646;" frameborder="0" allowfullscreen allow="autoplay"></iframe>';
