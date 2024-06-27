@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 use classes\ui\user\ManageVideosUI;
 use classes\ui\user\UserContentMainUI;
+use \ILIAS\UI\Component\Input\Container\Form\Standard;
 use platform\PanoptoException;
 use platform\SorterEntry;
 
@@ -111,6 +112,7 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
      */
     public function performCommand(string $cmd): void
     {
+        $this->setTitleAndDescription();
         $this->{$cmd}();
     }
 
@@ -163,38 +165,43 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
      */
     public function editSettings(): void
     {
+        global $DIC;
         $this->tabs->activateTab("settings");
+        $form = $this->initSettingsForm();
 
-        $this->tpl->setContent($this->initSettingsForm());
+        $renderer = $DIC->ui()->renderer();
+        $this->tpl->setContent($renderer->render($form));
     }
 
     /**
      * Initialize the settings form
-     * @return string
+     * @return Standard
      * @throws ilCtrlException
      */
-    public function initSettingsForm(): string
+    public function initSettingsForm(): Standard
     {
-        $form = new ilPropertyFormGUI();
-        $form->setFormAction($this->ctrl->getFormAction($this));
-        $form->setTitle($this->lng->txt("settings"));
+        global $DIC;
+        $ui = $DIC->ui()->factory();
+        $lng = $DIC->language();
+        $ctrl = $DIC->ctrl();
 
-        $title = new ilTextInputGUI($this->lng->txt("title"), "title");
-        $title->setRequired(true);
-        $title->setValue($this->object->getTitle());
-        $form->addItem($title);
 
-        $description = new ilTextAreaInputGUI($this->lng->txt("description"), "description");
-        $description->setValue($this->object->getDescription());
-        $form->addItem($description);
+        // Input field for title
+        $title = $ui->input()->field()->text($lng->txt("title"))
+            ->withRequired(true)
+            ->withValue($this->object->getTitle());
 
-        $online = new ilCheckboxInputGUI($this->lng->txt("online"), "online");
-        $online->setChecked($this->object->isOnline());
-        $form->addItem($online);
+        $description = $ui->input()->field()->textarea($lng->txt("description"))->withValue($this->object->getDescription());
 
-        $form->addCommandButton("saveSettings", $this->lng->txt("save"));
+        // Checkbox for online
+        $online = $ui->input()->field()->checkbox($lng->txt("online"))->withValue($this->object->isOnline());
 
-        return $form->getHTML();
+
+        // Construct the form with form fields
+        $form_action = $ctrl->getFormAction($this, "saveSettings");
+        $form_fields = ['title' => $title, 'description' => $description, 'online' => $online];
+        return $ui->input()->container()->form()->standard($form_action, $form_fields);
+
     }
 
     /**
@@ -204,23 +211,23 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
      */
     public function saveSettings(): void
     {
-        if (isset($_POST['title'])) {
-            $this->object->setTitle($_POST['title']);
+        global $DIC;
+        $request = $DIC->http()->request();
+        $form = $this->initSettingsForm();
+
+        if ($request->getMethod() == "POST") {
+            $form = $form->withRequest($request);
+            $result = $form->getData();
+            $this->object->setTitle($result["title"]);
+            $this->object->setDescription($result["description"]);
+            $this->object->setOnline($result["online"]);
+
+            //dump($result);exit;
+
+            $this->object->update();
+            $this->tpl->setOnScreenMessage("success", $this->lng->txt("msg_obj_modified"), true);
+            $this->ctrl->redirect($this, "editSettings");
         }
-
-        if (isset($_POST['description'])) {
-            $this->object->setDescription($_POST['description']);
-        }
-
-        if (isset($_POST['online'])) {
-            $this->object->setOnline((bool)$_POST['online']);
-        }
-
-        $this->object->update();
-
-        $this->tpl->setOnScreenMessage("success", $this->lng->txt("msg_obj_modified"), true);
-
-        $this->ctrl->redirect($this, "editSettings");
     }
 
     /**
