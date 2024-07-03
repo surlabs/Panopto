@@ -55,4 +55,9 @@ class ilPanoptoPlugin extends ilRepositoryObjectPlugin
     {
         return self::PLUGIN_NAME;
     }
+
+    public function allowCopy(): bool
+    {
+        return true;
+    }
 }
