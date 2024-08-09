@@ -28,7 +28,7 @@ use platform\PanoptoException;
  */
 class ilObjPanopto extends ilObjectPlugin
 {
-    private bool $online;
+    private bool $online = false;
     private int $folder_ext_id;
 
     /**
@@ -79,6 +79,18 @@ class ilObjPanopto extends ilObjectPlugin
     }
 
     /**
+     * @param      $new_obj ilObjPanopto
+     * @param      $a_target_id
+     * @param null $a_copy_id
+     * @throws PanoptoException
+     */
+    protected function doCloneObject(ilObject2 $new_obj, int $a_target_id, ?int $a_copy_id = null) : void
+    {
+        $new_obj->setFolderExtId($this->getFolderExtId());
+        $new_obj->update();
+    }
+
+    /**
      * Set the type of the object as the id of the plugin
      * @return void
      */
@@ -106,22 +118,13 @@ class ilObjPanopto extends ilObjectPlugin
     }
 
     /**
-     * Get the reference id of the object
-     * @return int
-     */
-    public function getReferenceId(): int
-    {
-        return $this->getRefId() ?: self::_getAllReferences($this->getId())[0];
-    }
-
-    /**
      * Get the folder external id
      * @return int
      * @throws PanoptoException
      */
     public function getFolderExtId(): int
     {
-        if (!isset($this->folder_ext_id) || $this->folder_ext_id != $this->getRefId()) {
+        if (!isset($this->folder_ext_id) || $this->folder_ext_id == 0) {
             $xpanDb = new PanoptoDatabase();
 
             $this->folder_ext_id = $this->getRefId();
@@ -130,5 +133,10 @@ class ilObjPanopto extends ilObjectPlugin
         }
 
         return $this->folder_ext_id;
+    }
+
+    private function setFolderExtId(int $folder_ext_id)
+    {
+        $this->folder_ext_id = $folder_ext_id;
     }
 }
