@@ -25,7 +25,7 @@ interface StreamInterface
      * @see http://php.net/manual/en/language.oop5.magic.php#object.tostring
      * @return string
      */
-    public function __toString(): string;
+    public function __toString();
 
     /**
      * Closes the stream and any underlying resources.
