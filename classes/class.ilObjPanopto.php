@@ -127,7 +127,7 @@ class ilObjPanopto extends ilObjectPlugin
         if (!isset($this->folder_ext_id) || $this->folder_ext_id == 0) {
             $xpanDb = new PanoptoDatabase();
 
-            $this->folder_ext_id = $this->getRefId();
+            $this->folder_ext_id = (int) $this->getRefId();
 
             $xpanDb->update("xpan_objects", ["folder_ext_id" => $this->folder_ext_id], ["obj_id" => $this->getId()]);
         }
