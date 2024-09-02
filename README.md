@@ -96,8 +96,9 @@ Login to your ILIAS platform as an administrator. Navigate to "Administration" -
     * **Client-Secret**: Secret of REST Client created in the section [REST Client](#rest-client)
  
 # Authors
-* A previous version of this plugin was developed and maintained by Fluxlabs, and it is no longer maintained.
-* This plugin is created and maintained by Jesús Copado, Saúl Díaz and Daniel Cazalla through [SURLABS](https://surlabs.es)
+* Initially created by studer + raimann ag, switzerland
+* Further maintained by fluxlabs ag, switzerland
+* Revamped and currently maintained by SURLABS, spain [SURLABS](https://surlabs.com)
 
 # Bug Reports & Discussion
 - Bug Reports: [Mantis](https://www.ilias.de/mantis) (Choose project "ILIAS plugins" and filter by category "Panopto")
