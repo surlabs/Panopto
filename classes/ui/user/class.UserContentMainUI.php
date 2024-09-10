@@ -148,7 +148,8 @@ class UserContentMainUI
         // "next" button
         if ($content_objects['count'] > (($_GET['xpan_page'] + 1) * 10)) {
             $this->ctrl->setParameter($this, 'xpan_page', $_GET['xpan_page'] + 1);
-            $link = $this->ctrl->getLinkTarget($this, 'index');
+            $link = $this->ctrl->getLinkTarget($parent, 'index');
+
             // top
             $tpl->setCurrentBlock('next_top');
             $tpl->setVariable('LINK_NEXT', $link);
