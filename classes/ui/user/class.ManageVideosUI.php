@@ -26,7 +26,7 @@ use ilPanoptoPlugin;
 use platform\PanoptoException;
 
 /**
- * Class UserContentMainUI
+ * Class ManageVideosUI
  * @authors Jesús Copado, Daniel Cazalla, Saúl Díaz, Juan Aguilar <info@surlabs.es>
  */
 class ManageVideosUI
