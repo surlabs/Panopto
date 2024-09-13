@@ -1,7 +1,7 @@
 <div alt style="text-align: center; transform: scale(.5);">
 	<picture>
-		<source media="(prefers-color-scheme: dark)" srcset="https://github.com/surlabs/Panopto/blob/ilias8/templates/images/GitBannerPanopto.png" />
-		<img alt="Panopto" src="https://github.com/surlabs/Panopto/blob/ilias8/templates/images/GitBannerPanopto.png"" />
+		<source media="(prefers-color-scheme: dark)" srcset="https://github.com/surlabs/Panopto/blob/ilias8/templates/images/GitBannerPanopto2.png" />
+		<img alt="Panopto" src="https://github.com/surlabs/Panopto/blob/ilias8/templates/images/GitBannerPanopto2.png"" />
 	</picture>
 </div>
 
