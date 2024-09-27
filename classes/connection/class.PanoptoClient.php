@@ -285,7 +285,7 @@ class PanoptoClient
         $folders_with_viewer_access = is_array($folder_ids) ? array_merge($folders_with_viewer_access, $folder_ids) : $folders_with_viewer_access;
 
         if (in_array($folder_id, $folders_with_viewer_access)) {
-            return 'Creator';
+            return 'Viewer';
         }
 
         return false;
