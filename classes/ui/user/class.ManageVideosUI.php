@@ -45,7 +45,7 @@ class ManageVideosUI
         global $DIC;
 
         $this->pl = ilPanoptoPlugin::getInstance();
-        $html = PanoptoLTIHandler::launchTool($object, true);
+        $html = PanoptoLTIHandler::launchTool($object, true, true);
         $DIC['tpl']->addCss($this->pl->getDirectory() . '/templates/default/waiter.css');
         $DIC['tpl']->addJavaScript($this->pl->getDirectory() . '/js/waiter.js');
         $DIC['tpl']->addOnLoadCode('$("#lti_form").submit();');
