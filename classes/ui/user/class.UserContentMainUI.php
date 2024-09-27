@@ -181,7 +181,7 @@ class UserContentMainUI
             $tpl->parseCurrentBlock();
         }
 
-        $lti_form = PanoptoLTIHandler::launchTool($panoptoObject);
+        $lti_form = PanoptoLTIHandler::launchTool($panoptoObject, false, false);
 
         $this->tpl->addCss($this->pl->getDirectory() . '/templates/default/content_list.css');
         $this->tpl->addJavaScript($this->pl->getDirectory() . '/templates/js/Panopto.js');

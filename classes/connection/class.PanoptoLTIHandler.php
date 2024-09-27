@@ -56,14 +56,15 @@ class PanoptoLTIHandler
     /**
      * @throws PanoptoException
      */
-    public static function launchTool($object, $showIframe = false): string
+    public static function launchTool($object, $showIframe = false, $isInstructor = false): string
     {
         global $DIC;
         $launch_url = 'https://' . PanoptoConfig::get('hostname');
+        $role_name = $isInstructor ? "Instructor" : "Viewer";
 
         $launch_data = [
             "user_id" => PanoptoUtils::getUserIdentifier(),
-            "roles" => "Instructor",
+            "roles" => $role_name,
             "resource_link_id" => $object->getFolderExtId(),
             "resource_link_title" => PanoptoUtils::getExternalIdOfObjectById($object->getFolderExtId()),
             "lis_person_name_full" => str_replace("'", "`", $DIC->user()->getFullname()),
