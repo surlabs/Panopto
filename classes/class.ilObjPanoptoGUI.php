@@ -112,6 +112,7 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
      */
     public function performCommand(string $cmd): void
     {
+        $this->setTitleAndDescription();
         $this->{$cmd}();
     }
 
@@ -130,7 +131,6 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
      */
     public function index(): void
     {
-
         try {
             $this->tabs->activateTab("content");
             $this->userContentMainUI = new UserContentMainUI();
