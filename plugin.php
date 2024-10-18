@@ -19,7 +19,7 @@
 
 $id = 'xpan';
 
-$version = '7.0.9';
+$version = '7.1.0';
 
 $ilias_min_version = '7.0';
 $ilias_max_version = '7.999';
