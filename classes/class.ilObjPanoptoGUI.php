@@ -26,7 +26,6 @@ use \ILIAS\UI\Component\Input\Container\Form\Standard;
 use platform\PanoptoException;
 use platform\SorterEntry;
 
-
 /**
  * Class ilObjPanoptoGUI
  * @authors Jesús Copado, Daniel Cazalla, Saúl Díaz, Juan Aguilar <info@surlabs.es>
@@ -132,6 +131,7 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
     {
 
         try {
+            $this->setTitleAndDescription();
             $this->tabs->activateTab("content");
             $this->userContentMainUI = new UserContentMainUI();
             $this->tpl->setContent($this->userContentMainUI->render($this->object, $this));
