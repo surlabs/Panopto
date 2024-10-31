@@ -176,8 +176,8 @@ class UserContentMainUI
             $tpl->setCurrentBlock('list_item');
             $tpl->setVariable('ID', $object->getId());
             $tpl->setVariable('THUMBNAIL', $object->getThumbnailUrl());
-            $tpl->setVariable('TITLE', $object->getTitle());
-            $tpl->setVariable('DESCRIPTION', $object->getDescription());
+            $tpl->setVariable('TITLE', htmlspecialchars($object->getTitle(), ENT_QUOTES, 'UTF-8'));
+            $tpl->setVariable('DESCRIPTION', htmlspecialchars($object->getDescription(), ENT_QUOTES, 'UTF-8'));
             $tpl->parseCurrentBlock();
         }
 
