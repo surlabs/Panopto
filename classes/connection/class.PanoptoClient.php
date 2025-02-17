@@ -201,8 +201,6 @@ class PanoptoClient
 
         $instanceArray = new ArrayOfstring();
         $instanceArray->setString(array(PanoptoConfig::get('instance_name')));
-
-
         $params = new GetAllFoldersByExternalId(
             $this->auth,
             $ext_ids,
@@ -211,7 +209,6 @@ class PanoptoClient
 
 
         $session_client = $this->panoptoclient->SessionManagement();
-
         $return = $session_client->GetAllFoldersByExternalId($params)->getGetAllFoldersByExternalIdResult()->getFolder();
 
 
@@ -235,7 +232,7 @@ class PanoptoClient
 
         if (!empty($folder_ext_ids)) {
             $typedFolders = new ArrayOfstring();
-            $typedFolders->setString(array_unique($folder_ext_ids));
+            $typedFolders->setString($this->removeDuplicates($folder_ext_ids));
             $folders = $this->getAllFoldersByExternalId($typedFolders);
             foreach ($folders as $folder) {
                 if ($folder && ($this->getUserAccessOnFolder($folder->getId(), $user_id) !== 'Creator')) {
@@ -244,6 +241,19 @@ class PanoptoClient
             }
         }
     }
+
+    private function removeDuplicates(array $data): array
+    {
+        $res = array();
+        foreach ($data as $value) {
+            if (!in_array($value, $res)) {
+                $res[] = $value;
+            }
+        }
+        return $res;
+    }
+
+
 
     /**
      * @param $folder_id
