@@ -93,10 +93,11 @@ class UserContentMainUI
     public function createContentObject($panoptoObject, $parent): string
     {
 
+        $page = isset($_GET['xpan_page']) ? $_GET['xpan_page'] : 0;
         $content_objects = $this->client->getContentObjectsOfFolder(
             $this->folder_id,
             true,
-            $_GET['xpan_page'],
+            $page,
             $panoptoObject->getFolderExtId());
 
         if (!$content_objects['count']) {
@@ -108,8 +109,8 @@ class UserContentMainUI
         $pages = 1 + floor($content_objects['count'] / 10);
 
         // "previous" button
-        if ($_GET['xpan_page']) {
-            $this->ctrl->setParameter($parent, 'xpan_page', $_GET['xpan_page'] - 1);
+        if ($page) {
+            $this->ctrl->setParameter($parent, 'xpan_page', $page - 1);
             $link = $this->ctrl->getLinkTarget($parent, 'index');
             // top
             $tpl->setCurrentBlock('previous_top');  // for some reason, i had to do 2 different blocks for top and bottom pagination
@@ -129,7 +130,7 @@ class UserContentMainUI
                 // top
                 $tpl->setCurrentBlock('page_top');
                 $tpl->setVariable('LINK_PAGE', $link);
-                if (($i - 1) == $_GET['xpan_page']) {
+                if (($i - 1) == $page) {
                     $tpl->setVariable('ADDITIONAL_CLASS', 'xpan_page_active');
                 }
                 $tpl->setVariable('LABEL_PAGE', $i);
@@ -137,7 +138,7 @@ class UserContentMainUI
                 // bottom
                 $tpl->setCurrentBlock('page_bottom');
                 $tpl->setVariable('LINK_PAGE', $link);
-                if (($i - 1) == $_GET['xpan_page']) {
+                if (($i - 1) == $page) {
                     $tpl->setVariable('ADDITIONAL_CLASS', 'xpan_page_active');
                 }
                 $tpl->setVariable('LABEL_PAGE', $i);
@@ -146,8 +147,8 @@ class UserContentMainUI
         }
 
         // "next" button
-        if ($content_objects['count'] > (($_GET['xpan_page'] + 1) * 10)) {
-            $this->ctrl->setParameter($this, 'xpan_page', $_GET['xpan_page'] + 1);
+        if ($content_objects['count'] > (($page + 1) * 10)) {
+            $this->ctrl->setParameter($this, 'xpan_page', $page + 1);
             $link = $this->ctrl->getLinkTarget($parent, 'index');
             // top
             $tpl->setCurrentBlock('next_top');
