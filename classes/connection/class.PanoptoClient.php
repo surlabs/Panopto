@@ -180,9 +180,7 @@ class PanoptoClient
      */
     public function getFolderByExternalId(int $ext_id): ?Folder
     {
-        $extArray = new ArrayOfstring();
-        $extArray->setString(array($ext_id));
-        $folders = $this->getAllFoldersByExternalId($extArray);
+        $folders = $this->getAllFoldersByExternalId((array)$ext_id);
         return array_shift($folders);
     }
 

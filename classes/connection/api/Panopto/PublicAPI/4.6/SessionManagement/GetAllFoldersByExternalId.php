@@ -22,7 +22,7 @@ class GetAllFoldersByExternalId
 
     /**
      * @param AuthenticationInfo $auth
-     * @param ArrayOfstring $folderExternalIds
+     * @param array $folderExternalIds
      * @param ArrayOfstring $providerNames
      */
     public function __construct($auth, $folderExternalIds, $providerNames)
