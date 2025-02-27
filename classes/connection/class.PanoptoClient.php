@@ -188,7 +188,7 @@ class PanoptoClient
      * @throws PanoptoException
      * @throws Exception
      */
-    public function getAllFoldersByExternalId(ArrayOfstring $ext_ids): ?array
+    public function getAllFoldersByExternalId(array $ext_ids): ?array
     {
         $this->log->write('*********');
         $this->log->write('SOAP call "GetAllFoldersByExternalId"');
@@ -229,8 +229,8 @@ class PanoptoClient
         }
 
         if (!empty($folder_ext_ids)) {
-            $typedFolders = new ArrayOfstring();
-            $typedFolders->setString($this->removeDuplicates($folder_ext_ids));
+            $typedFolders = [];
+            $typedFolders = array_unique($folder_ext_ids);
             $folders = $this->getAllFoldersByExternalId($typedFolders);
             foreach ($folders as $folder) {
                 if ($folder && ($this->getUserAccessOnFolder($folder->getId(), $user_id) !== 'Creator')) {
