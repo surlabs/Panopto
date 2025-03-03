@@ -45,6 +45,7 @@ grp_create_xpan#:#Panopto Erstellen
 root_create_xpan#:#Panopto Erstellen
 xpan_visible#:#Anzeigen: Panopto ist sichtbar
 xpan_read#:#Lesezugriff: Videos können angezeigt werden
+xpan_copy#:#Kopieren: Panopto-Objekte können kopiert werden
 xpan_write#:#Einstellungen bearbeiten: Einstellungen und Inhalte können bearbeitet werden
 xpan_delete#:#Löschen: Objekt kann gelöscht werden
 xpan_edit_permission#:#Rechteeinstellungen ändern: Rechteeinstellungen ändern
