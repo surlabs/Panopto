@@ -112,6 +112,8 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
      */
     public function performCommand(string $cmd): void
     {
+        $this->checkPermission("read");
+        
         $this->setTitleAndDescription();
         $this->{$cmd}();
     }
@@ -150,6 +152,8 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
      */
     public function manageVideos(): void
     {
+        $this->checkPermission("write");
+
         $this->tabs->activateTab("videos");
 
         $this->manageVideosUI = new manageVideosUI();
@@ -164,6 +168,8 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
      */
     public function editSettings(): void
     {
+        $this->checkPermission("write");
+
         global $DIC;
         $this->tabs->activateTab("settings");
         $form = $this->initSettingsForm();
