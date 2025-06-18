@@ -1,9 +1,5 @@
-<div alt style="text-align: center; transform: scale(.5);">
-	<picture>
-		<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/surlabs/Panopto/ilias8/templates/images/GitBannerPanopto2.png" />
-		<img alt="Panopto" src="https://raw.githubusercontent.com/surlabs/Panopto/ilias8/templates/images/GitBannerPanopto2.png" />
-	</picture>
-</div>
+![Panopto](https://github.com/user-attachments/assets/265a22ed-5a5d-409b-9d15-2d965fd372c5)
+
 
 # Panopto Repository Object Plugin for ILIAS 9
 This plugin allows users to embed Panopto videos in ILIAS as repository objects
