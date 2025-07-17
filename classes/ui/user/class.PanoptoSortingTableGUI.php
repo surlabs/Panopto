@@ -28,14 +28,14 @@ class PanoptoSortingTableGUI extends ilTable2GUI
 {
 
     const TBL_ROW_TEMPLATE_NAME = "tpl.sorting_row.html";
-    const TBL_ROW_TEMPLATE_DIR = "/templates/table_rows/";
+    const TBL_ROW_TEMPLATE_DIR = "Customizing/global/plugins/Services/Repository/RepositoryObject/Panopto/templates/table_rows/";
     const JS_FILES_TO_EMBED
         = [
-            "/templates/js/sortable.js",
+            "Customizing/global/plugins/Services/Repository/RepositoryObject/Panopto/templates/js/sortable.js",
         ];
     const CSS_FILES_TO_EMBED
         = [
-            "/templates/default/sorting_table.css",
+            "Customizing/global/plugins/Services/Repository/RepositoryObject/Panopto/templates/default/sorting_table.css",
         ];
 
     /**
@@ -64,10 +64,10 @@ class PanoptoSortingTableGUI extends ilTable2GUI
         $this->pl = ilPanoptoPlugin::getInstance();
         $this->client = PanoptoClient::getInstance();
 
-        $plugin_dir = $this->pl->getDirectory();
+        $plugin_dir = "Customizing/global/plugins/Services/Repository/RepositoryObject/Panopto";
 
         $this->initColumns($this->pl);
-        $this->setRowTemplate($this->pl->getDirectory() . self::TBL_ROW_TEMPLATE_DIR . self::TBL_ROW_TEMPLATE_NAME, $plugin_dir);
+        $this->setRowTemplate(self::TBL_ROW_TEMPLATE_NAME, self::TBL_ROW_TEMPLATE_DIR);
 
         $this->setExternalSorting(true);
         $this->setExternalSegmentation(true);

@@ -183,10 +183,10 @@ class UserContentMainUI
 
         $lti_form = PanoptoLTIHandler::launchTool($panoptoObject, false, false);
 
-        $this->tpl->addCss($this->pl->getDirectory() . '/templates/default/content_list.css');
-        $this->tpl->addJavaScript($this->pl->getDirectory() . '/templates/js/Panopto.js');
+        $this->tpl->addCss("Customizing/global/plugins/Services/Repository/RepositoryObject/Panopto/templates/default/content_list.css");
+        $this->tpl->addJavaScript('Customizing/global/plugins/Services/Repository/RepositoryObject/Panopto/templates/js/Panopto.js');
         $this->tpl->addOnLoadCode('Panopto.base_url = "https://' . PanoptoConfig::get('hostname') . '";');
-        $this->tpl->addJavaScript("./Services/UIComponent/Modal/js/Modal.js");
+        $this->tpl->addJavaScript("assets/js/modal.min.js");
 
 
         return '<div class="xpan_flex">' . $tpl->get() . '</div>' . $lti_form . $this->getModalPlayer();
