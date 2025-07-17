@@ -63,11 +63,6 @@ class PanoptoLTIHandler
         );
         $request->sign_request($method, $consumer, null);
         $parameters = $request->get_parameters();
-/*        $parameters['oauth_version'] = $parameters['oauth_version'][1];
-        $parameters['oauth_nonce'] = $parameters['oauth_nonce'][1];
-        $parameters['oauth_timestamp'] = $parameters['oauth_timestamp'][1];
-        $parameters['oauth_consumer_key'] = $parameters['oauth_consumer_key'][1];*/
-        //dump($parameters);exit();
 
         return $parameters;
     }

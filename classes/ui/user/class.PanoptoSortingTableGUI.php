@@ -75,8 +75,6 @@ class PanoptoSortingTableGUI extends ilTable2GUI
 
 
         $this->applyFiles($plugin_dir, $a_parent_gui);
-//        dump($this->getHTML());
-//        exit;
 
         $folder = $this->client->getFolderByExternalId($a_parent_obj->getFolderExtId());
         if (!$folder) {

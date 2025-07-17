@@ -67,4 +67,9 @@ class ilPanoptoPlugin extends ilRepositoryObjectPlugin
     {
         return true;
     }
+
+    public function getDirectory(): string
+    {
+        return '/Customizing/global/plugins/Services/COPage/PageComponent/PanoptoPageComponent';
+    }
 }
