@@ -63,13 +63,21 @@ class ilPanoptoPlugin extends ilRepositoryObjectPlugin
         return self::$instance;
     }
 
+    /**
+     * Get the plugin name
+     * @return bool
+     */
     public function allowCopy(): bool
     {
         return true;
     }
 
+    /**
+     * Get the plugin directory
+     * @return string
+     */
     public function getDirectory(): string
     {
-        return '/Customizing/global/plugins/Services/COPage/PageComponent/PanoptoPageComponent';
+        return 'public/Customizing/global/plugins/Services/Repository/RepositoryObject/Panopto';
     }
 }
