@@ -242,7 +242,7 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
     public function sorting(): void
     {
         $this->addSubTabs("subSorting");
-        $sort_table_gui = new PanoptoSortingTableGUI($this->object, $this);
+        $sort_table_gui = new PanoptoSortingTableGUI($this->object);
         $this->tpl->setContent($sort_table_gui->getHTML());
     }
 
@@ -267,20 +267,6 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
             $this->tpl->setAlertProperties($list_gui->getAlertProperties());
         }
 
-    }
-
-    /**
-     * @throws PanoptoException
-     */
-    public function reorder()
-    {
-        if (isset($_POST['ids'])) {
-            $ids = $_POST['ids'];
-
-            if (!empty($ids)) {
-                SorterEntry::saveOrder($ids, $this->object->getFolderExtId());
-            }
-        }
     }
 
     /**

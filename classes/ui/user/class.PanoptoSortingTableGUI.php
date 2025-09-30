@@ -18,125 +18,123 @@
  */
 
 use connection\PanoptoClient;
-use utils\DTO\ContentObject;
+use ILIAS\Data\URI;
+use ILIAS\HTTP\Wrapper\WrapperFactory;
+use ILIAS\UI\Component\Table\OrderingBinding;
+use ILIAS\UI\Component\Table\OrderingRowBuilder;
+use ILIAS\UI\Factory;
+use ILIAS\UI\Renderer;
+use platform\PanoptoException;
+use platform\SorterEntry;
 
 /**
  * Class PanoptoSortingTableGUI
  * @authors Jesús Copado, Daniel Cazalla, Saúl Díaz, Juan Aguilar <info@surlabs.es>
  */
-class PanoptoSortingTableGUI extends ilTable2GUI
+class PanoptoSortingTableGUI implements OrderingBinding
 {
+    protected ilPanoptoPlugin $plugin;
+    protected Factory $ui_factory;
+    protected Renderer $ui_renderer;
+    protected $request;
+    protected WrapperFactory $wrapper;
+    protected ILIAS\Refinery\Factory $refinery;
+    protected array $records;
+    private object $parent_obj;
 
-    const TBL_ROW_TEMPLATE_NAME = "tpl.sorting_row.html";
-    const TBL_ROW_TEMPLATE_DIR = "Customizing/global/plugins/Services/Repository/RepositoryObject/Panopto/templates/table_rows/";
-    const JS_FILES_TO_EMBED
-        = [
-            "Customizing/global/plugins/Services/Repository/RepositoryObject/Panopto/templates/js/sortable.js",
+
+    public function __construct(object $parent_obj)
+    {
+        global $DIC;
+
+        $this->plugin = ilPanoptoPlugin::getInstance();
+        $this->ui_factory = $DIC->ui()->factory();
+        $this->ui_renderer = $DIC->ui()->renderer();
+        $this->request = $DIC->http()->request();
+        $this->wrapper = $DIC->http()->wrapper();
+        $this->refinery = $DIC->refinery();
+
+        $this->parent_obj = $parent_obj;
+
+        $DIC->ui()->mainTemplate()->addCss('Customizing/global/plugins/Services/Repository/RepositoryObject/Panopto/templates/default/sorting_table.css');
+
+        $this->initRecords();
+    }
+
+    public function getRows(OrderingRowBuilder $row_builder, array $visible_column_ids): Generator
+    {
+        foreach ($this->records as $record) {
+            yield $row_builder->buildOrderingRow($record['id'], $record);
+        }
+    }
+
+    /**
+     * @throws PanoptoException
+     */
+    public function getHTML(): string
+    {
+        $target = (new URI((string) $this->request->getUri()))->withParameter('saveOrder', 1);
+
+        $table = $this->ui_factory->table()
+            ->ordering("", $this->getColumns(), $this, $target)
+            ->withRequest($this->request);
+
+        if ($this->request->getMethod() == "POST" && $this->wrapper->query()->has('saveOrder') && $this->wrapper->query()->retrieve('saveOrder', $this->refinery->kindlyTo()->int()) == 1) {
+            $data = $table->getData();
+
+            SorterEntry::saveOrder($data, $this->parent_obj->getFolderExtId());
+
+            $this->setOrder($data);
+        }
+
+        return $this->ui_renderer->render($table);
+    }
+
+    private function getColumns(): array
+    {
+        return [
+            "thumbnail" => $this->ui_factory->table()->column()->text($this->plugin->txt('content_thumbnail')),
+            "title" => $this->ui_factory->table()->column()->text($this->plugin->txt('content_title')),
+            "description" => $this->ui_factory->table()->column()->text($this->plugin->txt('content_description'))
         ];
-    const CSS_FILES_TO_EMBED
-        = [
-            "Customizing/global/plugins/Services/Repository/RepositoryObject/Panopto/templates/default/sorting_table.css",
-        ];
+    }
 
     /**
-     * @var PanoptoClient
-     */
-    protected PanoptoClient $client;
-    /**
-     * @var String
-     */
-    protected string $folder_id;
-
-    /**
-     * @var ilPanoptoPlugin
-     */
-    private ilPanoptoPlugin $pl;
-
-
-    /**
-     * xpanTableGUI constructor.
-     * @param                 $a_parent_obj
+     * @throws PanoptoException
+     * @throws ilException
      * @throws Exception
      */
-    public function __construct($a_parent_obj, $a_parent_gui)
+    private function initRecords(): void
     {
-        parent::__construct($a_parent_gui);
-        $this->pl = ilPanoptoPlugin::getInstance();
-        $this->client = PanoptoClient::getInstance();
+        $client = PanoptoClient::getInstance();
+        $folder = $client->getFolderByExternalId($this->parent_obj->getFolderExtId());
 
-        $plugin_dir = "Customizing/global/plugins/Services/Repository/RepositoryObject/Panopto";
-
-        $this->initColumns($this->pl);
-        $this->setRowTemplate(self::TBL_ROW_TEMPLATE_NAME, self::TBL_ROW_TEMPLATE_DIR);
-
-        $this->setExternalSorting(true);
-        $this->setExternalSegmentation(true);
-        $this->setShowRowsSelector(true);
-
-
-        $this->applyFiles($plugin_dir, $a_parent_gui);
-
-        $folder = $this->client->getFolderByExternalId($a_parent_obj->getFolderExtId());
         if (!$folder) {
             throw new ilException('No external folder found for this object.');
         }
-        $this->folder_id = $folder->getId();
 
-        $objects = PanoptoClient::getInstance()->getContentObjectsOfFolder($this->folder_id, false, 0, $a_parent_obj->getFolderExtId());
-        $this->parseData($objects);
+        $this->records = [];
 
+        $objects =  PanoptoClient::getInstance()->getContentObjectsOfFolder($folder->getId(), false, 0, $this->parent_obj->getFolderExtId());
+
+        foreach ($objects as $object) {
+            $this->records[$object->getId()] = [
+                'id' => $object->getId(),
+                'thumbnail' => "<img src='" . $object->getThumbnailUrl() . "' alt='" . $object->getTitle() . "' class='panopto_table_thumbnail'/>",
+                'title' => $object->getTitle(),
+                'description' => $object->getDescription(),
+            ];
+        }
     }
 
-
-    /**
-     * @param ilPanoptoPlugin $pl
-     */
-    protected function initColumns(ilPanoptoPlugin $pl): void
+    public function setOrder(array $ordered): void
     {
-        $this->addColumn("", 'move_icon');
-        $this->addColumn($pl->txt('content_thumbnail'));
-        $this->addColumn($pl->txt('content_title'));
-        $this->addColumn($pl->txt('content_description'));
-    }
+        $r = [];
 
-    /**
-     * @param ContentObject $content_object
-     */
-    protected function fillRow($content_object): void
-    {
-        $this->tpl->setVariable("VAL_THUMBNAIL", $content_object->getThumbnailUrl());
-        $this->tpl->setVariable("VAL_TITLE", $content_object->getTitle());
-        $this->tpl->setVariable("VAL_DESCRIPTION", $content_object->getDescription());
-        $this->tpl->setVariable("VAL_MID", $content_object->getId());
-    }
-
-
-    /**
-     * @param string $plugin_dir
-     * @throws ilCtrlException
-     */
-    protected function applyFiles(string $plugin_dir, $parent_gui): void
-    {
-        global $DIC;
-        $main_tpl = $DIC->ui()->mainTemplate();
-
-        foreach (self::JS_FILES_TO_EMBED as $pathSuffix) {
-            $main_tpl->addJavaScript($plugin_dir . $pathSuffix);
+        foreach ($ordered as $id) {
+            $r[$id] = $this->records[$id];
         }
 
-        foreach (self::CSS_FILES_TO_EMBED as $pathSuffix) {
-            $main_tpl->addCss($plugin_dir . $pathSuffix);
-        }
-
-        $base_link = $this->ctrl->getLinkTarget($parent_gui, '', '', true);
-        $main_tpl->addOnLoadCode('PanoptoSorter.init("' . $base_link . '");');
-    }
-
-    /**
-     * @param ContentObject[] $content_objects
-     */
-    protected function parseData(array $content_objects): void
-    {
-        $this->setData($content_objects);
+        $this->records = $r;
     }
 }
