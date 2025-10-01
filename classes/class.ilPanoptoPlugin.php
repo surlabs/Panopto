@@ -87,7 +87,7 @@ class ilPanoptoPlugin extends ilRepositoryObjectPlugin
     */
     public static function _getIcon(string $a_type): string
     {
-        $dir = self::getInstance()->getDirectory();
-        return $dir . "/templates/images/icon_xpan.svg";
+		$dir = "/Customizing/global/plugins/Services/Repository/RepositoryObject/Panopto";
+		return $dir . "/templates/images/icon_xpan.svg";
     }
 }
