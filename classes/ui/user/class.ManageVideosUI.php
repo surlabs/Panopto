@@ -46,14 +46,41 @@ class ManageVideosUI
 
         $this->pl = ilPanoptoPlugin::getInstance();
         $html = PanoptoLTIHandler::launchTool($object, true, true);
+
         $DIC['tpl']->addCss($this->pl->getDirectory() . '/templates/default/waiter.css');
-        $DIC['tpl']->addJavaScript($this->pl->getDirectory() . '/js/waiter.js');
-        $DIC['tpl']->addOnLoadCode('$("#lti_form").submit();');
-        $DIC['tpl']->addOnLoadCode('srWaiter.show();');
-        $DIC['tpl']->addOnLoadCode('$("iframe#basicltiLaunchFrame").load(function(){srWaiter.hide();});');
+        $DIC['tpl']->addJavaScript($this->pl->getDirectory() . '/templates/js/waiter.js');
 
-        return $html . '<div id="sr_waiter" class="sr_waiter"></div>';
+        $firefox_prompt_html = '<div id="xpan_firefox_prompt" style="display: none; padding: 20px; text-align: center;">
+    <p>' . $this->pl->txt('firefox_prompt_info_new_tab') . '</p>
+    <button id="xpan_load_videos_btn" class="btn btn-default">' . $this->pl->txt('firefox_prompt_btn_new_tab') . '</button>
+</div>';
 
+        $js_logic = "
+var panoptoLtiForm = $('#lti_form');
+var isFirefox = typeof InstallTrigger !== 'undefined';
+
+if (isFirefox) {
+    $('#xpan_firefox_prompt').show();
+    $('#basicltiLaunchFrame').hide();
+
+    $('#xpan_load_videos_btn').on('click', function() {
+        panoptoLtiForm.attr('target', '_blank');
+        panoptoLtiForm.submit();
+        $(this).text('" . $this->pl->txt('firefox_prompt_loading_new_tab') . "').prop('disabled', true);
+    });
+} else {
+    srWaiter.show();
+    panoptoLtiForm.submit();
+}
+
+$('iframe#basicltiLaunchFrame').on('load', function() {
+    srWaiter.hide();
+});
+";
+
+        $DIC['tpl']->addOnLoadCode($js_logic);
+
+        return $html . $firefox_prompt_html . '<div id="sr_waiter" class="sr_waiter"></div>';
     }
 }
 
