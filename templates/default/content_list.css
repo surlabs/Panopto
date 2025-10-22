@@ -161,7 +161,7 @@ div.xpan_image_container img.xpan_play_icon {
     display:flex;
     flex-wrap:wrap;
 	gap:10px;
-    justify-content: space-between;
+    justify-content: flex-start;
 }
 
 .xpan_page_active:hover {
