@@ -118,6 +118,67 @@ class UserContentMainUI
         );
         $pages = 1 + floor($content_objects["count"] / 10);
 
+        // Extract all session IDs for batching
+        $session_ids = [];
+        foreach ($content_objects["objects"] as $object) {
+            if ($object instanceof Session) {
+                $session_ids[] = $object->getId();
+            }
+        }
+
+        // Single batch call for all availability data
+        $availability_data = [];
+        if (!empty($session_ids)) {
+            $availability_data = $this->client->getSessionsAvailabilitySettings(
+                $session_ids,
+            );
+        }
+
+        // Apply filtering using batched data
+        $filtered_count = 0;
+        foreach ($content_objects["objects"] as $key => $object) {
+            if ($object instanceof Session) {
+                $session_id = $object->getId();
+                $availabilityStart = $this->processAvailabilityData(
+                    $availability_data[$session_id] ?? null,
+                );
+
+                if ($availabilityStart && $availabilityStart > new DateTime()) {
+                    unset($content_objects["objects"][$key]);
+                    $filtered_count++;
+                    continue;
+                }
+
+                $tpl->setCurrentBlock("duration");
+                $tpl->setVariable(
+                    "DURATION",
+                    $this->formatDuration((int) $object->getDuration()),
+                );
+                $tpl->parseCurrentBlock();
+                $tpl->setVariable("IS_PLAYLIST", "false");
+            } else {
+                $tpl->setVariable("IS_PLAYLIST", "true");
+                $tpl->touchBlock("playlist_icon");
+            }
+
+            $tpl->setCurrentBlock("list_item");
+            $tpl->setVariable("ID", $object->getId());
+            $tpl->setVariable("THUMBNAIL", $object->getThumbnailUrl());
+            $tpl->setVariable(
+                "TITLE",
+                htmlspecialchars($object->getTitle(), ENT_QUOTES, "UTF-8"),
+            );
+            $tpl->setVariable(
+                "DESCRIPTION",
+                htmlspecialchars(
+                    $object->getDescription(),
+                    ENT_QUOTES,
+                    "UTF-8",
+                ),
+            );
+            $tpl->parseCurrentBlock();
+        }
+
         // "previous" button
         if ($page) {
             $this->ctrl->setParameter($parent, "xpan_page", $page - 1);
@@ -170,49 +231,6 @@ class UserContentMainUI
             $tpl->parseCurrentBlock();
         }
 
-        // videos
-        /** @var ContentObject $object */
-        $filtered_count = 0;
-        foreach ($content_objects["objects"] as $object) {
-            if ($object instanceof Session) {
-                $availabilityStart = $this->fetchSessionAvailability(
-                    $object->getId(),
-                );
-                if ($availabilityStart && $availabilityStart > new DateTime()) {
-                    $filtered_count++;
-                    continue;
-                }
-
-                $tpl->setCurrentBlock("duration");
-                $tpl->setVariable(
-                    "DURATION",
-                    $this->formatDuration((int) $object->getDuration()),
-                );
-                $tpl->parseCurrentBlock();
-                $tpl->setVariable("IS_PLAYLIST", "false");
-            } else {
-                $tpl->setVariable("IS_PLAYLIST", "true");
-                $tpl->touchBlock("playlist_icon");
-            }
-
-            $tpl->setCurrentBlock("list_item");
-            $tpl->setVariable("ID", $object->getId());
-            $tpl->setVariable("THUMBNAIL", $object->getThumbnailUrl());
-            $tpl->setVariable(
-                "TITLE",
-                htmlspecialchars($object->getTitle(), ENT_QUOTES, "UTF-8"),
-            );
-            $tpl->setVariable(
-                "DESCRIPTION",
-                htmlspecialchars(
-                    $object->getDescription(),
-                    ENT_QUOTES,
-                    "UTF-8",
-                ),
-            );
-            $tpl->parseCurrentBlock();
-        }
-
         $lti_form = PanoptoLTIHandler::launchTool($panoptoObject, false, false);
 
         $this->tpl->addCss(
@@ -253,39 +271,27 @@ class UserContentMainUI
     }
 
     /**
-     * @return String
+     * Process availability data and return DateTime if available
+     * @param array|null $availability_setting
+     * @return DateTime|null
      */
-    private function fetchSessionAvailability(string $sessionId): ?DateTime
+    private function processAvailabilityData($availability_setting): ?DateTime
     {
-        try {
-            $availability_data = $this->client->getSessionsAvailabilitySettings(
-                [$sessionId],
-            );
-
-            if (isset($availability_data[$sessionId])) {
-                $setting = $availability_data[$sessionId];
-                if (
-                    $setting["start_setting_type"] === "SpecificDate" &&
-                    $setting["start_date"]
-                ) {
-                    // Handle DateTimeOffset object
-                    $start_date = $setting["start_date"];
-                    if (
-                        $start_date &&
-                        method_exists($start_date, "getDateTime")
-                    ) {
-                        return $start_date->getDateTime();
-                    }
-                }
-            }
-            return null;
-        } catch (Exception $e) {
-            PanoptoLog::getInstance()->write(
-                "Error fetching availability for session $sessionId: " .
-                    $e->getMessage(),
-            );
+        if (!$availability_setting) {
             return null;
         }
+
+        if (
+            $availability_setting["start_setting_type"] === "SpecificDate" &&
+            $availability_setting["start_date"]
+        ) {
+            $start_date = $availability_setting["start_date"];
+            if ($start_date && method_exists($start_date, "getDateTime")) {
+                return $start_date->getDateTime();
+            }
+        }
+
+        return null;
     }
 
     protected function getModalPlayer(): string
