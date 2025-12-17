@@ -20,10 +20,10 @@ declare(strict_types=1);
 
 namespace connection;
 
-use ILIAS\LTIOAuth\OAuthConsumer;
-use ILIAS\LTIOAuth\OAuthToken;
-use ILIAS\LTIOAuth\OAuthRequest;
-use ILIAS\LTIOAuth\OAuthSignatureMethod_HMAC_SHA1;
+use Panopto\OAuth\OAuthConsumer;
+use Panopto\OAuth\OAuthRequest;
+use Panopto\OAuth\OAuthSignatureMethod_HMAC_SHA1;
+use Panopto\OAuth\OAuthToken;
 use platform\PanoptoConfig;
 use platform\PanoptoException;
 use utils\PanoptoUtils;
@@ -62,8 +62,9 @@ class PanoptoLTIHandler
             $params["data"]
         );
         $request->sign_request($method, $consumer, null);
+        $parameters = $request->get_parameters();
 
-        return $request->get_parameters();
+        return $parameters;
     }
 
     /**
@@ -112,13 +113,21 @@ class PanoptoLTIHandler
             "data" => $launch_data
         ];
 
-        $oauth_params = self::signOAuth($params);
 
+        $oauth_params = self::signOAuth($params);
 
         $html = '<form id="lti_form" action="' . $launch_url . '" method="post" target="basicltiLaunchFrame"
       enctype="application/x-www-form-urlencoded">';
         foreach ($oauth_params as $key => $value) {
-            $html .= "<input type='hidden' name='$key' value='" . htmlspecialchars((string)$value, ENT_QUOTES) . "'>";
+            if (is_array($value) || is_object($value)) {
+                $value = json_encode($value);
+            }
+
+            if (!is_scalar($value)) {
+                continue;
+            }
+
+            $html .= "<input type='hidden' name='{$key}' value='" . htmlspecialchars((string)$value, ENT_QUOTES) . "'>";
         }
         $html .= '</form>';
         $html .= '<iframe name="basicltiLaunchFrame" id="basicltiLaunchFrame" src="" style="width:100%;height:100%;min-height:800px;border:none;' . ($showIframe ? 'min-height: calc(100dvh - 290px);' : 'display:none;') . '"></iframe>';
@@ -183,4 +192,3 @@ class PanoptoLTIHandler
         return json_encode($oauth_params);
     }
 }
-
