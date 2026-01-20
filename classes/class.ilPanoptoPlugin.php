@@ -78,7 +78,7 @@ class ilPanoptoPlugin extends ilRepositoryObjectPlugin
      */
     public function getDirectory(): string
     {
-        return '/Customizing/global/plugins/Services/Repository/RepositoryObject/Panopto';
+        return 'public/Customizing/global/plugins/Services/Repository/RepositoryObject/Panopto';
     }
 
     /**
