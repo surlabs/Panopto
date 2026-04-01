@@ -59,3 +59,9 @@ objs_xpan#:#Panoptos
 firefox_prompt_info_new_tab#:#Aufgrund der Datenschutzeinstellungen von Firefox muss Panopto in einem neuen Tab geöffnet werden. Bitte klicken Sie auf die Schaltfläche unten, um fortzufahren.
 firefox_prompt_btn_new_tab#:#Panopto in neuem Tab öffnen
 firefox_prompt_loading_new_tab#:#Panopto wird in einem neuen Tab geöffnet...
+err_api_auth_failed#:#Verbindungsfehler zu Panopto: Überprüfen Sie, ob die API-Anmeldedaten (Benutzername und Passwort) in der Plugin-Konfiguration korrekt sind.
+err_api_access_denied#:#Zugriff verweigert: Der API-Benutzer hat keine ausreichenden Berechtigungen für diese Aktion.
+err_api_connection_failed#:#Verbindung zum Panopto-Server nicht möglich. Überprüfen Sie den Hostnamen und die Netzwerkkonnektivität.
+test_connection_success#:#Verbindungstest erfolgreich: API-Anmeldedaten sind gültig.
+test_connection_failed#:#Verbindungstest fehlgeschlagen: 
+test_connection#:#Verbindung testen

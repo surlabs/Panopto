@@ -48,6 +48,7 @@ use platform\PanoptoDatabase;
 use platform\SorterEntry;
 use utils\DTO\ContentObjectBuilder;
 use Exception;
+use ilPanoptoPlugin;
 use platform\PanoptoConfig;
 use platform\PanoptoException;
 use Panopto\SessionManagement\Folder;
@@ -152,7 +153,7 @@ class PanoptoClient
             $sessions_result = $session_client->GetSessionsList($params);
         } catch (Exception $e) {
             $this->log->logError($e->getCode(), $e->getMessage());
-            throw $e;
+            $this->handleApiError($e->getMessage(), $e->getCode());
         }
 
         $sessions = $sessions_result->getGetSessionsListResult();
@@ -327,7 +328,7 @@ class PanoptoClient
                 $user_access_details[$user_id] = $access_management->GetUserAccessDetails($params)->getGetUserAccessDetailsResult();
             } catch (Exception $e) {
                 $this->log->logError($e->getCode(), $e->getMessage());
-                throw $e;
+                $this->handleApiError($e->getMessage(), $e->getCode());
             }
 
 
@@ -383,7 +384,7 @@ class PanoptoClient
             $return = $user_management->GetUserByKey($params)->getGetUserByKeyResult();
         } catch (Exception $e) {
             $this->log->logError($e->getCode(), $e->getMessage());
-            throw $e;
+            $this->handleApiError($e->getMessage(), $e->getCode());
         }
 
         if ($return->getUserId() == '00000000-0000-0000-0000-000000000000') {
@@ -398,7 +399,7 @@ class PanoptoClient
                 $return = $user_management->GetUserByKey($params)->getGetUserByKeyResult();
             } catch (Exception $e) {
                 $this->log->logError($e->getCode(), $e->getMessage());
-                throw $e;
+                $this->handleApiError($e->getMessage(), $e->getCode());
             }
         }
         $this->log->write('Found user with id: ' . $return->getUserId());
@@ -437,7 +438,7 @@ class PanoptoClient
             $user_management->CreateUser($params);
         } catch (Exception $e) {
             $this->log->logError($e->getCode(), $e->getMessage());
-            throw $e;
+            $this->handleApiError($e->getMessage(), $e->getCode());
         }
     }
 
@@ -493,7 +494,7 @@ class PanoptoClient
             $access_management->GrantUsersAccessToFolder($params);
         } catch (Exception $e) {
             $this->log->logError($e->getCode(), $e->getMessage());
-            throw $e;
+            $this->handleApiError($e->getMessage(), $e->getCode());
         }
     }
 
@@ -628,7 +629,7 @@ class PanoptoClient
             $access_management->GrantUsersViewerAccessToSession($params);
         } catch (Exception $e) {
             $this->log->logError($e->getCode(), $e->getMessage());
-            throw $e;
+            $this->handleApiError($e->getMessage(), $e->getCode());
         }
     }
 
@@ -657,7 +658,7 @@ class PanoptoClient
                 $session_access_details[$session_id] = $access_management->GetSessionAccessDetails($params)->getGetSessionAccessDetailsResult();
             } catch (Exception $e) {
                 $this->log->logError($e->getCode(), $e->getMessage());
-                throw $e;
+                $this->handleApiError($e->getMessage(), $e->getCode());
             }
 
             $this->log->write('Received ' .
@@ -666,6 +667,61 @@ class PanoptoClient
             );
         }
         return $session_access_details[$session_id];
+    }
+
+    /**
+     * @param string $message
+     * @param int $code
+     * @throws PanoptoException
+     */
+    protected function handleApiError(string $message, int $code): void
+    {
+        if (stripos($message, 'access') !== false || stripos($message, 'permission') !== false || stripos($message, 'does not have access') !== false) {
+            throw new PanoptoException(ilPanoptoPlugin::getInstance()->txt('err_api_access_denied'), $code);
+        }
+        
+        if (stripos($message, 'authentication') !== false || stripos($message, 'unauthorized') !== false || stripos($message, '401') !== false) {
+            throw new PanoptoException(ilPanoptoPlugin::getInstance()->txt('err_api_auth_failed'), $code);
+        }
+        
+        if (stripos($message, '403') !== false || stripos($message, 'forbidden') !== false) {
+            throw new PanoptoException(ilPanoptoPlugin::getInstance()->txt('err_api_auth_failed'), $code);
+        }
+
+        throw new PanoptoException($message, $code);
+    }
+
+    /**
+     * @return bool
+     * @throws PanoptoException
+     */
+    public function testConnection(): bool
+    {
+        try {
+            $this->log->write('*********');
+            $this->log->write('Testing connection...');
+
+            $auth = new AuthenticationInfo();
+            $auth->setUserKey(PanoptoConfig::get('instance_name') . "\\" . PanoptoConfig::get('api_user'));
+            $auth->setPassword(null);
+            $auth->setAuthCode($this->panoptoclient->getAuthenticationInfo()->getAuthCode());
+
+            $params = new GetUserByKey(
+                $auth,
+                PanoptoConfig::get('instance_name') . "\\" . PanoptoConfig::get('api_user')
+            );
+
+            /** @var UserManagement $user_management */
+            $user_management = $this->panoptoclient->UserManagement();
+            $user_management->GetUserByKey($params);
+
+            $this->log->write('Connection test successful.');
+            return true;
+        } catch (Exception $e) {
+            $this->log->logError($e->getCode(), $e->getMessage());
+            $this->handleApiError($e->getMessage(), $e->getCode());
+            return false;
+        }
     }
 
 }
