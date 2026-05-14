@@ -33,6 +33,8 @@ use ilTemplate;
 use platform\PanoptoConfig;
 use utils\DTO\ContentObject;
 use utils\DTO\Session;
+use ilLanguage;
+use ILIAS\UI\Renderer;
 
 /**
  * Class UserContentMainUI
@@ -60,6 +62,8 @@ class UserContentMainUI
      * @var ilCtrl
      */
     protected ilCtrl $ctrl;
+    protected ilLanguage $lng;
+    protected Renderer $ui_renderer;
 
     /**
      * @throws ilCtrlException
@@ -186,6 +190,14 @@ class UserContentMainUI
         $this->tpl->addCss("Customizing/global/plugins/Services/Repository/RepositoryObject/Panopto/templates/default/content_list.css");
         $this->tpl->addJavaScript('Customizing/global/plugins/Services/Repository/RepositoryObject/Panopto/templates/js/Panopto.js');
         $this->tpl->addOnLoadCode('Panopto.base_url = "https://' . PanoptoConfig::get('hostname') . '";');
+        $this->tpl->addOnloadCode('
+            $(function() {
+                var $form = $("#lti_form");
+                if ($form.length > 0) {
+                    $form.submit();
+                }
+            });
+        ');
         $this->tpl->addJavaScript("assets/js/modal.min.js");
 
 
@@ -204,21 +216,31 @@ class UserContentMainUI
     }
 
     /**
-     * @return String
+     * Generates the HTML string for the Panopto video player modal.
+     *
+     * @return string The rendered HTML modal component.
      */
     protected function getModalPlayer(): string
     {
         global $DIC;
-        $factory = $DIC->ui()->factory();
-        $renderer = $DIC->ui()->renderer();
-        $message = $factory->legacy('<section><div id="xpan_video_container"></div></section>');
-        $modal = $factory->modal()->roundtrip('', $message);
-        $this->tpl->addOnLoadCode('$("#lti_form").submit();');
+        $this->lng = $DIC->language();
 
-        return $renderer->render($modal);
+        $ui_factory = $DIC->ui()->factory();
 
+        // Base container that will be targeted by Panopto.js to inject the iframe
+        $html_content = '<div id="panopto-modal-video-container"></div>';
+
+        // Wrap the HTML content inside an ILIAS Legacy Component
+        $legacy_factory = $ui_factory->legacy();
+        $content_component = $legacy_factory->content($html_content);
+
+        // Build the roundtrip modal
+        $title = $this->lng->txt("rep_robj_xpnt_player_modal_title");
+        $modal = $ui_factory->modal()->roundtrip($title, $content_component);
+
+        // Render the modal component into an HTML string
+        return $DIC->ui()->renderer()->render($modal);
     }
 
 
 }
-

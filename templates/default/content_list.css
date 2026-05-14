@@ -200,3 +200,8 @@ div.xpan_image_container img.xpan_play_icon {
         width: 23% !important;
     }
 }
+
+.modal-dialog {
+    max-width: 70vw !important;
+    width: auto !important;
+}

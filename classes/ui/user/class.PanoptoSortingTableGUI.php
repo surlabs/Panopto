@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * This file is part of the Panopto Repository Object plugin for ILIAS.
  * This plugin allows users to embed Panopto videos in ILIAS as repository objects.
@@ -17,31 +19,36 @@
  *
  */
 
+namespace classes\ui\user;
+
 use connection\PanoptoClient;
 use ILIAS\Data\URI;
 use ILIAS\HTTP\Wrapper\WrapperFactory;
-use ILIAS\UI\Component\Table\OrderingBinding;
+use ILIAS\UI\Component\Table\OrderingRetrieval;
 use ILIAS\UI\Component\Table\OrderingRowBuilder;
 use ILIAS\UI\Factory;
 use ILIAS\UI\Renderer;
 use platform\PanoptoException;
 use platform\SorterEntry;
+use Exception;
+use ilException;
+use ilPanoptoPlugin;
+use Generator;
 
 /**
  * Class PanoptoSortingTableGUI
  * @authors Jesús Copado, Daniel Cazalla, Saúl Díaz, Juan Aguilar <info@surlabs.es>
  */
-class PanoptoSortingTableGUI implements OrderingBinding
+class PanoptoSortingTableGUI implements OrderingRetrieval
 {
     protected ilPanoptoPlugin $plugin;
     protected Factory $ui_factory;
     protected Renderer $ui_renderer;
     protected $request;
     protected WrapperFactory $wrapper;
-    protected ILIAS\Refinery\Factory $refinery;
+    protected \ILIAS\Refinery\Factory $refinery;
     protected array $records;
     private object $parent_obj;
-
 
     public function __construct(object $parent_obj)
     {
@@ -76,14 +83,12 @@ class PanoptoSortingTableGUI implements OrderingBinding
         $target = (new URI((string) $this->request->getUri()))->withParameter('saveOrder', 1);
 
         $table = $this->ui_factory->table()
-            ->ordering("", $this->getColumns(), $this, $target)
+            ->ordering($this, $target, "", $this->getColumns())
             ->withRequest($this->request);
 
         if ($this->request->getMethod() == "POST" && $this->wrapper->query()->has('saveOrder') && $this->wrapper->query()->retrieve('saveOrder', $this->refinery->kindlyTo()->int()) == 1) {
             $data = $table->getData();
-
             SorterEntry::saveOrder($data, $this->parent_obj->getFolderExtId());
-
             $this->setOrder($data);
         }
 
@@ -114,8 +119,7 @@ class PanoptoSortingTableGUI implements OrderingBinding
         }
 
         $this->records = [];
-
-        $objects =  PanoptoClient::getInstance()->getContentObjectsOfFolder($folder->getId(), false, 0, $this->parent_obj->getFolderExtId());
+        $objects = PanoptoClient::getInstance()->getContentObjectsOfFolder($folder->getId(), false, 0, $this->parent_obj->getFolderExtId());
 
         foreach ($objects as $object) {
             $this->records[$object->getId()] = [
@@ -130,11 +134,9 @@ class PanoptoSortingTableGUI implements OrderingBinding
     public function setOrder(array $ordered): void
     {
         $r = [];
-
         foreach ($ordered as $id) {
             $r[$id] = $this->records[$id];
         }
-
         $this->records = $r;
     }
 }
