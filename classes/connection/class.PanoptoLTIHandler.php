@@ -124,7 +124,7 @@ class PanoptoLTIHandler
             }
 
             if (!is_scalar($value)) {
-                continue; // ignora tipos raros (resources, etc.)
+                continue; //
             }
 
             $html .= "<input type='hidden' name='{$key}' value='" . htmlspecialchars((string)$value, ENT_QUOTES) . "'>";
@@ -192,4 +192,3 @@ class PanoptoLTIHandler
         return json_encode($oauth_params);
     }
 }
-

@@ -34,6 +34,7 @@ use Panopto\AccessManagement\AuthenticationInfo;
 use Panopto\Client as PanoptoClientAPI;
 use Panopto\SessionManagement\ArrayOfSessionState;
 use Panopto\SessionManagement\GetAllFoldersByExternalId;
+use Panopto\SessionManagement\GetSessionsAvailabilitySettings;
 use Panopto\SessionManagement\GetSessionsList;
 use Panopto\SessionManagement\ListSessionsRequest;
 use Panopto\SessionManagement\SessionManagement;
@@ -54,7 +55,6 @@ use platform\PanoptoException;
 use Panopto\SessionManagement\Folder;
 use utils\PanoptoUtils;
 
-
 /**
  * Class PanoptoClient
  * @authors Jesús Copado, Daniel Cazalla, Saúl Díaz, Juan Aguilar <info@surlabs.es>
@@ -65,7 +65,6 @@ class PanoptoClient
      * @var self
      */
     protected static PanoptoClient $instance;
-
 
     /**
      * @return self
@@ -78,7 +77,6 @@ class PanoptoClient
 
         return self::$instance;
     }
-
 
     /**
      * @var PanoptoClientAPI
@@ -105,15 +103,34 @@ class PanoptoClient
     {
         $this->log = PanoptoLog::getInstance();
 
-        $arrContextOptions = array("ssl" => array("verify_peer" => false, "verify_peer_name" => false));
-        $this->panoptoclient = new PanoptoClientAPI(PanoptoConfig::get('hostname'), array('trace' => 1, 'stream_context' => stream_context_create($arrContextOptions)));
-        $this->panoptoclient->setAuthenticationInfo(PanoptoConfig::get('instance_name') . "\\" . PanoptoConfig::get('api_user'), '', PanoptoConfig::get('application_key'));
+        $arrContextOptions = [
+            "ssl" => ["verify_peer" => false, "verify_peer_name" => false],
+        ];
+        $this->panoptoclient = new PanoptoClientAPI(
+            PanoptoConfig::get("hostname"),
+            [
+                "trace" => 1,
+                "stream_context" => stream_context_create($arrContextOptions),
+            ],
+        );
+        $this->panoptoclient->setAuthenticationInfo(
+            PanoptoConfig::get("instance_name") .
+                "\\" .
+                PanoptoConfig::get("api_user"),
+            "",
+            PanoptoConfig::get("application_key"),
+        );
         $this->auth = new AuthenticationInfo();
-        $this->auth->setUserKey(PanoptoConfig::get('instance_name') . "\\" . PanoptoConfig::get('api_user'));
+        $this->auth->setUserKey(
+            PanoptoConfig::get("instance_name") .
+                "\\" .
+                PanoptoConfig::get("api_user"),
+        );
         $this->auth->setPassword(null);
-        $this->auth->setAuthCode($this->panoptoclient->getAuthenticationInfo()->getAuthCode());
+        $this->auth->setAuthCode(
+            $this->panoptoclient->getAuthenticationInfo()->getAuthCode(),
+        );
         $this->rest_client = PanoptoRestClient::getInstance();
-
     }
 
     /**
@@ -121,8 +138,12 @@ class PanoptoClient
      * @throws ilException
      * @throws Exception
      */
-    public function getContentObjectsOfFolder($folder_id, $page_limit = false, $page = 0, int $ref_id = 0): array
-    {
+    public function getContentObjectsOfFolder(
+        $folder_id,
+        $page_limit = false,
+        $page = 0,
+        int $ref_id = 0,
+    ): array {
         $perpage = 10;
         $request = new ListSessionsRequest();
         $request->setFolderId($folder_id);
@@ -133,19 +154,19 @@ class PanoptoClient
         $request->setPagination($pagination);
 
         $states = new ArrayOfSessionState();
-        $states->setSessionState(array(SessionState::Complete, SessionState::Broadcasting, SessionState::Scheduled));
+        $states->setSessionState([
+            SessionState::Complete,
+            SessionState::Broadcasting,
+            SessionState::Scheduled,
+        ]);
         $request->setStates($states);
 
-        $this->log->write('*********');
+        $this->log->write("*********");
         $this->log->write('SOAP call "GetSessionsList"');
         $this->log->write("request:");
         $this->log->write(print_r($request, true));
 
-        $params = new GetSessionsList(
-            $this->auth,
-            $request,
-            ''
-        );
+        $params = new GetSessionsList($this->auth, $request, "");
 
         /** @var SessionManagement $session_client */
         $session_client = $this->panoptoclient->SessionManagement();
@@ -158,22 +179,25 @@ class PanoptoClient
 
         $sessions = $sessions_result->getGetSessionsListResult();
 
-        $this->log->write('Received ' . $sessions->getTotalNumberResults() . ' object(s).');
+        $this->log->write(
+            "Received " . $sessions->getTotalNumberResults() . " object(s).",
+        );
 
-        $sessions = ContentObjectBuilder::buildSessionsDTOsFromSessions($sessions->getResults()->getSession() ?? []);
+        $sessions = ContentObjectBuilder::buildSessionsDTOsFromSessions(
+            $sessions->getResults()->getSession() ?? [],
+        );
         $playlists = $this->rest_client->getPlaylistsOfFolder($folder_id);
         $objects = array_merge($sessions, $playlists);
         $objects = SorterEntry::generateSortedObjects($objects, $ref_id);
         if ($page_limit) {
             // Implement manual pagination
-            return array(
+            return [
                 "count" => count($objects),
                 "objects" => array_slice($objects, $page * $perpage, $perpage),
-            );
+            ];
         } else {
             return $objects;
         }
-
     }
 
     /**
@@ -181,7 +205,7 @@ class PanoptoClient
      */
     public function getFolderByExternalId(int $ext_id): ?Folder
     {
-        $folders = $this->getAllFoldersByExternalId((array)$ext_id);
+        $folders = $this->getAllFoldersByExternalId((array) $ext_id);
         return array_shift($folders);
     }
 
@@ -191,28 +215,31 @@ class PanoptoClient
      */
     public function getAllFoldersByExternalId(array $ext_ids): ?array
     {
-        $this->log->write('*********');
+        $this->log->write("*********");
         $this->log->write('SOAP call "GetAllFoldersByExternalId"');
         $this->log->write("folderExternalIds:");
         $this->log->write(print_r($ext_ids, true));
         $this->log->write("providerNames:");
-        $this->log->write(print_r(array(PanoptoConfig::get("instance_name")), true));
+        $this->log->write(print_r([PanoptoConfig::get("instance_name")], true));
 
         $instanceArray = new ArrayOfstring();
-        $instanceArray->setString(array(PanoptoConfig::get('instance_name')));
+        $instanceArray->setString([PanoptoConfig::get("instance_name")]);
         $params = new GetAllFoldersByExternalId(
             $this->auth,
             $ext_ids,
-            $instanceArray
+            $instanceArray,
         );
 
-
         $session_client = $this->panoptoclient->SessionManagement();
-        $return = $session_client->GetAllFoldersByExternalId($params)->getGetAllFoldersByExternalIdResult()->getFolder();
+        $return = $session_client
+            ->GetAllFoldersByExternalId($params)
+            ->getGetAllFoldersByExternalIdResult()
+            ->getFolder();
 
-
-        $this->log->write('Received ' . (isset($return) ? count($return) : 0) . ' object(s).');
-        return is_array($return) ? $return : array();
+        $this->log->write(
+            "Received " . (isset($return) ? count($return) : 0) . " object(s).",
+        );
+        return is_array($return) ? $return : [];
     }
 
     /**
@@ -223,7 +250,7 @@ class PanoptoClient
         $xpanDb = new PanoptoDatabase();
         $result = $xpanDb->select("xpan_objects", null, ["folder_ext_id"]);
 
-        $folder_ext_ids = array();
+        $folder_ext_ids = [];
 
         foreach ($result as $row) {
             $folder_ext_ids[] = $row["folder_ext_id"];
@@ -234,8 +261,16 @@ class PanoptoClient
             $typedFolders = array_unique($folder_ext_ids);
             $folders = $this->getAllFoldersByExternalId($typedFolders);
             foreach ($folders as $folder) {
-                if ($folder && ($this->getUserAccessOnFolder($folder->getId(), $user_id) !== 'Creator')) {
-                    $this->grantUserAccessToFolder($folder->getId(), 'Creator', $user_id);
+                if (
+                    $folder &&
+                    $this->getUserAccessOnFolder($folder->getId(), $user_id) !==
+                        "Creator"
+                ) {
+                    $this->grantUserAccessToFolder(
+                        $folder->getId(),
+                        "Creator",
+                        $user_id,
+                    );
                 }
             }
         }
@@ -243,7 +278,7 @@ class PanoptoClient
 
     private function removeDuplicates(array $data): array
     {
-        $res = array();
+        $res = [];
         foreach ($data as $value) {
             if (!in_array($value, $res)) {
                 $res[] = $value;
@@ -252,49 +287,66 @@ class PanoptoClient
         return $res;
     }
 
-
-
     /**
      * @param $folder_id
      * @param int $user_id
      * @return bool|string Creator, Viewer or false
      * @throws Exception
      */
-    public function getUserAccessOnFolder($folder_id, int $user_id = 0): bool|string
-    {
+    public function getUserAccessOnFolder(
+        $folder_id,
+        int $user_id = 0,
+    ): bool|string {
         $user_details = $this->getUserAccessDetails($user_id);
-        $user_groups_details = $user_details->getGroupMembershipAccess()->getGroupAccessDetails();
-        $user_groups_details = is_array($user_groups_details) ? $user_groups_details : array();
+        $user_groups_details = $user_details
+            ->getGroupMembershipAccess()
+            ->getGroupAccessDetails();
+        $user_groups_details = is_array($user_groups_details)
+            ? $user_groups_details
+            : [];
 
         // fetch creator access folders from groups
-        $folders_with_creator_access = array();
+        $folders_with_creator_access = [];
         foreach ($user_groups_details as $user_group_details) {
-            $folder_ids = $user_group_details->getFoldersWithCreatorAccess()->getGuid();
+            $folder_ids = $user_group_details
+                ->getFoldersWithCreatorAccess()
+                ->getGuid();
             if (is_array($folder_ids)) {
-                $folders_with_creator_access = array_merge($folders_with_creator_access, $folder_ids);
+                $folders_with_creator_access = array_merge(
+                    $folders_with_creator_access,
+                    $folder_ids,
+                );
             }
         }
         $folder_ids = $user_details->getFoldersWithCreatorAccess()->getGuid();
-        $folders_with_creator_access = is_array($folder_ids) ? array_merge($folders_with_creator_access, $folder_ids) : $folders_with_creator_access;
+        $folders_with_creator_access = is_array($folder_ids)
+            ? array_merge($folders_with_creator_access, $folder_ids)
+            : $folders_with_creator_access;
 
         if (in_array($folder_id, $folders_with_creator_access)) {
-            return 'Creator';
+            return "Creator";
         }
 
-
         // fetch viewer access folders from groups
-        $folders_with_viewer_access = array();
+        $folders_with_viewer_access = [];
         foreach ($user_groups_details as $user_group_details) {
-            $folder_ids = $user_group_details->getFoldersWithViewerAccess()->getGuid();
+            $folder_ids = $user_group_details
+                ->getFoldersWithViewerAccess()
+                ->getGuid();
             if (is_array($folder_ids)) {
-                $folders_with_viewer_access = array_merge($folders_with_viewer_access, $folder_ids);
+                $folders_with_viewer_access = array_merge(
+                    $folders_with_viewer_access,
+                    $folder_ids,
+                );
             }
         }
         $folder_ids = $user_details->getFoldersWithViewerAccess()->getGuid();
-        $folders_with_viewer_access = is_array($folder_ids) ? array_merge($folders_with_viewer_access, $folder_ids) : $folders_with_viewer_access;
+        $folders_with_viewer_access = is_array($folder_ids)
+            ? array_merge($folders_with_viewer_access, $folder_ids)
+            : $folders_with_viewer_access;
 
         if (in_array($folder_id, $folders_with_viewer_access)) {
-            return 'Viewer';
+            return "Viewer";
         }
 
         return false;
@@ -312,27 +364,31 @@ class PanoptoClient
         $user_id = $user_id ? $user_id : $DIC->user()->getId();
         if (!isset($user_access_details[$user_id])) {
             $guid = $this->getUserGuid($user_id);
-            $this->log->write('*********');
+            $this->log->write("*********");
             $this->log->write('SOAP call "GetUserAccessDetails"');
             $this->log->write("userId:");
             $this->log->write(print_r($guid, true));
 
-            $params = new GetUserAccessDetails(
-                $this->auth,
-                $guid
-            );
+            $params = new GetUserAccessDetails($this->auth, $guid);
 
             /** @var AccessManagement $access_management */
             $access_management = $this->panoptoclient->AccessManagement();
             try {
-                $user_access_details[$user_id] = $access_management->GetUserAccessDetails($params)->getGetUserAccessDetailsResult();
+                $user_access_details[$user_id] = $access_management
+                    ->GetUserAccessDetails($params)
+                    ->getGetUserAccessDetailsResult();
             } catch (Exception $e) {
                 $this->log->logError($e->getCode(), $e->getMessage());
                 $this->handleApiError($e->getMessage(), $e->getCode());
             }
 
-
-            $this->log->write('Received ' . (is_array($user_access_details[$user_id]) ? (int)count($user_access_details[$user_id]) : 0) . ' object(s).');
+            $this->log->write(
+                "Received " .
+                    (is_array($user_access_details[$user_id])
+                        ? (int) count($user_access_details[$user_id])
+                        : 0) .
+                    " object(s).",
+            );
         }
         return $user_access_details[$user_id];
     }
@@ -348,7 +404,9 @@ class PanoptoClient
         if (!isset($user_guids[$user_id])) {
             global $DIC;
             $user_id = $user_id ? $user_id : $DIC->user()->getId();
-            $user_guids[$user_id] = $this->getUserByKey(PanoptoUtils::getUserKey($user_id))->getUserId();
+            $user_guids[$user_id] = $this->getUserByKey(
+                PanoptoUtils::getUserKey($user_id),
+            )->getUserId();
         }
         return $user_guids[$user_id];
     }
@@ -358,11 +416,11 @@ class PanoptoClient
      * @return User
      * @throws Exception
      */
-    public function getUserByKey(string $user_key = ''): User
+    public function getUserByKey(string $user_key = ""): User
     {
         $user_key = $user_key ? $user_key : PanoptoUtils::getUserKey();
 
-        $this->log->write('*********');
+        $this->log->write("*********");
         $this->log->write('SOAP call "getUserByKey"');
         $this->log->write("userKey:");
         $this->log->write(print_r($user_key, true));
@@ -371,38 +429,45 @@ class PanoptoClient
         $user_management = $this->panoptoclient->UserManagement();
 
         $newAuth = new \Panopto\UserManagement\AuthenticationInfo();
-        $newAuth->setUserKey(PanoptoConfig::get('instance_name') . "\\" . PanoptoConfig::get('api_user'));
+        $newAuth->setUserKey(
+            PanoptoConfig::get("instance_name") .
+                "\\" .
+                PanoptoConfig::get("api_user"),
+        );
         $newAuth->setPassword(null);
-        $newAuth->setAuthCode($this->panoptoclient->getAuthenticationInfo()->getAuthCode());
-
-        $params = new GetUserByKey(
-            $newAuth,
-            $user_key
+        $newAuth->setAuthCode(
+            $this->panoptoclient->getAuthenticationInfo()->getAuthCode(),
         );
 
+        $params = new GetUserByKey($newAuth, $user_key);
+
         try {
-            $return = $user_management->GetUserByKey($params)->getGetUserByKeyResult();
+            $return = $user_management
+                ->GetUserByKey($params)
+                ->getGetUserByKeyResult();
         } catch (Exception $e) {
             $this->log->logError($e->getCode(), $e->getMessage());
             $this->handleApiError($e->getMessage(), $e->getCode());
         }
 
-        if ($return->getUserId() == '00000000-0000-0000-0000-000000000000') {
-            $this->log->write('Status: User Not Found');
+        if ($return->getUserId() == "00000000-0000-0000-0000-000000000000") {
+            $this->log->write("Status: User Not Found");
             $this->createUser($user_key, $newAuth);
 
             try {
-                $this->log->write('*********');
+                $this->log->write("*********");
                 $this->log->write('SOAP call "getUserByKey"');
                 $this->log->write("userKey:");
                 $this->log->write(print_r($user_key, true));
-                $return = $user_management->GetUserByKey($params)->getGetUserByKeyResult();
+                $return = $user_management
+                    ->GetUserByKey($params)
+                    ->getGetUserByKeyResult();
             } catch (Exception $e) {
                 $this->log->logError($e->getCode(), $e->getMessage());
                 $this->handleApiError($e->getMessage(), $e->getCode());
             }
         }
-        $this->log->write('Found user with id: ' . $return->getUserId());
+        $this->log->write("Found user with id: " . $return->getUserId());
 
         return $return;
     }
@@ -415,7 +480,7 @@ class PanoptoClient
     public function createUser($user_key, $auth): void
     {
         global $DIC;
-        $this->log->write('*********');
+        $this->log->write("*********");
         $this->log->write('SOAP call "createUser"');
         $this->log->write("userKey:");
         $this->log->write(print_r($user_key, true));
@@ -426,11 +491,7 @@ class PanoptoClient
         $user->setEmail($DIC->user()->getEmail());
         $user->setUserKey($user_key);
 
-        $params = new CreateUser(
-            $auth,
-            $user,
-            ''
-        );
+        $params = new CreateUser($auth, $user, "");
 
         /** @var UserManagement $user_management */
         $user_management = $this->panoptoclient->UserManagement();
@@ -450,9 +511,12 @@ class PanoptoClient
      * @param int $user_id
      * @throws Exception
      */
-    public function grantUserAccessToFolder($folder_id, $role, $user_id = 0): void
-    {
-        $this->grantUsersAccessToFolder(array($user_id), $folder_id, $role);
+    public function grantUserAccessToFolder(
+        $folder_id,
+        $role,
+        $user_id = 0,
+    ): void {
+        $this->grantUsersAccessToFolder([$user_id], $folder_id, $role);
     }
 
     /**
@@ -463,14 +527,17 @@ class PanoptoClient
      * @param $role
      * @throws Exception
      */
-    public function grantUsersAccessToFolder(array $user_ids, $folder_id, $role): void
-    {
-        $guids = array();
+    public function grantUsersAccessToFolder(
+        array $user_ids,
+        $folder_id,
+        $role,
+    ): void {
+        $guids = [];
         foreach ($user_ids as $user_id) {
             $guids[] = $this->getUserGuid($user_id);
         }
 
-        $this->log->write('*********');
+        $this->log->write("*********");
         $this->log->write('SOAP call "GrantUsersAccessToFolder"');
         $this->log->write("folderId:");
         $this->log->write(print_r($folder_id, true));
@@ -485,7 +552,7 @@ class PanoptoClient
             $this->auth,
             $folder_id,
             $arrayOfGuids,
-            $role
+            $role,
         );
 
         /** @var AccessManagement $access_management */
@@ -503,11 +570,19 @@ class PanoptoClient
      * @param int $user_id
      * @throws ilException|Exception
      */
-    public function grantViewerAccessToPlaylistFolder(string $playlist_id, $user_id = 0): void
-    {
+    public function grantViewerAccessToPlaylistFolder(
+        string $playlist_id,
+        $user_id = 0,
+    ): void {
         $folder_id = $this->getFolderIdOfPlaylist($playlist_id);
-        if (!in_array($this->getUserAccessOnFolder($folder_id, $user_id), ['Viewer', 'Creator', 'Publisher'])) {
-            $this->grantUserAccessToFolder($folder_id, 'Viewer', $user_id);
+        if (
+            !in_array($this->getUserAccessOnFolder($folder_id, $user_id), [
+                "Viewer",
+                "Creator",
+                "Publisher",
+            ])
+        ) {
+            $this->grantUserAccessToFolder($folder_id, "Viewer", $user_id);
         }
     }
 
@@ -526,8 +601,10 @@ class PanoptoClient
      * @param int $user_id
      * @throws Exception
      */
-    public function grantViewerAccessToSession(string $session_id, $user_id = 0): void
-    {
+    public function grantViewerAccessToSession(
+        string $session_id,
+        $user_id = 0,
+    ): void {
         $this->grantUserViewerAccessToSession($session_id, $user_id);
 
         if (!$this->hasUserViewerAccessOnSession($session_id, $user_id)) {
@@ -541,27 +618,43 @@ class PanoptoClient
      * @return bool
      * @throws Exception
      */
-    public function hasUserViewerAccessOnSession($session_id, $user_id = 0): bool
-    {
+    public function hasUserViewerAccessOnSession(
+        $session_id,
+        $user_id = 0,
+    ): bool {
         $user_details = $this->getUserAccessDetails($user_id);
         $session_details = $this->getSessionAccessDetails($session_id);
         $folder_details = $session_details->getFolderAccess();
 
-        $sessions_with_viewer_access = $user_details->getSessionsWithViewerAccess()->getGuid();
-        $sessions_with_viewer_access = is_array($sessions_with_viewer_access) ? $sessions_with_viewer_access : array();
+        $sessions_with_viewer_access = $user_details
+            ->getSessionsWithViewerAccess()
+            ->getGuid();
+        $sessions_with_viewer_access = is_array($sessions_with_viewer_access)
+            ? $sessions_with_viewer_access
+            : [];
 
-        $user_groups_details = $user_details->getGroupMembershipAccess()->getGroupAccessDetails();
-        $user_groups_details = is_array($user_groups_details) ? $user_groups_details : array();
+        $user_groups_details = $user_details
+            ->getGroupMembershipAccess()
+            ->getGroupAccessDetails();
+        $user_groups_details = is_array($user_groups_details)
+            ? $user_groups_details
+            : [];
         foreach ($user_groups_details as $user_group_details) {
             $session_ids = $user_group_details->getSessionsWithViewerAccess();
             if (is_array($session_ids)) {
-                $sessions_with_viewer_access = array_merge($sessions_with_viewer_access, $session_ids);
+                $sessions_with_viewer_access = array_merge(
+                    $sessions_with_viewer_access,
+                    $session_ids,
+                );
             }
         }
 
         if (
-            $this->hasUserViewerAccessOnFolder($folder_details->getFolderId(), $user_id)
-            || in_array($session_id, $sessions_with_viewer_access)
+            $this->hasUserViewerAccessOnFolder(
+                $folder_details->getFolderId(),
+                $user_id,
+            ) ||
+            in_array($session_id, $sessions_with_viewer_access)
         ) {
             return true;
         }
@@ -575,9 +668,15 @@ class PanoptoClient
      * @return bool
      * @throws Exception
      */
-    public function hasUserViewerAccessOnFolder($folder_id, int $user_id = 0): bool
-    {
-        return in_array($this->getUserAccessOnFolder($folder_id, $user_id), array('Viewer', 'Creator', 'Viewer'));
+    public function hasUserViewerAccessOnFolder(
+        $folder_id,
+        int $user_id = 0,
+    ): bool {
+        return in_array($this->getUserAccessOnFolder($folder_id, $user_id), [
+            "Viewer",
+            "Creator",
+            "Viewer",
+        ]);
     }
 
     /**
@@ -588,9 +687,11 @@ class PanoptoClient
      * @param int $user_id
      * @throws Exception
      */
-    public function grantUserViewerAccessToSession($session_id, $user_id = 0): void
-    {
-        $this->grantUsersViewerAccessToSession(array($user_id), $session_id);
+    public function grantUserViewerAccessToSession(
+        $session_id,
+        $user_id = 0,
+    ): void {
+        $this->grantUsersViewerAccessToSession([$user_id], $session_id);
     }
 
     /**
@@ -600,14 +701,16 @@ class PanoptoClient
      * @param $session_id
      * @throws Exception
      */
-    public function grantUsersViewerAccessToSession(array $user_ids, $session_id): void
-    {
-        $guids = array();
+    public function grantUsersViewerAccessToSession(
+        array $user_ids,
+        $session_id,
+    ): void {
+        $guids = [];
         foreach ($user_ids as $user_id) {
             $guids[] = $this->getUserGuid($user_id);
         }
 
-        $this->log->write('*********');
+        $this->log->write("*********");
         $this->log->write('SOAP call "GrantUsersViewerAccessToSession"');
         $this->log->write("sessionId:");
         $this->log->write(print_r($session_id, true));
@@ -620,7 +723,7 @@ class PanoptoClient
         $params = new GrantUsersViewerAccessToSession(
             $this->auth,
             $session_id,
-            $arrayGuids
+            $arrayGuids,
         );
 
         /** @var AccessManagement $access_management */
@@ -633,6 +736,57 @@ class PanoptoClient
         }
     }
 
+    public function getSessionsAvailabilitySettings(array $sessionIds): array
+    {
+        if (empty($sessionIds)) {
+            return [];
+        }
+
+        /** @var SessionManagement $session_client */
+        $session_client = $this->panoptoclient->SessionManagement();
+
+        $arrayGuids = new ArrayOfguid();
+        $arrayGuids->setGuid($sessionIds);
+
+        try {
+            $params = new GetSessionsAvailabilitySettings(
+                $this->auth,
+                $arrayGuids,
+            );
+            $result = $session_client->GetSessionsAvailabilitySettings($params);
+
+            $availability_data = [];
+
+            $sessions_result = $result->getGetSessionsAvailabilitySettingsResult();
+            $results = $sessions_result->getResults();
+
+            if ($results) {
+                $settings = $results->getSessionAvailabilitySettings();
+                $settings_list = is_array($settings) ? $settings : [$settings];
+
+                foreach ($settings_list as $setting) {
+                    $session_id = $setting->getSessionId();
+                    if ($session_id) {
+                        $start_date = $setting->getStartSettingDate();
+                        $end_date = $setting->getEndSettingDate();
+
+                        $availability_data[$session_id] = [
+                            "start_setting_type" => $setting->getStartSettingType(),
+                            "start_date" => $start_date,
+                            "end_setting_type" => $setting->getEndSettingType(),
+                            "end_date" => $end_date,
+                        ];
+                    }
+                }
+            }
+
+            return $availability_data;
+        } catch (Exception $e) {
+            $this->log->logError($e->getCode(), $e->getMessage());
+            return [];
+        }
+    }
+
     /**
      * @param $session_id
      * @return SessionAccessDetails
@@ -642,28 +796,30 @@ class PanoptoClient
     {
         static $session_access_details;
         if (!isset($session_access_details[$session_id])) {
-            $this->log->write('*********');
+            $this->log->write("*********");
             $this->log->write('SOAP call "GetSessionAccessDetails"');
             $this->log->write("sessionId:");
             $this->log->write(print_r($session_id, true));
 
-            $params = new GetSessionAccessDetails(
-                $this->auth,
-                $session_id
-            );
+            $params = new GetSessionAccessDetails($this->auth, $session_id);
 
             /** @var AccessManagement $access_management */
             $access_management = $this->panoptoclient->AccessManagement();
             try {
-                $session_access_details[$session_id] = $access_management->GetSessionAccessDetails($params)->getGetSessionAccessDetailsResult();
+                $session_access_details[$session_id] = $access_management
+                    ->GetSessionAccessDetails($params)
+                    ->getGetSessionAccessDetailsResult();
             } catch (Exception $e) {
                 $this->log->logError($e->getCode(), $e->getMessage());
                 $this->handleApiError($e->getMessage(), $e->getCode());
             }
 
-            $this->log->write('Received ' .
-                (is_array($session_access_details[$session_id]) ? (int)count($session_access_details[$session_id]) : 0) .
-                ' object(s).'
+            $this->log->write(
+                "Received " .
+                    (is_array($session_access_details[$session_id])
+                        ? (int) count($session_access_details[$session_id])
+                        : 0) .
+                    " object(s).",
             );
         }
         return $session_access_details[$session_id];
