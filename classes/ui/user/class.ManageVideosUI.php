@@ -47,8 +47,8 @@ class ManageVideosUI
         $this->pl = ilPanoptoPlugin::getInstance();
         $html = PanoptoLTIHandler::launchTool($object, true, true);
 
-        $DIC['tpl']->addCss($this->pl->getDirectory() . '/templates/default/waiter.css');
-        $DIC['tpl']->addJavaScript($this->pl->getDirectory() . '/templates/js/waiter.js');
+        $DIC['tpl']->addCss('/Customizing/global/plugins/Services/Repository/RepositoryObject/Panopto/templates/default/waiter.css');
+        $DIC['tpl']->addJavaScript('/Customizing/global/plugins/Services/Repository/RepositoryObject/Panopto/templates/js/waiter.js');
 
         $firefox_prompt_html = '<div id="xpan_firefox_prompt" style="display: none; padding: 20px; text-align: center;">
     <p>' . $this->pl->txt('firefox_prompt_info_new_tab') . '</p>

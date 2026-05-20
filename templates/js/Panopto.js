@@ -1,13 +1,22 @@
 let Panopto = {
 
     base_url: '',
-
     playVideo: function (sid, is_playlist, title) {
-        let $modal = $('#xpan_video_container').parent().parent().parent().parent().parent();
-        $(".modal-dialog").addClass("modal-lg").css("width", "100%").css("max-width", "800px");
-        $modal.modal('show');
-        let $iframe = '<iframe src="' + Panopto.base_url + '/Panopto/Pages/Embed.aspx?' + (is_playlist ? 'p' : '') + 'id=' + sid + '" width="720" height="405" style="padding: 0px; border: 1px solid #464646;" frameborder="0" allowfullscreen allow="autoplay"></iframe>';
-        $modal.find('div#xpan_video_container').html($iframe);
+        let $container = $('#panopto-modal-video-container');
+        if ($container.length === 0) return;
+
+        let $modal = $container.closest('dialog');
+        if ($modal.length === 0) return;
+
+        let modalElement = $modal.get(0);
+        // Fix: Pass all three arguments correctly
+        il.UI.modal.showModal(
+            modalElement,
+            {}, // No ajaxRenderUrl provided
+            { id: "panopto-video-modal" } // Any unique ID
+        );
+        let $iframe = '<iframe src="' + Panopto.base_url + '/Panopto/Pages/Embed.aspx?' + (is_playlist ? 'p' : '') + 'id=' + sid + '" width="720" height="405" style="padding: 0px; border: 1px solid #464646; width: 100%; aspect-ratio: 16/9;" frameborder="0" allowfullscreen allow="autoplay"></iframe>';
+        $modal.find('div#panopto-modal-video-container').html($iframe);
         $modal.find('.modal-title').html(title);
         $('#xoct_waiter_modal').show();
 

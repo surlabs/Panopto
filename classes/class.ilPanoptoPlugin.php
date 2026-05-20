@@ -63,8 +63,31 @@ class ilPanoptoPlugin extends ilRepositoryObjectPlugin
         return self::$instance;
     }
 
+    /**
+     * Get the plugin name
+     * @return bool
+     */
     public function allowCopy(): bool
     {
         return true;
+    }
+
+    /**
+     * Get the plugin directory
+     * @return string
+     */
+    public function getDirectory(): string
+    {
+        return 'public/Customizing/global/plugins/Services/Repository/RepositoryObject/Panopto';
+    }
+
+    /**
+     * Get the icon path
+     * @return string
+    */
+    public static function _getIcon(string $a_type): string
+    {
+		$dir = "/Customizing/global/plugins/Services/Repository/RepositoryObject/Panopto";
+		return $dir . "/templates/images/icon_xpan.svg";
     }
 }

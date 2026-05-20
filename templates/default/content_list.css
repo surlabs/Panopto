@@ -161,7 +161,7 @@ div.xpan_image_container img.xpan_play_icon {
     display:flex;
     flex-wrap:wrap;
 	gap:10px;
-    justify-content: flex-start;
+    justify-content: start;
 }
 
 .xpan_page_active:hover {
@@ -170,6 +170,10 @@ div.xpan_image_container img.xpan_play_icon {
 
 #xpan_video_container iframe{
     width: 100%;
+}
+
+#xpan_video_container {
+    width: 600px;
 }
 
 @media(max-width:768px){
@@ -195,4 +199,9 @@ div.xpan_image_container img.xpan_play_icon {
     .col-lg-3 {
         width: 23% !important;
     }
+}
+
+.modal-dialog {
+    max-width: 70vw !important;
+    width: auto !important;
 }

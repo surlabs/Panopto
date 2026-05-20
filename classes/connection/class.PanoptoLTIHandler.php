@@ -124,7 +124,7 @@ class PanoptoLTIHandler
             }
 
             if (!is_scalar($value)) {
-                continue;
+                continue; //
             }
 
             $html .= "<input type='hidden' name='{$key}' value='" . htmlspecialchars((string)$value, ENT_QUOTES) . "'>";

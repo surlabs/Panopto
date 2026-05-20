@@ -19,9 +19,9 @@ declare(strict_types=1);
  *
  */
 
-
 use classes\ui\user\ManageVideosUI;
 use classes\ui\user\UserContentMainUI;
+use classes\ui\user\PanoptoSortingTableGUI;
 use \ILIAS\UI\Component\Input\Container\Form\Standard;
 use platform\PanoptoException;
 use platform\SorterEntry;
@@ -113,7 +113,7 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
     public function performCommand(string $cmd): void
     {
         $this->checkPermission("read");
-        
+
         $this->setTitleAndDescription();
         $this->{$cmd}();
     }
@@ -227,8 +227,6 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
             $this->object->setDescription($result["description"]);
             $this->object->setOnline($result["online"]);
 
-            //dump($result);exit;
-
             $this->object->update();
             $this->tpl->setOnScreenMessage("success", $this->lng->txt("msg_obj_modified"), true);
             $this->ctrl->redirect($this, "editSettings");
@@ -244,7 +242,20 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
     public function sorting(): void
     {
         $this->addSubTabs("subSorting");
-        $sort_table_gui = new PanoptoSortingTableGUI($this->object, $this);
+
+        // Safe check for physical file paths
+        $table_file = __DIR__ . '/ui/user/PanoptoSortingTableGUI.php';
+        $alt_table_file = __DIR__ . '/ui/user/class.PanoptoSortingTableGUI.php';
+
+        if (file_exists($table_file)) {
+            require_once $table_file;
+        } elseif (file_exists($alt_table_file)) {
+            require_once $alt_table_file;
+        } else {
+            throw new Exception("Error Crítico: No se encuentra el archivo físico de la tabla. El servidor buscó en '$table_file' y '$alt_table_file'. Revisa el nombre exacto del archivo y su ubicación.");
+        }
+        // Force absolute namespace call in case the ILIAS autoloader fails
+        $sort_table_gui = new \classes\ui\user\PanoptoSortingTableGUI($this->object);
         $this->tpl->setContent($sort_table_gui->getHTML());
     }
 
@@ -269,20 +280,6 @@ class ilObjPanoptoGUI extends ilObjectPluginGUI
             $this->tpl->setAlertProperties($list_gui->getAlertProperties());
         }
 
-    }
-
-    /**
-     * @throws PanoptoException
-     */
-    public function reorder()
-    {
-        if (isset($_POST['ids'])) {
-            $ids = $_POST['ids'];
-
-            if (!empty($ids)) {
-                SorterEntry::saveOrder($ids, $this->object->getFolderExtId());
-            }
-        }
     }
 
     /**

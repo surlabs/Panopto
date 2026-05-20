@@ -24,6 +24,7 @@ use ILIAS\UI\Factory;
 use classes\ui\admin\PluginConfigurationMainUI;
 use platform\PanoptoConfig;
 use platform\PanoptoException;
+use connection\PanoptoClient;
 
 /**
  * Class ilPanoptoConfigGUI
@@ -61,7 +62,33 @@ class ilPanoptoConfigGUI extends ilPluginConfigGUI
                 $this->control->setParameterByClass('ilPanoptoConfigGUI', 'cmd', 'configure');
                 $sections = $this->config_ui->configure();
                 $form_action = $this->control->getLinkTargetByClass("ilPanoptoConfigGUI", "configure");
-                $rendered = $this->renderForm($form_action, $sections);
+                
+                $test_message = '';
+                $save_message = '';
+                
+                // Check if form was submitted
+                if ($this->request->getMethod() == "POST") {
+                    $form = self::$factory->input()->container()->form()->standard($form_action, $sections);
+                    $form = $form->withRequest($this->request);
+                    $result = $form->getData();
+                    
+                    if ($result) {
+                        // Save configuration
+                        PanoptoConfig::save();
+                        $save_message = $this->renderer->render(self::$factory->messageBox()->success($this->plugin_object->txt('info_config_saved')));
+                        
+                        // Test connection after saving
+                        try {
+                            $client = PanoptoClient::getInstance();
+                            $client->testConnection();
+                            $test_message = $this->renderer->render(self::$factory->messageBox()->success($this->plugin_object->txt('test_connection_success')));
+                        } catch (PanoptoException $e) {
+                            $test_message = $this->renderer->render(self::$factory->messageBox()->failure($this->plugin_object->txt('test_connection_failed') . $e->getMessage()));
+                        }
+                    }
+                }
+                
+                $rendered = $this->renderForm($form_action, $sections, $save_message, $test_message);
                 break;
             default:
                 throw new ilException("command not defined");
@@ -74,32 +101,34 @@ class ilPanoptoConfigGUI extends ilPluginConfigGUI
     /**
      * @throws ilCtrlException
      */
-    private function renderForm(string $form_action, array $sections): string
+    private function renderForm(string $form_action, array $sections, string $save_message = '', string $test_message = ''): string
     {
+        global $DIC;
+        
         //Create the form
         $form = self::$factory->input()->container()->form()->standard(
             $form_action,
             $sections
         );
 
-        $saving_info = "";
-
-        //Check if the form has been submitted
-        if ($this->request->getMethod() == "POST") {
-            $form = $form->withRequest($this->request);
-            $result = $form->getData();
-            if ($result) {
-                $saving_info = $this->save();
-            }
-        }
-
-        return $saving_info . $this->renderer->render($form);
+        return $save_message . $test_message . $this->renderer->render($form);
     }
 
     public function save(): string
     {
         PanoptoConfig::save();
         return $this->renderer->render(self::$factory->messageBox()->success($this->plugin_object->txt('info_config_saved')));
+    }
+
+    public function testConnection(): array
+    {
+        try {
+            $client = PanoptoClient::getInstance();
+            $client->testConnection();
+            return ['success' => true, 'message' => $this->plugin_object->txt('test_connection_success')];
+        } catch (PanoptoException $e) {
+            return ['success' => false, 'message' => $this->plugin_object->txt('test_connection_failed') . $e->getMessage()];
+        }
     }
 
 }
