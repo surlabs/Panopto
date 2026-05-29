@@ -129,7 +129,6 @@ class PanoptoClient
         $this->auth->setAuthCode(
             $this->panoptoclient->getAuthenticationInfo()->getAuthCode(),
         );
-        $this->rest_client = PanoptoRestClient::getInstance();
     }
 
     /**
@@ -592,6 +591,10 @@ class PanoptoClient
      */
     public function getFolderIdOfPlaylist(string $playlist_id): string
     {
+        if (!isset($this->rest_client)) {
+            $this->rest_client = PanoptoRestClient::getInstance();
+        }
+
         return $this->rest_client->getFolderIdOfPlaylist($playlist_id);
     }
 
