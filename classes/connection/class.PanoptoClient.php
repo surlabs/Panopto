@@ -184,7 +184,7 @@ class PanoptoClient
         $sessions = ContentObjectBuilder::buildSessionsDTOsFromSessions(
             $sessions->getResults()->getSession() ?? [],
         );
-        $playlists = $this->rest_client->getPlaylistsOfFolder($folder_id);
+        $playlists = $this->getRestClient()->getPlaylistsOfFolder($folder_id);
         $objects = array_merge($sessions, $playlists);
         $objects = SorterEntry::generateSortedObjects($objects, $ref_id);
         if ($page_limit) {
@@ -591,11 +591,16 @@ class PanoptoClient
      */
     public function getFolderIdOfPlaylist(string $playlist_id): string
     {
+        return $this->getRestClient()->getFolderIdOfPlaylist($playlist_id);
+    }
+
+    private function getRestClient(): PanoptoRestClient
+    {
         if (!isset($this->rest_client)) {
             $this->rest_client = PanoptoRestClient::getInstance();
         }
 
-        return $this->rest_client->getFolderIdOfPlaylist($playlist_id);
+        return $this->rest_client;
     }
 
     /**
