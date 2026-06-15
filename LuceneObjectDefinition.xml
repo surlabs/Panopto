@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ObjectDefinition xmlns:xi="http://www.w3.org/2001/XInclude" type="xpan">
+	<Document type="default">
+		<DataSource type="JDBC" action="append">
+			<Query>
+				SELECT oda.obj_id, oda.type, oda.title, oda.owner,
+					CASE WHEN xo.is_online = 1 THEN '0' ELSE '1' END offline,
+					ode.description, TIMESTAMP(oda.create_date) cdate
+				FROM object_data oda
+				LEFT JOIN object_description ode ON oda.obj_id = ode.obj_id
+				LEFT JOIN xpan_objects xo ON oda.obj_id = xo.obj_id
+				WHERE oda.obj_id IN (?)
+			</Query>
+			<Param format="list" type="int" value="objId" />
+			<Field store="YES" index="NOT_ANALYZED" column="obj_id" type="integer" name="objId" />
+			<Field store="YES" index="NOT_ANALYZED" column="type" type="text" name="type" />
+			<Field store="YES" index="NOT_ANALYZED" column="owner" type="integer" name="owner" />
+			<Field store="YES" index="NOT_ANALYZED" column="cdate" type="text" name="cdate" />
+			<Field store="YES" index="ANALYZED" column="title" type="text" name="title" />
+			<Field store="YES" index="ANALYZED" column="description" type="text" name="description" />
+			<Field store="YES" index="NOT_ANALYZED" column="offline" type="text" name="offline" />
+		</DataSource>
+		<DataSource type="JDBC" action="append">
+			<Query>
+				SELECT tag FROM il_tag
+				WHERE obj_id IN (?)
+				AND obj_type IN (?)
+				AND sub_obj_id = 0
+				AND is_offline = 0
+			</Query>
+			<Param format="list" type="int" value="objId" />
+			<Param format="list" type="string" value="objType" />
+			<Field store="YES" index="ANALYZED" column="tag" type="text" name="tag" />
+		</DataSource>
+	</Document>
+</ObjectDefinition>
