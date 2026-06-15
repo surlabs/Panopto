@@ -96,7 +96,7 @@ Login to your ILIAS platform as an administrator. Navigate to "Administration" -
 - SIG Panopto [Forum](https://docu.ilias.de/goto_docu_frm_13755.html)
 
 # Version History
-* The version 9.x.x for **ILIAS 11** developed and maintained by SURLABS can be found in the Github branch **dev_11**
+* The version 11.x.x for **ILIAS 11** developed and maintained by SURLABS can be found in the Github branch **dev_11**
 * The version 10.x.x for **ILIAS 10** developed and maintained by SURLABS can be found in the Github branch **release_10**
 * The version 9.x.x for **ILIAS 9** developed and maintained by SURLABS can be found in the Github branch **release_9**
 * The version 8.x.x for **ILIAS 8** developed and maintained by SURLABS can be found in the Github branch **release_8**
