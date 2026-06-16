@@ -45,6 +45,8 @@ class ilObjPanopto extends ilObjectPlugin
             "is_online" => 0,
             "folder_ext_id" => $this->getFolderExtId()
         ]);
+
+        $this->raiseSearchContentChanged();
     }
 
     /**
@@ -76,6 +78,8 @@ class ilObjPanopto extends ilObjectPlugin
         $xpanDb = new PanoptoDatabase();
 
         $xpanDb->update("xpan_objects", ["is_online" => (int)$this->online, "folder_ext_id" => $this->folder_ext_id], ["obj_id" => $this->getId()]);
+
+        $this->raiseSearchContentChanged();
     }
 
     /**
@@ -138,5 +142,19 @@ class ilObjPanopto extends ilObjectPlugin
     private function setFolderExtId(int $folder_ext_id)
     {
         $this->folder_ext_id = $folder_ext_id;
+    }
+
+    private function raiseSearchContentChanged(): void
+    {
+        global $DIC;
+
+        $DIC->event()->raise(
+            'Services/Search',
+            'contentChanged',
+            [
+                'obj_id' => $this->getId(),
+                'obj_type' => $this->getType()
+            ]
+        );
     }
 }
