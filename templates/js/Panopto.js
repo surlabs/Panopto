@@ -40,6 +40,17 @@ let Panopto = {
                 $iframe.attr('src', '');
             }
         });
+
+        // ILIAS 10 uses the native <dialog> element, which fires a plain 'close'
+        // event (not the bootstrap 'hidden'/'hidden.bs.modal' events above) when
+        // closed via the "x" button, ESC key or dialog.close(). Without this the
+        // Panopto iframe is never emptied and the video/audio keeps playing.
+        $modal.on('close', function() {
+            $iframe = $modal.find('iframe');
+            if ($iframe.length) {
+                $iframe.attr('src', '');
+            }
+        });
     }
 
 };
