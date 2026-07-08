@@ -4,7 +4,6 @@ let Panopto = {
 
     playVideo: function (sid, is_playlist, title) {
         let $modal = $('#xpan_video_container').closest('dialog');
-        $(".modal-dialog").addClass("modal-lg").css("width", "100%").css("max-width", "800px");
 
         let modalElement = $modal.get(0); // obtener el DOM element
 

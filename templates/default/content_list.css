@@ -177,6 +177,7 @@ div.xpan_image_container img.xpan_play_icon {
 #xpan_video_container {
     width: 100%;
     max-width: 600px;
+    margin: 0 auto;
 }
 
 @media(max-width:768px){
