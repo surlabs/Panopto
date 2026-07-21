@@ -7,22 +7,27 @@ namespace Composer\Autoload;
 class ComposerStaticInit324d70f119dd551c2e66b02980324944
 {
     public static $files = array (
-        '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
+        'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
+        '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
     );
 
     public static $prefixLengthsPsr4 = array (
-        'P' => 
+        'S' =>
+        array (
+            'Symfony\\Polyfill\\Php80\\' => 23,
+        ),
+        'P' =>
         array (
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Http\\Client\\' => 16,
         ),
-        'L' => 
+        'L' =>
         array (
             'League\\OAuth2\\Client\\' => 21,
         ),
-        'G' => 
+        'G' =>
         array (
             'GuzzleHttp\\Psr7\\' => 16,
             'GuzzleHttp\\Promise\\' => 19,
@@ -31,36 +36,40 @@ class ComposerStaticInit324d70f119dd551c2e66b02980324944
     );
 
     public static $prefixDirsPsr4 = array (
-        'Psr\\Http\\Message\\' => 
+        'Symfony\\Polyfill\\Php80\\' =>
         array (
-            0 => __DIR__ . '/..' . '/psr/http-message/src',
-            1 => __DIR__ . '/..' . '/psr/http-factory/src',
+            0 => __DIR__ . '/..' . '/symfony/polyfill-php80',
         ),
-        'Psr\\Http\\Client\\' => 
+        'Psr\\Http\\Message\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/psr/http-factory/src',
+            1 => __DIR__ . '/..' . '/psr/http-message/src',
+        ),
+        'Psr\\Http\\Client\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/http-client/src',
         ),
-        'League\\OAuth2\\Client\\' => 
+        'League\\OAuth2\\Client\\' =>
         array (
             0 => __DIR__ . '/..' . '/league/oauth2-client/src',
         ),
-        'GuzzleHttp\\Psr7\\' => 
+        'GuzzleHttp\\Psr7\\' =>
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
         ),
-        'GuzzleHttp\\Promise\\' => 
+        'GuzzleHttp\\Promise\\' =>
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/promises/src',
         ),
-        'GuzzleHttp\\' => 
+        'GuzzleHttp\\' =>
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
         ),
     );
 
     public static $classMap = array (
+        'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
-        'ObjectSettingsMainUI' => __DIR__ . '/../..' . '/classes/ui/author/class.ObjectSettingsMainUI.php',
         'PanoptoSortingTableGUI' => __DIR__ . '/../..' . '/classes/ui/user/class.PanoptoSortingTableGUI.php',
         'Panopto\\AccessManagement\\AccessManagement' => __DIR__ . '/../..' . '/classes/connection/api/Panopto/PublicAPI/4.6/AccessManagement/AccessManagement.php',
         'Panopto\\AccessManagement\\AccessRole' => __DIR__ . '/../..' . '/classes/connection/api/Panopto/PublicAPI/4.6/AccessManagement/AccessRole.php',
@@ -129,6 +138,16 @@ class ComposerStaticInit324d70f119dd551c2e66b02980324944
         'Panopto\\Auth\\ReportIntegrationInfo' => __DIR__ . '/../..' . '/classes/connection/api/Panopto/PublicAPI/4.6/Auth/ReportIntegrationInfo.php',
         'Panopto\\Auth\\ReportIntegrationInfoResponse' => __DIR__ . '/../..' . '/classes/connection/api/Panopto/PublicAPI/4.6/Auth/ReportIntegrationInfoResponse.php',
         'Panopto\\Client' => __DIR__ . '/../..' . '/classes/connection/api/Client.php',
+        'Panopto\\OAuth\\OAuthConsumer' => __DIR__ . '/../..' . '/classes/connection/OAuth.php',
+        'Panopto\\OAuth\\OAuthDataStore' => __DIR__ . '/../..' . '/classes/connection/OAuth.php',
+        'Panopto\\OAuth\\OAuthException' => __DIR__ . '/../..' . '/classes/connection/OAuth.php',
+        'Panopto\\OAuth\\OAuthRequest' => __DIR__ . '/../..' . '/classes/connection/OAuth.php',
+        'Panopto\\OAuth\\OAuthServer' => __DIR__ . '/../..' . '/classes/connection/OAuth.php',
+        'Panopto\\OAuth\\OAuthSignatureMethod' => __DIR__ . '/../..' . '/classes/connection/OAuth.php',
+        'Panopto\\OAuth\\OAuthSignatureMethod_HMAC_SHA1' => __DIR__ . '/../..' . '/classes/connection/OAuth.php',
+        'Panopto\\OAuth\\OAuthSignatureMethod_PLAINTEXT' => __DIR__ . '/../..' . '/classes/connection/OAuth.php',
+        'Panopto\\OAuth\\OAuthSignatureMethod_RSA_SHA1' => __DIR__ . '/../..' . '/classes/connection/OAuth.php',
+        'Panopto\\OAuth\\OAuthToken' => __DIR__ . '/../..' . '/classes/connection/OAuth.php',
         'Panopto\\RemoteRecorderManagement\\ArrayOfDayOfWeek' => __DIR__ . '/../..' . '/classes/connection/api/Panopto/PublicAPI/4.6/RemoteRecorderManagement/ArrayOfDayOfWeek.php',
         'Panopto\\RemoteRecorderManagement\\ArrayOfRecorderSettings' => __DIR__ . '/../..' . '/classes/connection/api/Panopto/PublicAPI/4.6/RemoteRecorderManagement/ArrayOfRecorderSettings.php',
         'Panopto\\RemoteRecorderManagement\\ArrayOfRemoteRecorder' => __DIR__ . '/../..' . '/classes/connection/api/Panopto/PublicAPI/4.6/RemoteRecorderManagement/ArrayOfRemoteRecorder.php',
@@ -340,8 +359,6 @@ class ComposerStaticInit324d70f119dd551c2e66b02980324944
         'Panopto\\SessionManagement\\UpdateSessionSetPanoptoBroadcastResponse' => __DIR__ . '/../..' . '/classes/connection/api/Panopto/PublicAPI/4.6/SessionManagement/UpdateSessionSetPanoptoBroadcastResponse.php',
         'Panopto\\SessionManagement\\UpdateSessionSetRTMPBroadcast' => __DIR__ . '/../..' . '/classes/connection/api/Panopto/PublicAPI/4.6/SessionManagement/UpdateSessionSetRTMPBroadcast.php',
         'Panopto\\SessionManagement\\UpdateSessionSetRTMPBroadcastResponse' => __DIR__ . '/../..' . '/classes/connection/api/Panopto/PublicAPI/4.6/SessionManagement/UpdateSessionSetRTMPBroadcastResponse.php',
-        'Panopto\\SessionManagement\\UpdateSessionUpdateRTMPStreamSetShouldConvertToOnDemand' => __DIR__ . '/../..' . '/classes/connection/api/Panopto/PublicAPI/4.6/SessionManagement/UpdateSessionUpdateRTMPStreamSetShouldConvertToOnDemand.php',
-        'Panopto\\SessionManagement\\UpdateSessionUpdateRTMPStreamSetShouldConvertToOnDemandResponse' => __DIR__ . '/../..' . '/classes/connection/api/Panopto/PublicAPI/4.6/SessionManagement/UpdateSessionUpdateRTMPStreamSetShouldConvertToOnDemandResponse.php',
         'Panopto\\SessionManagement\\UpdateSessionUpdateRTMPStreamTypes' => __DIR__ . '/../..' . '/classes/connection/api/Panopto/PublicAPI/4.6/SessionManagement/UpdateSessionUpdateRTMPStreamTypes.php',
         'Panopto\\SessionManagement\\UpdateSessionUpdateRTMPStreamTypesResponse' => __DIR__ . '/../..' . '/classes/connection/api/Panopto/PublicAPI/4.6/SessionManagement/UpdateSessionUpdateRTMPStreamTypesResponse.php',
         'Panopto\\SessionManagement\\UpdateSessionsAvailabilityEndSettings' => __DIR__ . '/../..' . '/classes/connection/api/Panopto/PublicAPI/4.6/SessionManagement/UpdateSessionsAvailabilityEndSettings.php',
@@ -482,6 +499,10 @@ class ComposerStaticInit324d70f119dd551c2e66b02980324944
         'Panopto\\UserManagement\\User' => __DIR__ . '/../..' . '/classes/connection/api/Panopto/PublicAPI/4.6/UserManagement/User.php',
         'Panopto\\UserManagement\\UserManagement' => __DIR__ . '/../..' . '/classes/connection/api/Panopto/PublicAPI/4.6/UserManagement/UserManagement.php',
         'Panopto\\UserManagement\\UserSortField' => __DIR__ . '/../..' . '/classes/connection/api/Panopto/PublicAPI/4.6/UserManagement/UserSortField.php',
+        'PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
+        'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
+        'UnhandledMatchError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
+        'ValueError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
         'classes\\ui\\admin\\PluginConfigurationMainUI' => __DIR__ . '/../..' . '/classes/ui/admin/class.PluginConfigurationMainUI.php',
         'classes\\ui\\user\\ManageVideosUI' => __DIR__ . '/../..' . '/classes/ui/user/class.ManageVideosUI.php',
         'classes\\ui\\user\\UserContentMainUI' => __DIR__ . '/../..' . '/classes/ui/user/class.UserContentMainUI.php',
@@ -489,19 +510,16 @@ class ComposerStaticInit324d70f119dd551c2e66b02980324944
         'connection\\PanoptoLTIHandler' => __DIR__ . '/../..' . '/classes/connection/class.PanoptoLTIHandler.php',
         'connection\\PanoptoLog' => __DIR__ . '/../..' . '/classes/connection/class.PanoptoLog.php',
         'connection\\PanoptoRestClient' => __DIR__ . '/../..' . '/classes/connection/class.PanoptoRestClient.php',
-        'connection\\PanoptoTokenHandler' => __DIR__ . '/../..' . '/classes/connection/class.PanoptoTokenHandler.php',
         'ilObjPanopto' => __DIR__ . '/../..' . '/classes/class.ilObjPanopto.php',
         'ilObjPanoptoAccess' => __DIR__ . '/../..' . '/classes/class.ilObjPanoptoAccess.php',
         'ilObjPanoptoGUI' => __DIR__ . '/../..' . '/classes/class.ilObjPanoptoGUI.php',
         'ilObjPanoptoListGUI' => __DIR__ . '/../..' . '/classes/class.ilObjPanoptoListGUI.php',
-        'ilPanoptoConfig' => __DIR__ . '/../..' . '/classes/class.ilPanoptoConfig.php',
         'ilPanoptoConfigGUI' => __DIR__ . '/../..' . '/classes/class.ilPanoptoConfigGUI.php',
         'ilPanoptoPlugin' => __DIR__ . '/../..' . '/classes/class.ilPanoptoPlugin.php',
         'platform\\PanoptoConfig' => __DIR__ . '/../..' . '/classes/platform/class.PanoptoConfig.php',
         'platform\\PanoptoDatabase' => __DIR__ . '/../..' . '/classes/platform/class.PanoptoDatabase.php',
         'platform\\PanoptoException' => __DIR__ . '/../..' . '/classes/platform/class.PanoptoException.php',
         'platform\\PanoptoPlatform' => __DIR__ . '/../..' . '/classes/platform/class.PanoptoPlatform.php',
-        'platform\\PanoptoRender' => __DIR__ . '/../..' . '/classes/platform/class.PanoptoRender.php',
         'platform\\SorterEntry' => __DIR__ . '/../..' . '/classes/platform/class.SorterEntry.php',
         'utils\\DTO\\ContentObject' => __DIR__ . '/../..' . '/classes/utils/DTO/ContentObject.php',
         'utils\\DTO\\ContentObjectBuilder' => __DIR__ . '/../..' . '/classes/utils/DTO/ContentObjectBuilder.php',
