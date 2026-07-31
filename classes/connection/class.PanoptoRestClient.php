@@ -19,15 +19,12 @@ declare(strict_types=1);
  */
 
 namespace connection;
-require_once __DIR__ . "/../../vendor/autoload.php";
 
 use ilException;
-use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use platform\PanoptoConfig;
 use platform\PanoptoException;
 use utils\DTO\Playlist;
 use utils\DTO\RESTToken as RESTToken;
-use League\OAuth2\Client\Provider\GenericProvider as OAuth2Provider;
 use utils\DTO\ContentObjectBuilder;
 
 
@@ -42,7 +39,6 @@ class PanoptoRestClient
      */
     protected static PanoptoRestClient $instance;
     private string $base_url;
-    private OAuth2Provider $oauth2_provider;
     public RESTToken $token;
     private PanoptoLog $log;
 
@@ -71,13 +67,6 @@ class PanoptoRestClient
         }
         $this->base_url = 'https://' . rtrim($host, '/');
 
-        $this->oauth2_provider = new OAuth2Provider(array(
-            'clientId' => PanoptoConfig::get('rest_client_id'),
-            'clientSecret' => PanoptoConfig::get('rest_client_secret'),
-            'urlAccessToken' => $this->base_url . '/Panopto/oauth2/connect/token',
-            'urlAuthorize' => '',
-            'urlResourceOwnerDetails' => ''
-        ));
         $this->loadToken();
     }
 
@@ -99,18 +88,32 @@ class PanoptoRestClient
 
         if (!$token || $token->isExpired()) {
             $this->log('fetch access token');
-            try {
-                $oauth2_token = $this->oauth2_provider->getAccessToken("password", [
-                    "username" => PanoptoConfig::get('rest_api_user'),
-                    "password" => PanoptoConfig::get('rest_api_password'),
-                    "scope" => "api"
-                ]);
-                $token = new RESTToken($oauth2_token->getToken(), $oauth2_token->getExpires());
-                PanoptoConfig::set('rest_token', $token->jsonSerialize());
-                PanoptoConfig::save();
-            } catch (IdentityProviderException $e) {
-                throw new PanoptoException('Could not fetch access token: ' . $e->getMessage());
+            $curl = curl_init($this->base_url . '/Panopto/oauth2/connect/token');
+            curl_setopt_array($curl, [
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => http_build_query([
+                    'grant_type' => 'password',
+                    'username' => PanoptoConfig::get('rest_api_user'),
+                    'password' => PanoptoConfig::get('rest_api_password'),
+                    'scope' => 'api',
+                ]),
+                CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
+                CURLOPT_USERPWD => PanoptoConfig::get('rest_client_id') . ':' . PanoptoConfig::get('rest_client_secret'),
+                CURLOPT_HTTPHEADER => ['Content-Type: application/x-www-form-urlencoded'],
+                CURLOPT_RETURNTRANSFER => true,
+            ]);
+            $response = curl_exec($curl);
+            if ($response === false) {
+                throw new PanoptoException('Could not fetch access token: ' . curl_error($curl));
             }
+            $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+            $response_data = json_decode($response, true);
+            if ($http_status >= 300 || !is_array($response_data) || !isset($response_data['access_token'], $response_data['expires_in'])) {
+                throw new PanoptoException('Could not fetch access token: ' . $response);
+            }
+            $token = new RESTToken($response_data['access_token'], time() + $response_data['expires_in']);
+            PanoptoConfig::set('rest_token', $token->jsonSerialize());
+            PanoptoConfig::save();
         }
         $this->token = $token;
     }
