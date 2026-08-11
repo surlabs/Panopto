@@ -149,7 +149,7 @@ class ilObjPanopto extends ilObjectPlugin
         global $DIC;
 
         $DIC->event()->raise(
-            'Services/Search',
+            'components/ILIAS/Search',
             'contentChanged',
             [
                 'obj_id' => $this->getId(),
