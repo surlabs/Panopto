@@ -49,6 +49,7 @@ class ManageVideosUI
 
         $DIC['tpl']->addCss($this->pl->getDirectory() . '/templates/default/waiter.css');
         $DIC['tpl']->addJavaScript($this->pl->getDirectory() . '/templates/js/waiter.js');
+        $DIC['tpl']->addJavaScript($this->pl->getDirectory() . '/templates/js/Panopto.js');
 
         $firefox_prompt_html = '<div id="xpan_firefox_prompt" style="display: none; padding: 20px; text-align: center;">
     <p>' . $this->pl->txt('firefox_prompt_info_new_tab') . '</p>
@@ -59,7 +60,7 @@ class ManageVideosUI
 var panoptoLtiForm = $('#lti_form');
 var isFirefox = typeof InstallTrigger !== 'undefined';
 
-if (isFirefox) {
+if (isFirefox || (typeof Panopto.blocksThirdPartyCookies === 'function' && Panopto.blocksThirdPartyCookies())) {
     $('#xpan_firefox_prompt').show();
     $('#basicltiLaunchFrame').hide();
 

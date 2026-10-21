@@ -56,6 +56,6 @@ content_description#:#Beschreibung
 obj_xpan#:#Panopto
 objs_xpan#:#Panopto
 
-firefox_prompt_info_new_tab#:#Aufgrund der Datenschutzeinstellungen von Firefox muss Panopto in einem neuen Tab geöffnet werden. Bitte klicken Sie auf die Schaltfläche unten, um fortzufahren.
+firefox_prompt_info_new_tab#:#Aufgrund der Datenschutzeinstellungen Ihres Browsers muss Panopto in einem neuen Tab geöffnet werden. Bitte klicken Sie auf die Schaltfläche unten, um fortzufahren.
 firefox_prompt_btn_new_tab#:#Panopto in neuem Tab öffnen
 firefox_prompt_loading_new_tab#:#Panopto wird in einem neuen Tab geöffnet...
