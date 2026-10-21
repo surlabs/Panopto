@@ -201,7 +201,7 @@ div.xpan_image_container img.xpan_play_icon {
     }
 }
 
-.modal-dialog {
-    max-width: 70vw !important;
-    width: auto !important;
+.c-modal:has(#panopto-modal-video-container) .modal-dialog {
+    max-width: none !important;
+    width: 100% !important;
 }

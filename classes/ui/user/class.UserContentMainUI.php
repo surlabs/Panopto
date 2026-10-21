@@ -243,7 +243,7 @@ class UserContentMainUI
         $this->tpl->addOnloadCode('
             $(function() {
                 var $form = $("#lti_form");
-                if ($form.length > 0) {
+                if ($form.length > 0 && !(typeof Panopto.blocksThirdPartyCookies === "function" && Panopto.blocksThirdPartyCookies())) {
                     $form.submit();
                 }
             });
