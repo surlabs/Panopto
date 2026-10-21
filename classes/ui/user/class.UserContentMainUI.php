@@ -213,7 +213,7 @@ class UserContentMainUI
         $renderer = $DIC->ui()->renderer();
         $message = $factory->legacy('<section><div id="xpan_video_container"></div></section>');
         $modal = $factory->modal()->roundtrip('', $message);
-        $this->tpl->addOnLoadCode('$("#lti_form").submit();');
+        $this->tpl->addOnLoadCode('if (!(typeof Panopto.blocksThirdPartyCookies === "function" && Panopto.blocksThirdPartyCookies())) { $("#lti_form").submit(); }');
 
         return $renderer->render($modal);
 

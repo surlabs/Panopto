@@ -57,7 +57,7 @@ content_description#:#Description
 obj_xpan#:#Panopto
 objs_xpan#:#Panoptos
 
-firefox_prompt_info_new_tab#:#Due to Firefox's privacy settings, Panopto must be opened in a new tab. Please click the button below to continue.
+firefox_prompt_info_new_tab#:#Due to your browser's privacy settings, Panopto must be opened in a new tab. Please click the button below to continue.
 firefox_prompt_btn_new_tab#:#Open Panopto in New Tab
 firefox_prompt_loading_new_tab#:#Panopto is opening in a new tab...
 err_api_auth_failed#:#Error connecting to Panopto: Verify that the API credentials (User and Password) in the plugin configuration are correct.
