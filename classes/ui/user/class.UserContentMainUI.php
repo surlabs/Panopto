@@ -237,7 +237,7 @@ class UserContentMainUI
             $this->pl->getDirectory() . "/templates/default/content_list.css",
         );
         $this->tpl->addJavaScript(
-            $this->pl->getDirectory() . "/templates/js/Panopto.js",
+            $this->pl->getDirectory() . "/templates/js/Panopto.js?v=" . $this->pl->getVersion(),
         );
         $this->tpl->addOnLoadCode(
             'Panopto.base_url = "https://' .
