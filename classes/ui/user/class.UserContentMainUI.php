@@ -186,6 +186,7 @@ class UserContentMainUI
         $this->tpl->addCss("Customizing/global/plugins/Services/Repository/RepositoryObject/Panopto/templates/default/content_list.css");
         $this->tpl->addJavaScript('Customizing/global/plugins/Services/Repository/RepositoryObject/Panopto/templates/js/Panopto.js');
         $this->tpl->addOnLoadCode('Panopto.base_url = "https://' . PanoptoConfig::get('hostname') . '";');
+        $this->tpl->addOnLoadCode('Panopto.txt_open_new_tab = ' . json_encode($this->pl->txt('firefox_prompt_btn_new_tab')) . ';');
         $this->tpl->addJavaScript("assets/js/modal.min.js");
 
 
