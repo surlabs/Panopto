@@ -244,9 +244,6 @@ class UserContentMainUI
                 PanoptoConfig::get("hostname") .
                 '";',
         );
-        $this->tpl->addOnLoadCode(
-            'Panopto.txt_open_new_tab = ' . json_encode($this->pl->txt('firefox_prompt_btn_new_tab')) . ';',
-        );
         $this->tpl->addJavaScript("./Services/UIComponent/Modal/js/Modal.js");
 
         if ($filtered_count > 0) {
